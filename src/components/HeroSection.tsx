@@ -76,9 +76,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <div className="w-full flex flex-col">
-      {/* 1. HERO VIDEO: 16:9 Full-Width Container (No Left/Right Cropping) */}
-      <section className="relative w-full aspect-video max-h-[85vh] overflow-hidden bg-black flex items-center justify-start">
-        {/* HTML5 Native Autoplay Video Player (100% full width and height without cropping) */}
+      {/* 1. HERO VIDEO: Taller vertical height on mobile (cropped left/right), 16:9 aspect-video on tablet/desktop */}
+      <section className="relative w-full h-[54vh] min-h-[390px] max-h-[560px] sm:h-auto sm:min-h-0 sm:max-h-[85vh] sm:aspect-video overflow-hidden bg-black flex items-center justify-start">
+        {/* HTML5 Native Autoplay Video Player */}
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <video
             ref={videoRef}
@@ -86,7 +86,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             loop
             muted
             playsInline
-            className="w-full h-full object-cover opacity-85 sm:opacity-90"
+            className="w-full h-full object-cover object-center opacity-85 sm:opacity-90"
             src={HERO_VIDEO_MP4}
           >
             <source src={HERO_VIDEO_MP4} type="video/mp4" />
@@ -97,7 +97,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Overlaid Catchphrase ONLY (Responsive Typography & Cursor) */}
-        <div className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-12 md:px-16 flex flex-col justify-center pt-10 sm:pt-14 md:pt-18">
+        <div className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-12 md:px-16 flex flex-col justify-center pt-14 sm:pt-14 md:pt-18">
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight leading-[1.25] drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               {/* First Line: Slightly Thinner (font-bold instead of font-black) */}
