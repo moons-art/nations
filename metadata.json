@@ -1,0 +1,6 @@
+{
+  "name": "네이션스 솔루션 (NATIONS)",
+  "description": "교회의 본질에만 집중하도록 돕는 스마트 미니스트리 올인원 솔루션 (교회투표, 악보, 교회관리, 소그룹, 성경)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
