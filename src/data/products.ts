@@ -15,20 +15,14 @@ export const CORE_POINT_IMAGES = {
   // Point 01: 시간과 재정을 아끼는 사역 효율 (현장 상황실 실시간 집계 태블릿)
   point1: '/Gemini_Generated_Image_nrt3w0nrt3w0nrt3.png',
   point1Alt: '/core-point-1.png',
-  point1Fallback:
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuCw6ycdnJOsXPNF348TtEBJ8BypHmDbWlZxLFoKU5FkVjjDFLo0zskvarCV4XfJTKr4M7cUNwqLN20oWA7bhVTz3GlECWgujvnEhNsZ8a3ksphl4pwzc8nyOVgubJDIz8qwSudprM2brnm-h4BhqFsungZk7KHRir6PzRDjG0u0cE2ycRol7s5I6dhnPUh8MvkNHaFf3NhnoCN_rY8-p2nGbkdDNQSHZfxvC0nOnR4SAOiIW_rC8Wtk',
 
   // Point 02: 어르신부터 청년까지 탄탄한 접근성 (스마트폰 직관적 투표 확인 화면)
   point2: '/Gemini_Generated_Image_5a62ji5a62ji5a62.png',
   point2Alt: '/core-point-2.png',
-  point2Fallback:
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuBQdPC5dC40SiudD5xPcuLcacOs4cmfTdvzn9Y_DvG0FqUG_g6waVH5ccxYsUcP03YPJH7HXs4USNuYCUj5xjVMua1iAy7B2PjUkXgjUjDtLeH6K7lclZKV8OHHcIGKLB00ph2shdMp4eIa9hnvQAkNH1YKMLT4UM4y4wBJZa741cY0AQj-Zcn6IRCIMvxu5p3xsg-sHToBMt2ueKc0A1SKQkNX23FqHUcdyDq2_oNXUV8FgwsIsDfA',
 
   // Point 03: 교회의 안전을 지키는 데이터 보안 (선거관리위원회 일정 및 투표 절차 회의실)
   point3: '/Gemini_Generated_Image_p5sxyop5sxyop5sx.png',
   point3Alt: '/core-point-3.png',
-  point3Fallback:
-    'https://lh3.googleusercontent.com/aida-public/AB6AXuDW1g7XdgRGkJSv9rDdX6Mm2TdKlsgX5Hyv24GH0kPR0fR-OMoHFmehLKtyl8Mn54NF2aRD0_pmj4hb8FmXR95u1fiS-4wtOsnu8zZIXVumTquC55OSbjH5fTeLoYzGqcPX3io2F7ydAIvBjwiCM46AVaInyGJ1YdAiYN1rbQ1tMDJa1b3fEBzAgbOpyW8zYeMzTcPt31XPsNc1dpx6kO6xClStKgmOjNZGjHntX5vl3AIAwF2Sqbe4',
 
   showcase:
     'https://lh3.googleusercontent.com/aida-public/AB6AXuBZqTvQZw2iHCcnqsFdrC9AGwdCL7JnYlt6AY4rCM2EdHEdmqhE7o6keNw45ffHRkaEJg7eYzezBRPQnT7HL28tHv-f-QHCYWa_4ogi-GCRs155OhE3A8RaHoTmQYvN2l_TisXbUGD1EcVSewqyUoPaW6Vdr2W0WoUV0I6VYm5Pu1IopuevwsEG5mw-pkB78vGgM4EPjsf5_MxgFobry_RZQAzupxSn__OxAM2QzeGzLRxiNvdqUyww',
