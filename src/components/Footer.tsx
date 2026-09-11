@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { NATIONS_LOGO_URL } from '../data/products';
 
 interface FooterProps {
@@ -14,7 +15,13 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   return (
     <footer className="w-full bg-[#1E293B] text-slate-400 mt-12 px-4 pt-8 pb-24 border-t border-slate-800">
-      <div className="max-w-lg mx-auto flex flex-col gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-lg mx-auto flex flex-col gap-4"
+      >
         <div className="flex items-center gap-3">
           <img
             alt="NATIONS 로고"
@@ -68,7 +75,7 @@ export const Footer: React.FC<FooterProps> = ({
         <p className="text-[12px] text-slate-500 pt-1">
           © NATIONS Solution. All rights reserved.
         </p>
-      </div>
+      </motion.div>
     </footer>
   );
 };

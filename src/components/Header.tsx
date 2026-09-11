@@ -29,27 +29,55 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 text-[15px] font-semibold text-white/95 drop-shadow-md">
-            <a href="#core-values" className="hover:text-[#85f8c4] transition-colors">
-              네이션스 가치
-            </a>
-            <a href="#product-vote" className="hover:text-[#85f8c4] transition-colors">
+            <a
+              href="#differentiation"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('differentiation')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hover:text-[#85f8c4] transition-colors cursor-pointer"
+            >
               교회투표
             </a>
-            <a href="#ecosystem" className="hover:text-[#85f8c4] transition-colors">
-              스마트 생태계
-            </a>
-            <a href="#differentiation" className="hover:text-[#85f8c4] transition-colors">
+            <a
+              href="#service-guide"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('service-guide')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hover:text-[#85f8c4] transition-colors cursor-pointer"
+            >
               서비스 안내
+            </a>
+            <a
+              href="#core-values"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('core-values')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hover:text-[#85f8c4] transition-colors cursor-pointer"
+            >
+              네이션스 가치
+            </a>
+            <a
+              href="#ecosystem"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('ecosystem')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hover:text-[#85f8c4] transition-colors cursor-pointer"
+            >
+              스마트 생태계
             </a>
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Green '문의하기' CTA Button (Matching Screenshot 1 & 2) */}
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            {/* Green '문의하기' CTA Button (Compact on mobile, full-size on desktop) */}
             <button
               onClick={onOpenDemoModal}
               type="button"
-              className="min-h-[40px] px-4 py-2 flex items-center justify-center gap-1.5 bg-[#16a34a]/95 hover:bg-[#15803d] active:scale-95 rounded-lg text-white text-[13px] sm:text-[14px] font-bold transition-all shadow-lg cursor-pointer border border-[#85f8c4]/40 backdrop-blur-xs"
+              className="min-h-[30px] sm:min-h-[40px] px-2.5 sm:px-4 py-1 sm:py-2 flex items-center justify-center gap-1 bg-[#16a34a]/95 hover:bg-[#15803d] active:scale-95 rounded-md sm:rounded-lg text-white text-[11.5px] sm:text-[14px] font-bold transition-all shadow-md cursor-pointer border border-[#85f8c4]/40 backdrop-blur-xs"
             >
               <span>문의하기</span>
             </button>

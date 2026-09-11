@@ -57,8 +57,8 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
         {/* Links list */}
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-1 text-[15px] font-medium text-slate-700">
           <div className="mb-2 p-3 bg-[#ECFDF5] rounded-xl border border-[#006948]/20 flex flex-col gap-1.5">
-            <span className="text-[11px] font-bold text-[#006948] uppercase tracking-wider">Special Offer</span>
-            <p className="text-[13px] text-slate-800 font-semibold">100명 미만 미자립/개척교회</p>
+            <span className="text-[11px] font-bold text-[#006948] tracking-wider">네이션스 교회투표</span>
+            <p className="text-[13px] text-slate-800 font-semibold">100명 미만 미자립/개척교회 무료 지원</p>
             <button
               onClick={() => {
                 onClose();
@@ -66,10 +66,32 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
               }}
               className="mt-1 w-full py-2 bg-[#006948] hover:bg-[#00855d] text-white rounded-lg text-[13px] font-semibold flex items-center justify-center gap-1 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[16px]">volunteer_activism</span>
-              무료 도입 혜택 신청
+              <span className="material-symbols-outlined text-[16px]">how_to_vote</span>
+              무료 도입 및 신청 하기
             </button>
           </div>
+
+          <button
+            onClick={() => handleLinkClick('differentiation')}
+            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[20px] text-[#006948]">how_to_vote</span>
+              교회투표
+            </span>
+            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
+          </button>
+
+          <button
+            onClick={() => handleLinkClick('service-guide')}
+            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[20px] text-[#006948]">church</span>
+              서비스 안내
+            </span>
+            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
+          </button>
 
           <button
             onClick={() => handleLinkClick('core-values')}
@@ -83,18 +105,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           </button>
 
           <button
-            onClick={() => handleLinkClick('product-vote')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">how_to_vote</span>
-              교회투표
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <button
-            onClick={() => handleLinkClick('product-lineup')}
+            onClick={() => handleLinkClick('ecosystem')}
             className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
           >
             <span className="flex items-center gap-2.5">
@@ -104,23 +115,12 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
           </button>
 
-          <button
-            onClick={() => handleLinkClick('differentiation')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">church</span>
-              서비스 안내
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
           <div className="my-2 border-t border-slate-100" />
 
           <button
             onClick={() => {
               onClose();
-              onOpenDemoModal({ type: 'demo' });
+              onOpenDemoModal({ type: 'free_under_100' });
             }}
             className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
           >

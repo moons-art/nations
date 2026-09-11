@@ -3,13 +3,12 @@ import React, { useState } from 'react';
 interface KakaoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenDemoForm: () => void;
+  onOpenDemoForm?: () => void;
 }
 
 export const KakaoModal: React.FC<KakaoModalProps> = ({
   isOpen,
   onClose,
-  onOpenDemoForm,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -57,8 +56,6 @@ export const KakaoModal: React.FC<KakaoModalProps> = ({
               카카오톡 채널 [더네이션스 솔루션]
             </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed">
-              교회의 일정과 사역 필요를 말씀해 주시면
-              <br />
               친절하고 빠르게 실시간 1:1 상담을 도와드립니다.
             </p>
           </div>
@@ -70,22 +67,22 @@ export const KakaoModal: React.FC<KakaoModalProps> = ({
             </div>
             <div className="flex justify-between items-center">
               <span className="text-slate-500">상담 시간:</span>
-              <span className="font-medium text-slate-700">평일 09:00 ~ 18:00</span>
+              <span className="font-medium text-slate-700">월~금 09:00 ~ 18:00</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-500">긴급 선거 지원:</span>
-              <span className="font-medium text-[#006948]">주일 당일 24H 핫라인 가동</span>
+              <span className="text-slate-500">상담 시간 외:</span>
+              <span className="font-medium text-slate-600">답변이 늦을 수 있습니다.</span>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <a
-              href="https://pf.kakao.com"
+              href="http://pf.kakao.com/_cxjBxaX/chat"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3 bg-[#FEE500] hover:brightness-95 active:scale-[0.98] text-[#371D1E] rounded-xl text-[14px] font-bold shadow-sm flex items-center justify-center gap-1.5 transition-all"
             >
-              <span>카카오톡 채널 바로가기</span>
+              <span>카카오톡 1:1 상담 바로가기</span>
               <span className="material-symbols-outlined text-[16px]">open_in_new</span>
             </a>
 
@@ -98,19 +95,6 @@ export const KakaoModal: React.FC<KakaoModalProps> = ({
                 {copied ? 'check' : 'content_copy'}
               </span>
               <span>{copied ? '채널명이 복사되었습니다' : '채널명 복사하기'}</span>
-            </button>
-          </div>
-
-          <div className="pt-1 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onOpenDemoForm();
-              }}
-              className="text-[12px] text-[#006948] font-semibold hover:underline"
-            >
-              전화/이메일로 온라인 데모 신청하기 &gt;
             </button>
           </div>
         </div>

@@ -54,7 +54,7 @@ export default function App() {
     type?: 'demo' | 'free_under_100' | 'consultation';
     product?: string;
   }) => {
-    setConsultationPreset(preset || { type: 'demo' });
+    setConsultationPreset(preset || { type: 'free_under_100' });
     setIsConsultationOpen(true);
   };
 
@@ -77,20 +77,18 @@ export default function App() {
     setSearchFeedback(`'${clean}' 관련 솔루션으로 이동합니다`);
     setTimeout(() => setSearchFeedback(null), 3000);
 
-    // If query contains vote/투표
-    if (clean.includes('투표')) {
-      setHighlightedProductId('vote');
-      const el = document.getElementById('product-vote') || document.getElementById('product-lineup');
+    // If query contains vote/투표 or '네이션스'
+    if (clean.includes('투표') || clean.includes('네이션스')) {
+      const el = document.getElementById('differentiation');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
-      setTimeout(() => setHighlightedProductId(null), 3500);
       return;
     }
 
     if (clean.includes('악보')) {
       setHighlightedProductId('score');
-      const el = document.getElementById('product-score') || document.getElementById('product-lineup');
+      const el = document.getElementById('product-score') || document.getElementById('ecosystem');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => setHighlightedProductId(null), 3500);
       return;
@@ -98,7 +96,7 @@ export default function App() {
 
     if (clean.includes('관리') || clean.includes('교적') || clean.includes('행정')) {
       setHighlightedProductId('erp');
-      const el = document.getElementById('product-erp') || document.getElementById('product-lineup');
+      const el = document.getElementById('product-erp') || document.getElementById('ecosystem');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => setHighlightedProductId(null), 3500);
       return;
@@ -106,7 +104,7 @@ export default function App() {
 
     if (clean.includes('소그룹') || clean.includes('구역') || clean.includes('셀')) {
       setHighlightedProductId('group');
-      const el = document.getElementById('product-group') || document.getElementById('product-lineup');
+      const el = document.getElementById('product-group') || document.getElementById('ecosystem');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => setHighlightedProductId(null), 3500);
       return;
@@ -114,16 +112,16 @@ export default function App() {
 
     if (clean.includes('성경') || clean.includes('설교') || clean.includes('말씀')) {
       setHighlightedProductId('bible');
-      const el = document.getElementById('product-bible') || document.getElementById('product-lineup');
+      const el = document.getElementById('product-bible') || document.getElementById('ecosystem');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => setHighlightedProductId(null), 3500);
       return;
     }
 
-    // Default scroll to core points or lineup
-    const coreEl = document.getElementById('core-points');
-    if (coreEl) {
-      coreEl.scrollIntoView({ behavior: 'smooth' });
+    // Default scroll to differentiation or core points
+    const targetEl = document.getElementById('differentiation') || document.getElementById('core-values');
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -145,7 +143,7 @@ export default function App() {
       <Header
         onOpenKakao={handleOpenKakao}
         onOpenMenu={() => setIsMenuOpen(true)}
-        onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo' })}
+        onOpenDemoModal={() => handleOpenDemoModal({ type: 'free_under_100' })}
       />
 
       {/* Navigation Drawer */}
@@ -166,30 +164,35 @@ export default function App() {
           onSearchQuery={handleSearchQuery}
         />
 
-        <div className="w-full max-w-xl mx-auto flex flex-col px-4">
-          {/* 2. Core Values: 3대 원칙 */}
-          <div id="core-values">
+        {/* 2. Core Values: 3대 원칙 */}
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
+          <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
             <CoreValuesSection />
           </div>
+        </div>
 
-          {/* 3. Differentiation: 네이션스만의 차별점 (Dark Inverted Module) */}
-          <div id="differentiation">
-            <DifferentiationSection onOpenKakao={handleOpenKakao} />
-          </div>
+        {/* 3. Differentiation: 네이션스만의 차별점 (Full-Bleed Black Background Section) */}
+        <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
+          <DifferentiationSection onOpenKakao={handleOpenKakao} />
+        </div>
 
+        {/* 4. All-in-One Ecosystem, Bottom CTA & Footer */}
+        <div className="w-full max-w-6xl mx-auto flex flex-col px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 gap-12 sm:gap-16 lg:gap-20">
           {/* 4. All-in-One Ecosystem: 제품 라인업 */}
-          <div id="ecosystem">
+          <div id="ecosystem" className="scroll-mt-24 md:scroll-mt-28 w-full">
             <EcosystemSection
               onSelectProduct={(prod) => setSelectedProduct(prod)}
               highlightedProductId={highlightedProductId}
             />
           </div>
 
-          {/* 5. Bottom CTA & Inquiry */}
-          <BottomCtaSection
-            onOpenKakao={handleOpenKakao}
-            onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo' })}
-          />
+          {/* 5. Bottom CTA & Inquiry (서비스 안내) */}
+          <div id="service-guide" className="scroll-mt-24 md:scroll-mt-28 w-full">
+            <BottomCtaSection
+              onOpenKakao={handleOpenKakao}
+              onOpenDemoModal={() => handleOpenDemoModal({ type: 'free_under_100' })}
+            />
+          </div>
 
           {/* Submitted Inquiries Banner (if any submitted) */}
           {requestsList.length > 0 && (
@@ -220,7 +223,7 @@ export default function App() {
       {/* Fixed Bottom Navigation Bar */}
       <FixedBottomBar
         onOpenKakao={handleOpenKakao}
-        onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo' })}
+        onOpenDemoModal={() => handleOpenDemoModal({ type: 'free_under_100' })}
       />
 
       {/* Modals */}

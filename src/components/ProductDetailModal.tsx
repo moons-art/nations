@@ -48,6 +48,16 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4 text-[13px]">
+          {/* 이런 교회에 추천합니다. (제목 아래 최상단) */}
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700">
+            <span className="font-bold text-slate-900 block mb-1 text-[13px]">
+              이런 교회에 추천합니다.
+            </span>
+            <p className="text-[13px] text-slate-600 leading-relaxed font-medium">
+              {product.targetUseCase}
+            </p>
+          </div>
+
           {/* Main Description */}
           <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 leading-relaxed font-normal">
             {product.description}
@@ -60,7 +70,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 key={i}
                 className="px-2.5 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-semibold flex items-center gap-1 border border-[#006948]/10"
               >
-                <span className="material-symbols-outlined text-[14px]">check</span>
+                <span className="material-symbols-outlined text-[14px] select-none" aria-hidden="true">check</span>
                 {h}
               </span>
             ))}
@@ -92,14 +102,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Target Use Cases */}
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700">
-            <span className="font-bold text-slate-900 block mb-1 text-[13px]">
-              📌 추천 사역 현장
-            </span>
-            <p className="text-[12.5px] text-slate-600 leading-relaxed">{product.targetUseCase}</p>
           </div>
         </div>
 
