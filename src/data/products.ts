@@ -13,15 +13,15 @@ export const VIDEO_WATCH_URL =
 
 export const CORE_POINT_IMAGES = {
   // Point 01: 시간과 재정을 아끼는 사역 효율 (현장 상황실 실시간 집계 태블릿)
-  point1: '/Gemini_Generated_Image_nrt3w0nrt3w0nrt3.png',
+  point1: '/core-point-1.png',
   point1Alt: '/core-point-1.png',
 
   // Point 02: 어르신부터 청년까지 탄탄한 접근성 (스마트폰 직관적 투표 확인 화면)
-  point2: '/Gemini_Generated_Image_5a62ji5a62ji5a62.png',
+  point2: '/core-point-2.png',
   point2Alt: '/core-point-2.png',
 
   // Point 03: 교회의 안전을 지키는 데이터 보안 (선거관리위원회 일정 및 투표 절차 회의실)
-  point3: '/Gemini_Generated_Image_p5sxyop5sxyop5sx.png',
+  point3: '/core-point-3.png',
   point3Alt: '/core-point-3.png',
 
   showcase:
