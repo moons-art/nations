@@ -1,12 +1,15 @@
 import { ProductItem } from '../types';
 
+export const NATIONS_ICON_URL = '/icon.png';
 export const NATIONS_LOGO_URL = '/nations-logo-white.png';
 export const NATIONS_LOGO_ORIG_URL = '/nations-logo-orig.png';
 
 export const VIDEO_EMBED_URL =
   'https://drive.google.com/file/d/14onR-HCKmJn3N_QuKiH4O5jY5G3vpOpH/preview';
 
-export const HERO_VIDEO_MP4 = '/hero-video.mp4';
+export const HERO_VIDEO_MP4 = '/hero-video.mp4?v=clean_nowm';
+export const SCORE_HERO_VIDEO_MP4 = '/score-hero-video-1.mp4?v=clean_nowm';
+export const BIBLE_HERO_VIDEO_MP4 = '/hero-video-bible.mp4?v=clean_nowm';
 
 export const VIDEO_WATCH_URL =
   'https://drive.google.com/file/d/14onR-HCKmJn3N_QuKiH4O5jY5G3vpOpH/view?usp=sharing';
@@ -35,6 +38,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
     name: '네이션스 교회투표',
     badge: '스마트 총회 & 선거',
     badgeColor: 'emerald',
+    appUrl: 'https://vote.thenations.kr/',
     description:
       '90% 이상 단축되는 개표 시간, 실시간 본당 스크린 송출 및 자동 집계. 피로도 없는 은혜로운 선거를 만드는 스마트 투표 플랫폼.',
     icon: 'how_to_vote',
@@ -61,6 +65,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
     name: '네이션스 악보',
     badge: '예배 찬양 스마트 라이브러리',
     badgeColor: 'secondary',
+    appUrl: 'https://studio.thenations.kr/',
     description:
       '자신만의 악보 라이브러리 관리부터 악보 편집, 콘티 생성·프린트, 그리고 찬양팀 태블릿 실시간 동기화 및 회중용 PDF 공유까지 지원하는 찬양사역 전용 에디터 & 뷰어 시스템.',
     icon: 'queue_music',
@@ -87,6 +92,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
     name: '네이션스 교회관리',
     badge: '차세대 스마트 행정 ERP',
     badgeColor: 'emerald',
+    appUrl: 'https://erp.thenations.kr/',
     description:
       '쉽고 직관적인 관리, 어렵고 불필요한 메뉴는 버리고 합리적 메뉴 구성. 교인 명부, 심방 기록, 출결 현황을 실시간 데이터로 체계화하는 올인원 스마트 교적 관리.',
     icon: 'church',
@@ -114,6 +120,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
     name: '네이션스 소그룹',
     badge: '공동체 소통 & 양육 플랫폼',
     badgeColor: 'secondary',
+    appUrl: 'https://group.thenations.kr/',
     description:
       '구역, 셀, 목장 모임의 나눔과 기도제목 공유, 모임 보고서 작성까지 손끝에서 살아나는 교제와 양육 네트워크.',
     icon: 'diversity_3',
@@ -140,14 +147,15 @@ export const PRODUCTS_LIST: ProductItem[] = [
     name: '네이션스 성경',
     badge: '설교자를 위한 설교준비 노트',
     badgeColor: 'secondary',
+    appUrl: 'https://bible.thenations.kr/',
     description:
       '빠르고 정확한 성경 검색, 나만의 주석, 관주, 다중 역본 대조, 교회 공동체 말씀 나눔 연동으로 성도들의 영적 성장을 돕는 스마트 말씀 도구.',
     icon: 'menu_book',
     highlights: [
       '설교 준비 & 나만의 노트 지원',
       '설교자를 위한 다중 역본 동시 대조',
-      '설교 노트 & 공동체 묵상 연동',
-      '역본사용법은 네이션스로 문의 바랍니다.',
+      '주석 클라우드로 모든 기기에서 실시간 연동',
+      'AI 원어주석활용',
     ],
     keyFeatures: [
       {
@@ -156,7 +164,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
       },
       {
         title: '설교자를 위한 다중 역본 동시 대조',
-        desc: '앱만 제공합니다. 각 역본 data 자료는 개인이 준비, 역본사용법은 네이션스로 문의 바랍니다.',
+        desc: '앱만 제공합니다. 각 역본 data 자료는 개인이 준비, AI 원어주석활용 및 안내를 지원합니다.',
       },
       {
         title: '나만의 절별 노트, 주석, 관주 링크 만들기',
@@ -164,6 +172,6 @@ export const PRODUCTS_LIST: ProductItem[] = [
       },
     ],
     targetUseCase:
-      '나만의 설교 준비 데스크, 소그룹앱과 연동하여 목회자의 묵상나눔등 동기화',
+      '나만의 설교 준비 데스크, 여기저기 흩어져 있던 구절별 주해와 설교의 통합관리로 나만의 주석완성',
   },
 ];

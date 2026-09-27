@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { NATIONS_LOGO_URL } from '../data/products';
+import { NATIONS_LOGO_URL, NATIONS_ICON_URL } from '../data/products';
 
 interface FooterProps {
   onOpenTerms: () => void;
@@ -23,11 +23,18 @@ export const Footer: React.FC<FooterProps> = ({
         className="max-w-lg mx-auto flex flex-col gap-4"
       >
         <div className="flex items-center gap-3">
-          <img
-            alt="NATIONS 로고"
-            className="h-6 sm:h-7 w-auto object-contain"
-            src={NATIONS_LOGO_URL}
-          />
+          <div className="flex items-center gap-2">
+            <img
+              alt="NATIONS 아이콘"
+              className="h-6 sm:h-7 w-auto object-contain rounded-sm"
+              src={NATIONS_ICON_URL}
+            />
+            <img
+              alt="NATIONS 로고"
+              className="h-5 sm:h-6 w-auto object-contain"
+              src={NATIONS_LOGO_URL}
+            />
+          </div>
           <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-[#85f8c4] border border-slate-700">
             스마트 미니스트리
           </span>

@@ -16,10 +16,10 @@ export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
   return (
     <section className="w-full flex flex-col gap-8" id="ecosystem">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 55 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col gap-2 text-center max-w-2xl mx-auto"
       >
         <div className="inline-flex items-center justify-center gap-1.5 text-[#006948] text-[13px] sm:text-[14px] font-bold tracking-wide">
@@ -46,13 +46,13 @@ export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
               key={product.id}
               id={`product-${product.id}`}
               onClick={() => onSelectProduct(product)}
-              initial={{ opacity: 0, y: 35 }}
+              initial={{ opacity: 0, y: 70 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
+              viewport={{ once: true, margin: '-30px' }}
               transition={{
-                duration: 0.55,
+                duration: 0.85,
                 delay: index * 0.08,
-                ease: [0.22, 1, 0.36, 1],
+                ease: [0.16, 1, 0.3, 1],
               }}
               className={`bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-between gap-4 border transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-1 ${
                 isHighlighted
@@ -99,10 +99,10 @@ export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
 
       {/* Interactive Showcase Highlight Banner: Expanded on Tablet & PC */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 75 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-8 border border-[#E2E8F0]"
       >
         <div className="flex flex-col gap-4 max-w-xl lg:max-w-[360px] xl:max-w-[420px] shrink-0">
@@ -127,12 +127,12 @@ export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
               교회투표 시스템
             </span>
             <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
-              예배 찬양 콘티 뷰어
+              악보 편집, 송품 공유&뷰어
             </span>
             <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
               스마트 교적 ERP
             </span>
-            <span className="px-3 py-1.5 rounded-xl bg-[#ECFDF5] text-[13px] text-[#006948] font-bold">
+            <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
               셀·구역 목양 모바일
             </span>
           </div>

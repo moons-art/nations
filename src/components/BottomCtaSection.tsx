@@ -1,14 +1,15 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { NATIONS_ICON_URL } from '../data/products';
 
 interface BottomCtaSectionProps {
   onOpenKakao: () => void;
-  onOpenDemoModal: () => void;
+  onOpenDemoModal?: () => void;
 }
 
 export const BottomCtaSection: React.FC<BottomCtaSectionProps> = ({
   onOpenKakao,
-  onOpenDemoModal,
+  onOpenDemoModal: _onOpenDemoModal,
 }) => {
   return (
     <section className="w-full bg-white/90 rounded-3xl p-6 sm:p-10 lg:p-14 flex flex-col items-center text-center gap-8 shadow-xs border border-slate-200/90" id="service-guide">
@@ -17,16 +18,20 @@ export const BottomCtaSection: React.FC<BottomCtaSectionProps> = ({
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-[#ECFDF5] text-[#006948] flex items-center justify-center shadow-inner ring-4 ring-[#006948]/10"
+        className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white p-2 text-[#006948] flex items-center justify-center shadow-md ring-4 ring-[#006948]/10 border border-slate-200"
       >
-        <span className="material-symbols-outlined text-[32px] sm:text-[36px]">church</span>
+        <img
+          src={NATIONS_ICON_URL}
+          alt="NATIONS"
+          className="w-full h-full object-contain rounded-xl"
+        />
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 55 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.85, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col gap-2 max-w-xl"
       >
         <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#0F172A] leading-tight">
@@ -43,10 +48,10 @@ export const BottomCtaSection: React.FC<BottomCtaSectionProps> = ({
 
       {/* Grid container for Reassurance Banner and Action Buttons on Tablet & PC */}
       <motion.div
-        initial={{ opacity: 0, y: 35 }}
+        initial={{ opacity: 0, y: 70 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.65, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 w-full max-w-3xl text-left"
       >
         {/* Reassurance Banner */}
@@ -71,19 +76,10 @@ export const BottomCtaSection: React.FC<BottomCtaSectionProps> = ({
           <button
             type="button"
             onClick={onOpenKakao}
-            className="w-full py-3.5 px-5 bg-[#FEE500] hover:bg-[#ebd300] text-[#371D1E] rounded-xl sm:rounded-2xl text-[15px] sm:text-[16px] font-bold shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+            className="w-full py-4 px-5 bg-[#FEE500] hover:bg-[#ebd300] text-[#371D1E] rounded-xl sm:rounded-2xl text-[15px] sm:text-[16px] font-bold shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
           >
             <span className="material-symbols-outlined text-[24px]">forum</span>
             <span>카카오채널: 더네이션스 솔루션</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenDemoModal}
-            className="w-full py-3.5 px-5 bg-[#006948] hover:bg-[#00855d] text-white rounded-xl sm:rounded-2xl text-[15px] sm:text-[16px] font-bold shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[#85f8c4] text-[24px]">schedule</span>
-            <span>도입 컨설팅 및 데모 시연 예약</span>
           </button>
         </div>
       </motion.div>

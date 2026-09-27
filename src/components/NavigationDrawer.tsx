@@ -1,161 +1,367 @@
-import React from 'react';
-import { NATIONS_LOGO_ORIG_URL } from '../data/products';
+import React, { useRef, useState } from 'react';
+import { NATIONS_LOGO_URL, NATIONS_ICON_URL } from '../data/products';
 
 interface NavigationDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  activePage: 'vote' | 'score' | 'bible';
+  onSelectPage: (page: 'vote' | 'score' | 'bible') => void;
   onOpenKakao: () => void;
   onOpenDemoModal: (preset?: { type?: 'demo' | 'free_under_100'; product?: string }) => void;
   onOpenTerms: () => void;
   onOpenPrivacy: () => void;
 }
 
+interface ProductItem {
+  id: 'vote' | 'score' | 'bible';
+  title: string;
+  icon: string;
+  desc: string;
+  url: string;
+}
+
+const PRODUCTS: ProductItem[] = [
+  {
+    id: 'vote',
+    title: '네이션스 Vote',
+    icon: 'how_to_vote',
+    desc: '100명 미만 개척교회 및 미자립 교회를 위한 무료 투표 지원',
+    url: 'https://vote.thenations.kr/',
+  },
+  {
+    id: 'score',
+    title: '네이션스 STUDIO(구 악보)',
+    icon: 'queue_music',
+    desc: '악보 편집, 프린트 기능 무료 (악보, 콘티 라이브러리, 찬양팀 송폼 공유 기능 유료 서비스)',
+    url: 'https://studio.thenations.kr/',
+  },
+  {
+    id: 'bible',
+    title: '네이션스 Bible',
+    icon: 'menu_book',
+    desc: 'AI 주석 제외한 모든 기능 무료',
+    url: 'https://bible.thenations.kr/',
+  },
+];
+
 export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   isOpen,
   onClose,
   onOpenKakao,
-  onOpenDemoModal,
   onOpenTerms,
   onOpenPrivacy,
 }) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 펼쳐진 제품 상태 Set (화살표에 마우스를 대거나 터치/클릭할 때마다 토글됨)
+  const [expandedProductIds, setExpandedProductIds] = useState<Set<string>>(new Set());
+
   if (!isOpen) return null;
 
-  const handleLinkClick = (targetId?: string) => {
+  const handleScrollTo = (elementId: string) => {
     onClose();
-    if (targetId) {
-      const el = document.getElementById(targetId);
+    setTimeout(() => {
+      const el = document.getElementById(elementId);
       if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }, 200);
+  };
+
+  // 마우스를 사이드바 패널 밖으로 옮기면 자동 닫기
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      onClose();
+    }, 200);
+  };
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
+  };
+
+  // 토글 함수: 이미 열려있으면 닫고, 닫혀있으면 엶
+  const toggleProductExpand = (id: string, e?: React.SyntheticEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    setExpandedProductIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  // 각 제품의 앱 들어가기 링크 클릭 (새 창 열림)
+  const handleLaunchApp = (url: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
+      {/* Dark Outer Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-[4px] transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
+        aria-hidden="true"
       />
 
-      {/* Drawer panel */}
-      <div className="relative w-full max-w-xs bg-white h-full shadow-2xl z-10 flex flex-col pt-safe animate-in slide-in-from-right duration-200">
-        {/* Top bar */}
-        <div className="p-4 flex items-center justify-between border-b border-slate-100">
-          <img alt="NATIONS 로고" className="h-6 w-auto object-contain" src={NATIONS_LOGO_ORIG_URL} />
+      {/* Drawer Panel - Translucent Black Background with Thin Font Weights & Auto-close on MouseLeave */}
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="relative w-full max-w-[320px] sm:max-w-[340px] bg-[#0c0d0e]/85 backdrop-blur-xl text-white h-full shadow-[0_0_60px_rgba(0,0,0,0.85)] z-10 flex flex-col border-l border-white/10 animate-in slide-in-from-right duration-200 select-none font-light"
+      >
+        {/* Header: Nations 로고 (최상단 브랜드 제목은 진한 화이트 유지) */}
+        <div className="px-5 py-5 flex items-center justify-between border-b border-white/10 bg-white/[0.02]">
+          <div className="flex items-center gap-2">
+            <img
+              alt="NATIONS 아이콘"
+              className="h-5 sm:h-6 w-auto object-contain rounded-sm drop-shadow-md"
+              src={NATIONS_ICON_URL}
+            />
+            <img
+              alt="NATIONS 로고"
+              className="h-4 sm:h-5 w-auto object-contain drop-shadow-md"
+              src={NATIONS_LOGO_URL}
+            />
+          </div>
           <button
+            type="button"
             onClick={onClose}
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="닫기"
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors"
           >
-            <span className="material-symbols-outlined text-[22px]">close</span>
+            <span className="material-symbols-outlined text-[19px]">close</span>
           </button>
         </div>
 
-        {/* Links list */}
-        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-1 text-[15px] font-medium text-slate-700">
-          <div className="mb-2 p-3 bg-[#ECFDF5] rounded-xl border border-[#006948]/20 flex flex-col gap-1.5">
-            <span className="text-[11px] font-bold text-[#006948] tracking-wider">네이션스 교회투표</span>
-            <p className="text-[13px] text-slate-800 font-semibold">100명 미만 미자립/개척교회 무료 지원</p>
+        {/* Content Body: Scrollable Dark Minimalist Layout */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-[13.5px]">
+          {/* Section 1: 제품 메뉴 (오직 앱에 들어가기 위한 메뉴) */}
+          <div>
+            <div className="flex items-center justify-between mb-2 px-2">
+              <span className="text-[11px] font-extralight text-white/45 tracking-wider uppercase">
+                제품
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              {PRODUCTS.map((prod) => {
+                const isExpanded = expandedProductIds.has(prod.id);
+
+                return (
+                  <div key={prod.id} className="rounded-xl transition-all">
+                    {/* 제품 행 */}
+                    <div
+                      className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between transition-colors ${
+                        isExpanded ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={(e) => toggleProductExpand(prod.id, e)}
+                        className="group flex-1 flex items-center gap-2.5 py-1 text-left cursor-pointer transition-colors"
+                      >
+                        <span
+                          className={`material-symbols-outlined text-[17px] transition-colors ${
+                            isExpanded ? 'text-white' : 'text-white/50 group-hover:text-white'
+                          }`}
+                          style={{ fontVariationSettings: "'wght' 200" }}
+                        >
+                          {prod.icon}
+                        </span>
+                        <span
+                          className={`text-[13px] font-light transition-colors ${
+                            isExpanded ? 'text-white' : 'text-white/60 group-hover:text-white'
+                          }`}
+                        >
+                          {prod.title}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        aria-label={`${prod.title} 메뉴 ${isExpanded ? '접기' : '펼치기'}`}
+                        onMouseEnter={(e) => toggleProductExpand(prod.id, e)}
+                        onClick={(e) => toggleProductExpand(prod.id, e)}
+                        className="p-1.5 -mr-1 rounded-lg text-white/40 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer flex items-center justify-center"
+                      >
+                        <span
+                          className={`material-symbols-outlined text-[18px] transition-transform duration-200 ${
+                            isExpanded ? 'rotate-180 text-white' : 'text-white/45'
+                          }`}
+                          style={{ fontVariationSettings: "'wght' 200" }}
+                        >
+                          keyboard_arrow_down
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* 아래 글자와 버튼 */}
+                    {isExpanded && (
+                      <div className="px-3 pt-1.5 pb-2.5 ml-7 mr-2 space-y-1.5 animate-in fade-in slide-in-from-top-0.5 duration-150">
+                        <p className="text-[11.5px] text-white/55 font-light leading-snug">
+                          {prod.desc}
+                        </p>
+
+                        <div className="pt-0.5">
+                          <button
+                            type="button"
+                            onClick={(e) => handleLaunchApp(prod.url, e)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#006948] hover:bg-[#00855d] active:scale-[0.97] text-white text-[11px] font-light shadow-xs transition-all cursor-pointer"
+                          >
+                            <span
+                              className="material-symbols-outlined text-[13px] text-white/90"
+                              style={{ fontVariationSettings: "'wght' 200" }}
+                            >
+                              login
+                            </span>
+                            <span>앱 들어가기</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section 2: Nations 안내 */}
+          <div className="border-t border-white/10 pt-3">
+            <div className="px-2 mb-1.5">
+              <span className="text-[11px] font-extralight text-white/45 tracking-wider uppercase">
+                Nations 안내
+              </span>
+            </div>
+
+            <div className="space-y-0.5">
+              <button
+                type="button"
+                onClick={() => handleScrollTo('service-guide')}
+                className="group w-full px-3 py-2 rounded-xl flex items-center justify-between text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer font-light"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="material-symbols-outlined text-[17px] text-white/50 group-hover:text-white transition-colors"
+                    style={{ fontVariationSettings: "'wght' 200" }}
+                  >
+                    church
+                  </span>
+                  <span className="text-[13px] font-light">서비스 안내</span>
+                </div>
+                <span
+                  className="material-symbols-outlined text-[15px] text-white/30 group-hover:text-white/60 transition-colors"
+                  style={{ fontVariationSettings: "'wght' 200" }}
+                >
+                  chevron_right
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleScrollTo('ecosystem')}
+                className="group w-full px-3 py-2 rounded-xl flex items-center justify-between text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer font-light"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="material-symbols-outlined text-[17px] text-white/50 group-hover:text-white transition-colors"
+                    style={{ fontVariationSettings: "'wght' 200" }}
+                  >
+                    hub
+                  </span>
+                  <span className="text-[13px] font-light">스마트 생태계</span>
+                </div>
+                <span
+                  className="material-symbols-outlined text-[15px] text-white/30 group-hover:text-white/60 transition-colors"
+                  style={{ fontVariationSettings: "'wght' 200" }}
+                >
+                  chevron_right
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleScrollTo('core-values')}
+                className="group w-full px-3 py-2 rounded-xl flex items-center justify-between text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer font-light"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="material-symbols-outlined text-[17px] text-white/50 group-hover:text-white transition-colors"
+                    style={{ fontVariationSettings: "'wght' 200" }}
+                  >
+                    verified
+                  </span>
+                  <span className="text-[13px] font-light">네이션스 가치</span>
+                </div>
+                <span
+                  className="material-symbols-outlined text-[15px] text-white/30 group-hover:text-white/60 transition-colors"
+                  style={{ fontVariationSettings: "'wght' 200" }}
+                >
+                  chevron_right
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: 하단 카카오 1:1 상담 및 이용약관 / 사업자 정보 */}
+        <div className="p-4 border-t border-white/10 bg-black/40 space-y-2.5 font-light">
+          {/* Kakao 1:1 상담 버튼 */}
+          <div className="flex items-center justify-end text-[12px]">
             <button
+              type="button"
               onClick={() => {
                 onClose();
-                onOpenDemoModal({ type: 'free_under_100' });
+                onOpenKakao();
               }}
-              className="mt-1 w-full py-2 bg-[#006948] hover:bg-[#00855d] text-white rounded-lg text-[13px] font-semibold flex items-center justify-center gap-1 shadow-sm"
+              className="w-full py-2 px-3 rounded-xl bg-[#FEE500] hover:bg-[#ffe812] active:scale-[0.98] text-[#371D1E] font-medium flex items-center justify-center gap-1.5 shadow-[0_2px_10px_rgba(254,229,0,0.25)] transition-all cursor-pointer text-[12.5px]"
             >
-              <span className="material-symbols-outlined text-[16px]">how_to_vote</span>
-              무료 도입 및 신청 하기
+              <span
+                className="material-symbols-outlined text-[16px]"
+                style={{ fontVariationSettings: "'wght' 300" }}
+              >
+                chat
+              </span>
+              <span>1:1 상담</span>
             </button>
           </div>
 
-          <button
-            onClick={() => handleLinkClick('differentiation')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">how_to_vote</span>
-              교회투표
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <button
-            onClick={() => handleLinkClick('service-guide')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">church</span>
-              서비스 안내
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <button
-            onClick={() => handleLinkClick('core-values')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">verified</span>
-              네이션스 가치
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <button
-            onClick={() => handleLinkClick('ecosystem')}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">hub</span>
-              스마트 생태계
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <div className="my-2 border-t border-slate-100" />
-
-          <button
-            onClick={() => {
-              onClose();
-              onOpenDemoModal({ type: 'free_under_100' });
-            }}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-50 flex items-center justify-between text-slate-800"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-[#006948]">schedule</span>
-              도입 컨설팅 & 데모 예약
-            </span>
-            <span className="material-symbols-outlined text-[16px] text-slate-400">chevron_right</span>
-          </button>
-
-          <button
-            onClick={() => {
-              onClose();
-              onOpenKakao();
-            }}
-            className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-amber-50 flex items-center justify-between text-slate-900 bg-amber-50/50"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px] text-amber-600">forum</span>
-              카카오톡 실시간 상담
-            </span>
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#FEE500] text-[#371D1E]">채널</span>
-          </button>
-        </div>
-
-        {/* Footer info in drawer */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50 text-[12px] text-slate-500 flex flex-col gap-2">
-          <p className="font-medium text-slate-700">NATIONS 솔루션 | 교회를 돕는 모든 것</p>
-          <div className="flex items-center gap-2 text-slate-400">
-            <button onClick={onOpenTerms} className="hover:underline">
+          {/* Legal Links */}
+          <div className="flex items-center justify-center gap-2 text-[11px] text-white/40 pt-1 font-light">
+            <button
+              type="button"
+              onClick={onOpenTerms}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
               이용약관
             </button>
-            <span>·</span>
-            <button onClick={onOpenPrivacy} className="hover:underline">
+            <span>•</span>
+            <button
+              type="button"
+              onClick={onOpenPrivacy}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
               개인정보처리방침
+            </button>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() =>
+                alert('더네이션스 솔루션\n대표: 유문식\n사업자등록번호: 712-14-02380')
+              }
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              사업자정보
             </button>
           </div>
         </div>
