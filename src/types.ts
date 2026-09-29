@@ -1,3 +1,5 @@
+export type ActivePage = 'vote' | 'score' | 'bible';
+
 export interface ProductItem {
   id: string;
   number: string;
@@ -7,8 +9,9 @@ export interface ProductItem {
   description: string;
   icon: string;
   highlights: string[];
-  keyFeatures: { title: string; desc: string }[];
+  keyFeatures: { title: string; desc: string; icon?: string }[];
   targetUseCase: string;
+  appUrl?: string;
 }
 
 export interface ConsultationRequest {

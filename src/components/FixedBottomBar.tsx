@@ -1,4 +1,5 @@
 import React from 'react';
+import { KakaoIcon } from './KakaoIcon';
 
 interface FixedBottomBarProps {
   onOpenKakao: () => void;
@@ -10,33 +11,51 @@ export const FixedBottomBar: React.FC<FixedBottomBarProps> = ({
   onOpenDemoModal,
 }) => {
   return (
-    <nav className="fixed bottom-0 w-full z-40 pb-safe bg-white/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(15,23,42,0.08)] border-t border-slate-100">
-      <div className="max-w-lg mx-auto px-4 py-2 flex items-center gap-2.5">
-        {/* Kakao Button */}
-        <button
-          type="button"
-          onClick={onOpenKakao}
-          className="flex-1 min-h-[48px] px-2 bg-[#FEE500] hover:bg-[#ebd300] active:scale-[0.98] text-[#371D1E] rounded-xl flex items-center justify-center gap-1.5 text-[13px] font-bold shadow-[0_2px_8px_rgba(254,229,0,0.3)] transition-all text-center leading-tight cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[18px]">forum</span>
-          <span className="text-left">
-            카카오톡 채널 상담
-            <span className="block text-[11px] font-normal opacity-85">
-              (더네이션스 솔루션)
-            </span>
-          </span>
-        </button>
-
-        {/* Demo Request Button */}
+    <aside
+      aria-label="빠른 실행 플로팅 메뉴"
+      className="fixed bottom-6 right-4 sm:bottom-8 sm:right-6 z-40 flex flex-col items-center gap-2.5 sm:gap-3 pointer-events-auto select-none"
+    >
+      {/* 1. 앱 들어가기 플로팅 원형 버튼 (클로드 주황색) */}
+      <div className="relative group">
         <button
           type="button"
           onClick={onOpenDemoModal}
-          className="flex-1 min-h-[48px] px-3 bg-[#006948] hover:bg-[#00855d] active:scale-[0.98] text-white rounded-xl flex items-center justify-center gap-1.5 text-[13px] font-semibold shadow-[0_4px_14px_rgba(0,105,72,0.25)] transition-colors text-center cursor-pointer"
+          aria-label="앱 들어가기"
+          className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#C15F3C] hover:bg-[#a94e30] active:scale-95 text-white shadow-[0_6px_20px_rgba(193,95,60,0.4)] hover:shadow-[0_8px_24px_rgba(193,95,60,0.5)] border border-white/20 flex flex-col items-center justify-center transition-all duration-200 cursor-pointer hover:scale-105"
         >
-          <span className="material-symbols-outlined text-[18px] text-[#85f8c4]">rocket_launch</span>
-          <span>도입 및 데모 신청</span>
+          <span className="material-symbols-outlined text-[20px] sm:text-[22px] leading-none">
+            apps
+          </span>
+          <span className="text-[10px] sm:text-[10.5px] font-bold leading-none mt-0.5">
+            앱
+          </span>
         </button>
+
+        {/* Desktop Tooltip */}
+        <span className="hidden sm:block absolute right-full mr-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-black/85 text-white text-[12px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 shadow-md">
+          앱 들어가기
+        </span>
       </div>
-    </nav>
+
+      {/* 2. 1:1 상담 플로팅 원형 버튼 (카카오 옐로우) */}
+      <div className="relative group">
+        <button
+          type="button"
+          onClick={onOpenKakao}
+          aria-label="1:1 상담"
+          className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#FEE500] hover:bg-[#ffd800] active:scale-95 text-[#371D1E] shadow-[0_6px_20px_rgba(254,229,0,0.4)] hover:shadow-[0_8px_24px_rgba(254,229,0,0.5)] border border-[#ebd300] flex flex-col items-center justify-center transition-all duration-200 cursor-pointer hover:scale-105"
+        >
+          <KakaoIcon className="w-[19px] h-[19px] sm:w-[21px] sm:h-[21px] leading-none" />
+          <span className="text-[10px] sm:text-[10.5px] font-bold leading-none mt-0.5">
+            상담
+          </span>
+        </button>
+
+        {/* Desktop Tooltip */}
+        <span className="hidden sm:block absolute right-full mr-2.5 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-black/85 text-white text-[12px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 shadow-md">
+          1:1 실시간 상담
+        </span>
+      </div>
+    </aside>
   );
 };

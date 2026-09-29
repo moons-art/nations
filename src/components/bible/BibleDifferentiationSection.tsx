@@ -1,22 +1,25 @@
 import React from 'react';
 import { motion } from 'motion/react';
 
-interface DifferentiationSectionProps {
+interface BibleDifferentiationSectionProps {
   onOpenKakao: () => void;
 }
 
-export const DifferentiationSection: React.FC<DifferentiationSectionProps> = ({
+export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionProps> = ({
   onOpenKakao,
 }) => {
   return (
-    <section className="w-full bg-[#080B11] text-white relative overflow-hidden border-y border-slate-800/90 shadow-2xl">
+    <section
+      id="bible-differentiation"
+      className="w-full bg-[#080B11] text-white relative overflow-hidden border-y border-slate-800/90 shadow-2xl"
+    >
       {/* Glow ambient background */}
-      <div className="absolute -right-24 -top-24 w-96 h-96 bg-[#C15F3C]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -left-24 -bottom-24 w-80 h-80 bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -right-24 -top-24 w-96 h-96 bg-[#C15F3C]/25 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -left-24 -bottom-24 w-80 h-80 bg-amber-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Main Inner Content: Max width 6xl, centered */}
+      {/* Main Inner Content */}
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28 flex flex-col lg:grid lg:grid-cols-12 gap-10 lg:gap-14 relative z-10">
-        {/* Contrast Callout (Left Column on large screens) */}
+        {/* Contrast Callout (Left Column) */}
         <motion.div
           initial={{ opacity: 0, y: 65 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -25,93 +28,93 @@ export const DifferentiationSection: React.FC<DifferentiationSectionProps> = ({
           className="flex flex-col justify-center gap-4 lg:col-span-6"
         >
           <p className="text-[14px] sm:text-[16px] text-white/80 font-medium">
-            단순한 앱 개발 회사는 많습니다.
+            단순한 성경 읽기 앱은 많습니다.
           </p>
 
           <h2 className="text-[24px] sm:text-[30px] lg:text-[36px] font-black text-white leading-snug tracking-tight">
-            하지만 우리는 <span className="text-white underline decoration-[#C15F3C] decoration-4 underline-offset-4">교회를 모른 채</span>
+            하지만 우리는 <span className="text-white underline decoration-[#C15F3C] decoration-4 underline-offset-4">설교자의 고뇌를 모른 채</span>
             <br />
             기술만 만들지 않습니다!
           </h2>
 
           <p className="text-[14px] sm:text-[16px] text-white/80 leading-relaxed max-w-xl">
-            교회 현장의 질서와 정서, 예배의 거룩함을 완벽히 이해하는 전문가 그룹이{' '}
-            <strong className="text-white font-semibold">사역의 언어로 시스템을 구축</strong>합니다.
+            매주 강단에 오르기 전 말씀을 연구하고 씨름하는 목회자의 심정으로,{' '}
+            <strong className="text-white font-semibold">설교 준비의 모든 번잡함을 걷어내고 말씀의 본질에 집중</strong>할 수 있도록 돕습니다.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2 text-[13px] text-white/70">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-white/80" />
-              <span>목회 현장 맞춤 설계</span>
+              <span>주석 클라우드 실시간 연동</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-white/80" />
-              <span>전 연령 배려 UI</span>
+              <span>다중 역본 병렬 대조</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-white/80" />
-              <span>철저한 교인 보안</span>
+              <span>절별 주석 설교 라이브러리</span>
             </div>
           </div>
         </motion.div>
 
-        {/* Q&A Box (Right Column on large screens) */}
+        {/* Q&A Box (Right Column) */}
         <motion.div
           initial={{ opacity: 0, y: 75 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.95, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-6 relative z-10 lg:col-span-6 justify-center"
+          className="bg-[#121826]/95 rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col gap-6 relative z-10 backdrop-blur-md shadow-2xl border border-slate-800/90 lg:col-span-6 justify-center"
         >
-          {/* Q&A 1 */}
-          <div className="flex flex-col gap-3">
+          {/* Q&A 1: PC 프로그램 대비 장점 */}
+          <div className="flex flex-col gap-2.5 sm:gap-3">
             <div className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#C15F3C] text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-sm">
                 Q
               </span>
               <h3 className="text-[15px] sm:text-[17px] font-bold text-white leading-snug">
-                스마트 투표 시스템 도입시 어르신들이 어려워하지 않을까요?
+                기존에 사용하던 무거운 PC 성경 프로그램에 비해 어떤 실질적 장점이 있나요?
               </h3>
             </div>
 
-            <div className="flex items-start gap-3 pl-0.5">
+            <div className="flex items-start gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#FFEDD5] text-[#C15F3C] flex items-center justify-center font-black text-[14px] shrink-0 mt-0.5 shadow-sm">
                 A
               </span>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <p className="text-[14px] sm:text-[15px] text-[#FB923C] font-bold leading-snug">
-                  네이션스의 모든 솔루션은 '현장 중심'으로 설계됩니다.
+                  네이션스 성경은 무겁지 않으며 언제 어디서나 즉시 이어집니다.
                 </p>
-                <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed">
-                  직관적인 화면 구성은 물론, 대리 인증 및 종이 투표 병행 가이드 등 현장 맞춤형 매뉴얼을 함께 제공하여 단 한 명의 성도도 소외되지 않도록 돕습니다.
+                <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed break-keep-all">
+                  복잡하고 난해한 메뉴 대신 목회자가 가장 자주 쓰는 역본 대조와 절별 메모를 직관적으로 배치했습니다. 서재의 PC, 이동 중 스마트폰, 강단 위의 태블릿까지 실시간 클라우드로 완벽 동기화됩니다.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="w-full h-[1px] bg-slate-800/90" />
+          <div className="w-full h-[1px] bg-slate-800" />
 
-          {/* Q&A 2 (추가된 질문) */}
-          <div className="flex flex-col gap-3">
+          {/* Q&A 2: AI 원어 주석과 개인 주석 활용 */}
+          <div className="flex flex-col gap-2.5 sm:gap-3">
             <div className="flex items-center gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#C15F3C] text-white flex items-center justify-center font-black text-[14px] shrink-0 shadow-sm">
                 Q
               </span>
               <h3 className="text-[15px] sm:text-[17px] font-bold text-white leading-snug">
-                스마트 투표의 운영이 비전문 선거 관리자(목회자)가 쓰기에 어렵지 않을까요?
+                AI 원어 주석과 개인 주석기능은 어떻게 활용하나요?
               </h3>
             </div>
 
-            <div className="flex items-start gap-3 pl-0.5">
+            <div className="flex items-start gap-3">
               <span className="w-8 h-8 rounded-xl bg-[#FFEDD5] text-[#C15F3C] flex items-center justify-center font-black text-[14px] shrink-0 mt-0.5 shadow-sm">
                 A
               </span>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <p className="text-[14px] sm:text-[15px] text-[#FB923C] font-bold leading-snug">
-                  네이션스의 모든 솔루션은 불필요한 행정을 혁신적으로 줄이는데 있습니다.
+                  네이션스 성경은 완벽한 나만의 주석을 추구합니다.
                 </p>
-                <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed">
-                  IT 전문 지식이 없는 목회자와 성도님도 별도의 교육 없이 바로 쓸 수 있는 단순함이 네이션스의 원칙입니다.
+                <p className="text-[13px] sm:text-[14px] text-slate-300 leading-relaxed break-keep-all">
+                  AI원어 주석을 통해 구절별, 단어별, 심층 주석을 제공받고, 사용자가 메모해둔 주석과 관주, 설교등이 모두 성경텍스트 안에 구절마다 담겨져 있습니다. 기존의 흩어져 있던 자료들을 찾느라 시간낭비 없이 나만의 주석이 완성됩니다.
                 </p>
               </div>
             </div>

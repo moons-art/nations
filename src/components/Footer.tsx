@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { NATIONS_LOGO_URL } from '../data/products';
+import { NATIONS_LOGO_URL, NATIONS_ICON_URL } from '../data/products';
 
 interface FooterProps {
   onOpenTerms: () => void;
@@ -23,25 +23,23 @@ export const Footer: React.FC<FooterProps> = ({
         className="max-w-lg mx-auto flex flex-col gap-4"
       >
         <div className="flex items-center gap-3">
-          <img
-            alt="NATIONS 로고"
-            className="h-6 sm:h-7 w-auto object-contain"
-            src={NATIONS_LOGO_URL}
-          />
-          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-[#85f8c4] border border-slate-700">
-            스마트 미니스트리
-          </span>
+          <div className="flex items-center gap-2">
+            <img
+              alt="NATIONS 아이콘"
+              className="h-6 sm:h-7 w-auto object-contain rounded-sm"
+              src={NATIONS_ICON_URL}
+            />
+            <img
+              alt="NATIONS 로고"
+              className="h-5 sm:h-6 w-auto object-contain"
+              src={NATIONS_LOGO_URL}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1 text-[13px] leading-relaxed text-slate-400">
           <p className="font-semibold text-slate-200">
-            NATIONS 네이션스 솔루션 | 교회를 돕는 모든 것
-          </p>
-          <p>
-            문의 채널: 카카오톡 채널 [더네이션스 솔루션]
-          </p>
-          <p className="text-slate-400/90">
-            스마트 교회투표 · 악보 라이브러리 · 스마트 교회행정 ERP · 소그룹앱 · 스마트 성경
+            네이션스 솔루션 | 교회를 돕는 모든 것
           </p>
         </div>
 

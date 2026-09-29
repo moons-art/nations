@@ -4,12 +4,18 @@
  */
 
 import { useState } from 'react';
-import { ProductItem, ConsultationRequest } from './types';
+import { ProductItem, ConsultationRequest, ActivePage } from './types';
 import { Header } from './components/Header';
 import { NavigationDrawer } from './components/NavigationDrawer';
 import { HeroSection } from './components/HeroSection';
 import { CoreValuesSection } from './components/CoreValuesSection';
 import { DifferentiationSection } from './components/DifferentiationSection';
+import { ScoreHeroSection } from './components/score/ScoreHeroSection';
+import { ScoreCoreValuesSection } from './components/score/ScoreCoreValuesSection';
+import { ScoreDifferentiationSection } from './components/score/ScoreDifferentiationSection';
+import { BibleHeroSection } from './components/bible/BibleHeroSection';
+import { BibleCoreValuesSection } from './components/bible/BibleCoreValuesSection';
+import { BibleDifferentiationSection } from './components/bible/BibleDifferentiationSection';
 import { EcosystemSection } from './components/EcosystemSection';
 import { BottomCtaSection } from './components/BottomCtaSection';
 import { Footer } from './components/Footer';
@@ -20,6 +26,9 @@ import { KakaoModal } from './components/KakaoModal';
 import { PolicyModal } from './components/PolicyModal';
 
 export default function App() {
+  // Active Page Routing ('vote' | 'score' | 'bible')
+  const [activePage, setActivePage] = useState<ActivePage>('vote');
+
   // Navigation & Drawer
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -141,6 +150,8 @@ export default function App() {
 
       {/* Header */}
       <Header
+        activePage={activePage}
+        onSelectPage={(page) => setActivePage(page)}
         onOpenKakao={handleOpenKakao}
         onOpenMenu={() => setIsMenuOpen(true)}
         onOpenDemoModal={() => handleOpenDemoModal({ type: 'free_under_100' })}
@@ -150,6 +161,8 @@ export default function App() {
       <NavigationDrawer
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        activePage={activePage}
+        onSelectPage={(page) => setActivePage(page)}
         onOpenKakao={handleOpenKakao}
         onOpenDemoModal={handleOpenDemoModal}
         onOpenTerms={handleOpenTerms}
@@ -158,27 +171,76 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 w-full pb-20 flex flex-col items-center">
-        {/* 1. Hero Section with Hero Video (Full Bleed, matching screenshots) */}
-        <HeroSection
-          onOpenFreeModal={handleOpenFreeModal}
-          onSearchQuery={handleSearchQuery}
-        />
+        {/* Conditional Page Rendering based on activePage: 'vote' | 'score' | 'bible' */}
+        {activePage === 'vote' && (
+          <>
+            {/* 1. Hero Section with Hero Video */}
+            <HeroSection
+              onOpenFreeModal={handleOpenFreeModal}
+              onSearchQuery={handleSearchQuery}
+            />
 
-        {/* 2. Core Values: 3대 원칙 */}
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
-          <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
-            <CoreValuesSection />
-          </div>
-        </div>
+            {/* 2. Core Values: 3대 원칙 */}
+            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
+              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
+                <CoreValuesSection />
+              </div>
+            </div>
 
-        {/* 3. Differentiation: 네이션스만의 차별점 (Full-Bleed Black Background Section) */}
-        <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
-          <DifferentiationSection onOpenKakao={handleOpenKakao} />
-        </div>
+            {/* 3. Differentiation: 네이션스만의 차별점 */}
+            <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <DifferentiationSection onOpenKakao={handleOpenKakao} />
+            </div>
+          </>
+        )}
+
+        {activePage === 'score' && (
+          <>
+            {/* 1. Score Hero Section with Hero Video */}
+            <ScoreHeroSection
+              onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo', product: '네이션스 악보' })}
+              onSearchQuery={handleSearchQuery}
+            />
+
+            {/* 2. Score Core Values: 3대 원칙 */}
+            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
+              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
+                <ScoreCoreValuesSection />
+              </div>
+            </div>
+
+            {/* 3. Score Differentiation */}
+            <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <ScoreDifferentiationSection onOpenKakao={handleOpenKakao} />
+            </div>
+          </>
+        )}
+
+        {activePage === 'bible' && (
+          <>
+            {/* 1. Bible Hero Section with Hero Video (영상과 문구 그대로 + 말씀 및 설교 구성) */}
+            <BibleHeroSection
+              onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo', product: '네이션스 성경' })}
+              onSearchQuery={handleSearchQuery}
+            />
+
+            {/* 2. Bible Core Values: 3대 원칙 */}
+            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
+              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
+                <BibleCoreValuesSection />
+              </div>
+            </div>
+
+            {/* 3. Bible Differentiation */}
+            <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <BibleDifferentiationSection onOpenKakao={handleOpenKakao} />
+            </div>
+          </>
+        )}
 
         {/* 4. All-in-One Ecosystem, Bottom CTA & Footer */}
         <div className="w-full max-w-6xl mx-auto flex flex-col px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 gap-12 sm:gap-16 lg:gap-20">
-          {/* 4. All-in-One Ecosystem: 제품 라인업 */}
+          {/* 4. All-in-One Ecosystem: 제품 라인업 (요구사항: 3) 이 부분은 그대로 두면 됨) */}
           <div id="ecosystem" className="scroll-mt-24 md:scroll-mt-28 w-full">
             <EcosystemSection
               onSelectProduct={(prod) => setSelectedProduct(prod)}
@@ -238,6 +300,11 @@ export default function App() {
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
         onRequestDemo={(productName) => handleOpenDemoModal({ type: 'demo', product: productName })}
+        onOpenKakao={handleOpenKakao}
+        onNavigateToPage={(page) => {
+          setActivePage(page);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
 
       <KakaoModal

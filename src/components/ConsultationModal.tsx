@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ConsultationRequest } from '../types';
-import { PRODUCTS_LIST } from '../data/products';
+import React, { useState } from 'react';
+import { NATIONS_ICON_URL } from '../data/products';
+import { KakaoIcon } from './KakaoIcon';
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -9,510 +9,269 @@ interface ConsultationModalProps {
     type?: 'demo' | 'free_under_100' | 'consultation';
     product?: string;
   };
-  onSubmitSuccess: (data: ConsultationRequest) => void;
+  onSubmitSuccess?: (data: any) => void;
 }
 
 export const ConsultationModal: React.FC<ConsultationModalProps> = ({
   isOpen,
   onClose,
-  preset,
-  onSubmitSuccess,
 }) => {
-  // Default to true so all "문의하기", "도입 및 데모신청" buttons show this requested screen
-  const isFreeUnder100 = preset?.type !== 'legacy_demo';
-
-  const [churchName, setChurchName] = useState('');
-  const [contactName, setContactName] = useState('');
-  const [position, setPosition] = useState('담임목사');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [churchSize, setChurchSize] = useState('100명 미만');
-  const [selectedProducts, setSelectedProducts] = useState<string[]>([
-    '네이션스 교회투표',
-    '네이션스 악보',
-    '네이션스 성경',
-  ]);
-  const [notes, setNotes] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsSubmitted(false);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (preset?.product && !selectedProducts.includes(preset.product)) {
-      setSelectedProducts((prev) => [...prev, preset.product!]);
-    }
-  }, [preset]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const toggleProduct = (productName: string) => {
-    setSelectedProducts((prev) =>
-      prev.includes(productName)
-        ? prev.filter((p) => p !== productName)
-        : [...prev, productName]
-    );
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!churchName.trim() || !contactName.trim() || !phone.trim()) {
-      alert('교회명, 담당자 성함, 연락처를 입력해 주세요.');
-      return;
-    }
-
-    setIsSubmitting(true);
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
     setTimeout(() => {
-      const newRequest: ConsultationRequest = {
-        id: 'REQ-' + Date.now(),
-        churchName: churchName.trim(),
-        contactName: contactName.trim(),
-        position,
-        phone: phone.trim(),
-        email: email.trim() || undefined,
-        churchSize,
-        selectedProducts,
-        inquiryType: isFreeUnder100 ? 'free_under_100' : 'demo',
-        notes: notes.trim() || undefined,
-        createdAt: new Date().toLocaleString('ko-KR'),
-      };
-
-      onSubmitSuccess(newRequest);
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 600);
+      setToastMessage(null);
+    }, 2500);
   };
 
-  const handleResetAndClose = () => {
-    setIsSubmitted(false);
-    onClose();
+  const handleVoteAppClick = () => {
+    window.open('https://vote.thenations.kr/', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleScoreAppClick = () => {
+    window.open('https://studio.thenations.kr/', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleBibleAppClick = () => {
+    window.open('https://bible.thenations.kr/', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleRenewalClick = (appName: string) => {
+    showToast(`${appName} 앱은 현재 더 나은 서비스를 위해 리뉴얼 중입니다.`);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+      {/* Pitch Black Dark Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
-        onClick={handleResetAndClose}
+        className="fixed inset-0 bg-black/85 backdrop-blur-[6px] transition-opacity"
+        onClick={onClose}
       />
 
-      {/* Modal Dialog */}
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl z-10 max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="p-4 bg-[#eff4ff] border-b border-slate-200 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#006948] text-white flex items-center justify-center">
-              <span className="material-symbols-outlined text-[18px]">
-                {isFreeUnder100 ? 'how_to_vote' : 'calendar_month'}
-              </span>
-            </div>
-            <div>
-              <h3 className="text-[16px] font-bold text-[#0F172A]">
-                {isFreeUnder100
-                  ? '네이션스 교회투표 무료 도입 및 신청 하기'
-                  : '도입 컨설팅 및 데모 시연 예약'}
+      {/* Claude Style Warm Neutral & Paper Ivory Container */}
+      <div className="relative w-full max-w-lg bg-[#FAF8F5] text-[#2D2A26] rounded-3xl shadow-[0_20px_50px_rgba(45,42,38,0.22)] z-10 max-h-[92vh] flex flex-col overflow-hidden border border-[#E8E2D9] animate-in zoom-in-95 duration-200">
+        
+        {/* Toast Notification */}
+        {toastMessage && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-[#2D2A26] border border-[#C15F3C]/40 text-[#FAF8F5] text-[13px] font-medium px-4 py-2.5 rounded-xl shadow-xl animate-in fade-in slide-in-from-top-2 duration-150 flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px] text-[#D97706]">build</span>
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        {/* Modal Header: Warm Ivory background with subtle serif-accent touch */}
+        <div className="px-4 py-3.5 sm:px-6 sm:py-5 border-b border-[#E8E2D9] bg-[#F4EFEA] flex items-start justify-between gap-2.5">
+          <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
+            <img
+              src={NATIONS_ICON_URL}
+              alt="NATIONS"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-contain shadow-xs border border-[#E3DBD2] mt-0.5 shrink-0"
+            />
+            <div className="flex flex-col min-w-0 text-left">
+              <h3 className="text-[16px] sm:text-[18px] font-bold text-[#2D2A26] tracking-tight">
+                네이션스 앱 들어가기
               </h3>
-              <p className="text-[12px] text-slate-500">
-                {isFreeUnder100
-                  ? '100명 미만 개척교회 및 미자립 교회의 사역을 위한 무료 지원'
-                  : '전문 상담사가 교회의 일정과 상황에 맞춰 안내해 드립니다'}
+              <p className="text-[11.5px] sm:text-[12px] text-[#78716C] font-normal">
+                더네이션스의 스마트 목회 & 사역 솔루션
               </p>
+              <div className="mt-1.5 text-[11px] sm:text-[12px] text-[#C15F3C] font-medium leading-snug sm:leading-relaxed break-keep-all">
+                <p>네이션스 앱은 다운로드 없이 사이트에 들어가서 이용하는 웹앱입니다.</p>
+                <p className="mt-0.5">pc, 테블릿에서 사용하면 훨씬 편하게 쓰실 수 있습니다.</p>
+              </div>
             </div>
           </div>
           <button
             type="button"
-            onClick={handleResetAndClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-200/60 transition-colors"
+            onClick={onClose}
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#78716C] hover:text-[#2D2A26] hover:bg-[#EAE4DC] transition-colors cursor-pointer shrink-0"
+            aria-label="닫기"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span className="material-symbols-outlined text-[19px] sm:text-[20px]">close</span>
           </button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-5">
-          {isFreeUnder100 ? (
-            /* Free Under 100 / Church Vote Free Offer Flow */
-            isSubmitted ? (
-              <div className="py-6 flex flex-col items-center text-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-[#ECFDF5] text-[#006948] flex items-center justify-center ring-8 ring-[#ECFDF5]/50">
-                  <span className="material-symbols-outlined text-[36px]">check_circle</span>
+        {/* Modal Content Body: No card borders, no white background cards, clean separated list with narrowed content area */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 bg-[#FAF8F5]">
+          <div className="max-w-[420px] mx-auto w-full divide-y divide-[#E8E2D9]">
+          
+            {/* Item 1: 네이션스 교회투표 */}
+            <div className="pb-5 pt-1 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="material-symbols-outlined text-[19px] sm:text-[20px] text-black shrink-0">
+                    how_to_vote
+                  </span>
+                  <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#2D2A26] tracking-tight">
+                    네이션스 교회투표
+                  </h4>
                 </div>
-                <h4 className="text-[18px] font-bold text-[#0F172A] mt-1">
-                  무료도입 혜택 안내
-                </h4>
-
-                <div className="w-full mt-2 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left flex flex-col gap-3">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-[14px] font-bold text-[#006948]">
-                      <span className="px-2 py-0.5 rounded bg-[#ECFDF5] border border-[#006948]/20 text-[12px]">
-                        [네이션스 악보]
-                      </span>
-                      <span>무료사용</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] font-bold text-[#006948]">
-                      <span className="px-2 py-0.5 rounded bg-[#ECFDF5] border border-[#006948]/20 text-[12px]">
-                        [네이션스 성경]
-                      </span>
-                      <span>무료사용</span>
-                    </div>
-                  </div>
-
-                  <div className="p-3 bg-white rounded-xl border border-slate-200 text-[13px] text-slate-800 leading-relaxed font-medium">
-                    <strong className="text-[#006948]">[네이션스 교회투표]</strong> 앱에서 회원가입 후 로그인 하시면 연동 됩니다.
-                  </div>
-
-                  <p className="text-[12px] text-slate-500">
-                    (네이션스 교회관리, 소그룹은 연동준비 중입니다)
-                  </p>
-                </div>
-
-                <div className="mt-3 flex flex-col w-full gap-2">
-                  <a
-                    href="https://vote.thenations.kr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-3 bg-[#006948] hover:bg-[#00855d] text-white rounded-xl text-[14px] font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
-                  >
-                    <span>네이션스 교회투표 앱 접속하기</span>
-                    <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                  </a>
-
-                  <a
-                    href="http://pf.kakao.com/_cxjBxaX/chat"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 bg-[#FEE500] hover:brightness-95 text-[#371D1E] rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">forum</span>
-                    <span>카톡문의</span>
-                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={handleResetAndClose}
-                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-[13px] font-medium transition-colors"
-                  >
-                    닫기
-                  </button>
-                </div>
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black border border-black shrink-0">
+                  100명 미만 교회 무료
+                </span>
               </div>
-            ) : (
-              <div className="flex flex-col gap-4 text-[13px]">
-                {/* Free Benefit Header Card with link to vote app */}
-                <div className="p-4 bg-[#ECFDF5] rounded-2xl border border-[#006948]/20 flex flex-col gap-3">
-                  <div className="flex items-start gap-2.5">
-                    <span className="material-symbols-outlined text-[20px] text-[#006948] shrink-0 mt-0.5">
-                      volunteer_activism
-                    </span>
-                    <div className="text-[13px] text-slate-800 font-semibold leading-relaxed">
-                      <span className="text-[#006948] font-bold block mb-0.5">100명 미만</span>
-                      개척교회 및 미자립 교회의 사역을 위해 기본 이용료를 무료로 지원합니다.
-                    </div>
-                  </div>
 
-                  <a
-                    href="https://vote.thenations.kr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 px-3 bg-white hover:bg-slate-50 border border-[#006948]/30 rounded-xl text-[13px] font-bold text-[#006948] flex items-center justify-center gap-1.5 transition-all shadow-2xs hover:shadow-xs group"
-                  >
-                    <span>네이션스 교회 투표앱 접속하기</span>
-                    <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">
-                      open_in_new
-                    </span>
-                  </a>
+              <p className="text-[12.5px] sm:text-[13px] text-[#57534E] leading-relaxed break-keep-all text-left">
+                100명 미만 개척교회 및 미자립 교회의 사역을 위해 교회투표앱의 모든 기능을 무료로 지원합니다.
+              </p>
+
+              {/* App Launch Button */}
+              <button
+                type="button"
+                onClick={handleVoteAppClick}
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#C15F3C] hover:bg-[#a94e30] active:scale-[0.98] text-white rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer group text-center"
+              >
+                <span>네이션스 교회투표 앱 들어가기</span>
+                <span className="material-symbols-outlined text-[17px] group-hover:translate-x-0.5 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+
+            {/* Item 2: 네이션스 스튜디오(구 네이션스 악보) */}
+            <div className="py-5 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="material-symbols-outlined text-[19px] sm:text-[20px] text-black shrink-0">
+                    queue_music
+                  </span>
+                  <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#2D2A26] tracking-tight">
+                    네이션스 스튜디오(구 네이션스 악보)
+                  </h4>
                 </div>
-
-                {/* 관심 솔루션 선택 (All deleted personal form fields removed) */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="block font-bold text-slate-900 text-[13px]">
-                      관심 솔루션 (아래 내용 선택)
-                    </label>
-                    <span className="text-[11px] text-slate-500">중복 선택 가능</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {PRODUCTS_LIST.map((prod) => {
-                      const isChecked = selectedProducts.includes(prod.name);
-                      const isFreeSupported =
-                        prod.name.includes('악보') ||
-                        prod.name.includes('성경') ||
-                        prod.name.includes('투표');
-                      return (
-                        <div
-                          key={prod.id}
-                          onClick={() => toggleProduct(prod.name)}
-                          className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${
-                            isChecked
-                              ? 'border-[#006948] bg-[#ECFDF5]/60 text-[#006948]'
-                              : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[18px]">
-                              {isChecked ? 'check_box' : 'check_box_outline_blank'}
-                            </span>
-                            <span className="text-[13px] font-medium">{prod.name}</span>
-                          </div>
-                          {isFreeSupported ? (
-                            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-[#ECFDF5] text-[#006948] border border-[#006948]/20">
-                              무료사용
-                            </span>
-                          ) : (
-                            <span className="text-[11px] font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
-                              준비중
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="pt-2 flex flex-col gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setIsSubmitted(true)}
-                    className="w-full py-3.5 bg-[#006948] hover:bg-[#00855d] active:scale-[0.98] text-white rounded-xl text-[15px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
-                    <span>무료도입 혜택 신청하기</span>
-                  </button>
-
-                  <a
-                    href="http://pf.kakao.com/_cxjBxaX/chat"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 bg-[#FEE500] hover:brightness-95 active:scale-[0.98] text-[#371D1E] rounded-xl text-[13px] font-bold shadow-xs flex items-center justify-center gap-1.5 transition-all"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">forum</span>
-                    <span>카톡문의</span>
-                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                  </a>
-                </div>
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black border border-black shrink-0">
+                  악보편집, 프린트 무료
+                </span>
               </div>
-            )
-          ) : (
-            /* General Consultation / Demo Request Flow */
-            isSubmitted ? (
-              <div className="py-8 flex flex-col items-center text-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-[#ECFDF5] text-[#006948] flex items-center justify-center ring-8 ring-[#ECFDF5]/50">
-                  <span className="material-symbols-outlined text-[36px]">check_circle</span>
-                </div>
-                <h4 className="text-[18px] font-bold text-[#0F172A] mt-2">
-                  신청이 성공적으로 접수되었습니다!
-                </h4>
-                <p className="text-[13px] text-slate-600 max-w-sm leading-relaxed">
-                  <strong>{churchName}</strong> {contactName} {position}님,
-                  접수해 주신 정보로 담당자가 24시간 이내에 친절하게 연락드리겠습니다.
-                </p>
 
-                <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-left text-[12px] text-slate-600 w-full space-y-1">
-                  <div>
-                    <span className="font-semibold text-slate-800">선택 솔루션:</span>{' '}
-                    {selectedProducts.join(', ')}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-800">교회 규모:</span> {churchSize}
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-800">연락처:</span> {phone}
-                  </div>
-                </div>
+              <p className="text-[12.5px] sm:text-[13px] text-[#57534E] leading-relaxed break-keep-all text-left">
+                찬양팀 콘티와 스마트 디지털 악보 뷰어, 악보 프린트, 찬양팀과 악보, 카피곡 유튜브, 송품 공유 한 번에 관리하세요.
+              </p>
 
-                <div className="mt-4 flex flex-col w-full gap-2">
-                  <a
-                    href="http://pf.kakao.com/_cxjBxaX/chat"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 bg-[#FEE500] hover:brightness-95 text-[#371D1E] rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">forum</span>
-                    <span>카톡 실시간 문의</span>
-                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                  </a>
-                  <button
-                    type="button"
-                    onClick={handleResetAndClose}
-                    className="w-full py-2.5 bg-[#006948] text-white rounded-xl text-[14px] font-semibold hover:bg-[#00855d] transition-colors"
-                  >
-                    확인
-                  </button>
+              {/* App Launch Button */}
+              <button
+                type="button"
+                onClick={handleScoreAppClick}
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#C15F3C] hover:bg-[#a94e30] active:scale-[0.98] text-white rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer group text-center"
+              >
+                <span>네이션스 스튜디오 앱 들어가기</span>
+                <span className="material-symbols-outlined text-[17px] group-hover:translate-x-0.5 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+
+            {/* Item 3: 네이션스 성경 */}
+            <div className="py-5 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="material-symbols-outlined text-[19px] sm:text-[20px] text-black shrink-0">
+                    menu_book
+                  </span>
+                  <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#2D2A26] tracking-tight">
+                    네이션스 성경
+                  </h4>
                 </div>
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black border border-black shrink-0">
+                  AI주석외 모든 기능 무료
+                </span>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-[13px]">
-                {/* Church Name & Position */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-semibold text-slate-800 mb-1">
-                      교회명 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="예: 은혜교회"
-                      value={churchName}
-                      onChange={(e) => setChurchName(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-[#006948] focus:ring-1 focus:ring-[#006948] outline-none text-slate-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold text-slate-800 mb-1">
-                      직분 <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      value={position}
-                      onChange={(e) => setPosition(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-[#006948] focus:ring-1 focus:ring-[#006948] outline-none bg-white text-slate-900"
-                    >
-                      <option value="담임목사">담임목사</option>
-                      <option value="부목사/전도사">부목사 / 전도사</option>
-                      <option value="장로/당회원">장로 / 당회원</option>
-                      <option value="선거관리위원장">선거관리위원장 / 위원</option>
-                      <option value="행정간사/사무원">행정간사 / 사무원</option>
-                      <option value="찬양팀/미디어팀장">찬양팀 / 미디어팀장</option>
-                      <option value="성도/집사">성도 / 집사</option>
-                    </select>
-                  </div>
+
+              <p className="text-[12.5px] sm:text-[13px] text-[#57534E] leading-relaxed break-keep-all text-left">
+                원어 분해, 다역본 대조, 개인 주석 노트가 유기적으로 연결된 올인원 설교 연구 도구입니다.
+              </p>
+
+              {/* App Launch Button */}
+              <button
+                type="button"
+                onClick={handleBibleAppClick}
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#C15F3C] hover:bg-[#a94e30] active:scale-[0.98] text-white rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer group text-center"
+              >
+                <span>네이션스 성경 앱 들어가기</span>
+                <span className="material-symbols-outlined text-[17px] group-hover:translate-x-0.5 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
+
+            {/* Item 4: 네이션스 교회관리 (리뉴얼 중) */}
+            <div className="py-5 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="material-symbols-outlined text-[19px] sm:text-[20px] text-black shrink-0">
+                    church
+                  </span>
+                  <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#2D2A26] tracking-tight">
+                    네이션스 교회관리
+                  </h4>
                 </div>
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black/70 border border-black/40 shrink-0">
+                  차세대 스마트 행정 ERP
+                </span>
+              </div>
 
-                {/* Contact Name & Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-semibold text-slate-800 mb-1">
-                      담당자 성함 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="홍길동"
-                      value={contactName}
-                      onChange={(e) => setContactName(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-[#006948] focus:ring-1 focus:ring-[#006948] outline-none text-slate-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold text-slate-800 mb-1">
-                      연락처 (휴대폰) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="010-0000-0000"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-[#006948] focus:ring-1 focus:ring-[#006948] outline-none text-slate-900"
-                    />
-                  </div>
+              <p className="text-[12.5px] sm:text-[13px] text-[#78716C] leading-relaxed break-keep-all text-left">
+                교인 명부, 심방 기록, 출결 현황을 실시간 데이터로 체계화하는 올인원 스마트 교적 관리 시스템입니다.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => handleRenewalClick('네이션스 교회관리')}
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#EAE4DC]/80 hover:bg-[#EAE4DC] active:scale-[0.98] text-[#57534E] rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 border border-[#E8E2D9] transition-all cursor-pointer group text-center"
+              >
+                <span>네이션스 교회관리 앱 들어가기</span>
+                <span className="material-symbols-outlined text-[17px] text-[#D97706]">build</span>
+              </button>
+            </div>
+
+            {/* Item 5: 네이션스 소그룹 (리뉴얼 중) */}
+            <div className="py-5 flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                  <span className="material-symbols-outlined text-[19px] sm:text-[20px] text-black shrink-0">
+                    diversity_3
+                  </span>
+                  <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#2D2A26] tracking-tight">
+                    네이션스 소그룹
+                  </h4>
                 </div>
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black/70 border border-black/40 shrink-0">
+                  공동체 소통 & 양육 플랫폼
+                </span>
+              </div>
 
-                {/* Church Size */}
-                <div>
-                  <label className="block font-semibold text-slate-800 mb-1">
-                    교회 주일 출석 규모 <span className="text-red-500">*</span>
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {['100명 미만', '100~300명', '300~1,000명', '1,000명 이상'].map((size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        onClick={() => setChurchSize(size)}
-                        className={`py-2 px-2 text-center rounded-lg border text-[12px] font-medium transition-all ${
-                          churchSize === size
-                            ? 'border-[#006948] bg-[#ECFDF5] text-[#006948] font-bold shadow-xs'
-                            : 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <p className="text-[12.5px] sm:text-[13px] text-[#78716C] leading-relaxed break-keep-all text-left">
+                구역, 셀, 목장 모임의 나눔과 기도제목 공유, 모임 보고서 작성까지 손끝에서 살아나는 교제와 양육 네트워크입니다.
+              </p>
 
-                {/* Selected Products */}
-                <div>
-                  <label className="block font-semibold text-slate-800 mb-1">
-                    관심 솔루션 (중복 선택 가능)
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {PRODUCTS_LIST.map((prod) => {
-                      const isChecked = selectedProducts.includes(prod.name);
-                      return (
-                        <div
-                          key={prod.id}
-                          onClick={() => toggleProduct(prod.name)}
-                          className={`p-2.5 rounded-lg border flex items-center gap-2 cursor-pointer transition-colors ${
-                            isChecked
-                              ? 'border-[#006948] bg-emerald-50/40 text-[#006948]'
-                              : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          <span className="material-symbols-outlined text-[18px]">
-                            {isChecked ? 'check_box' : 'check_box_outline_blank'}
-                          </span>
-                          <span className="text-[13px] font-medium">{prod.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+              <button
+                type="button"
+                onClick={() => handleRenewalClick('네이션스 소그룹')}
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#EAE4DC]/80 hover:bg-[#EAE4DC] active:scale-[0.98] text-[#57534E] rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 border border-[#E8E2D9] transition-all cursor-pointer group text-center"
+              >
+                <span>네이션스 소그룹 앱 들어가기</span>
+                <span className="material-symbols-outlined text-[17px] text-[#D97706]">build</span>
+              </button>
+            </div>
 
-                {/* Notes */}
-                <div>
-                  <label className="block font-semibold text-slate-800 mb-1">
-                    희망 상담 내용 및 요청 사항 (선택)
-                  </label>
-                  <textarea
-                    rows={2}
-                    placeholder="예: 11월 총회 임직자 투표를 앞두고 현장 시연을 받아보고 싶습니다."
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-[#006948] focus:ring-1 focus:ring-[#006948] outline-none text-slate-900 resize-none text-[13px]"
-                  />
-                </div>
+            {/* Kakao Inquiries Button */}
+            <div className="pt-4 pb-2">
+              <a
+                href="http://pf.kakao.com/_cxjBxaX/chat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3 bg-[#FEE500] hover:brightness-95 active:scale-[0.98] text-[#371D1E] rounded-xl text-[13.5px] font-bold shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-[#EBD300]"
+              >
+                <KakaoIcon className="w-5 h-5" />
+                <span>카카오톡 채널 실시간 문의</span>
+                <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+              </a>
+            </div>
 
-                {/* Submit Button */}
-                <div className="pt-2 flex flex-col gap-2">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 bg-[#006948] hover:bg-[#00855d] active:scale-[0.98] text-white rounded-xl text-[15px] font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
-                  >
-                    {isSubmitting ? (
-                      <span>접수 처리 중...</span>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined text-[18px]">send</span>
-                        <span>상담 및 데모 예약하기</span>
-                      </>
-                    )}
-                  </button>
+          </div>
 
-                  <a
-                    href="http://pf.kakao.com/_cxjBxaX/chat"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 bg-[#FEE500] hover:brightness-95 text-[#371D1E] rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">forum</span>
-                    <span>카톡문의</span>
-                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                  </a>
-
-                  <p className="text-center text-[11px] text-slate-400 mt-1">
-                    접수해주신 정보는 상담 및 일정 조율 목적으로만 안전하게 사용됩니다.
-                  </p>
-                </div>
-              </form>
-            )
-          )}
         </div>
       </div>
     </div>

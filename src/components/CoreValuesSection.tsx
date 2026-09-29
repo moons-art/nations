@@ -21,43 +21,33 @@ const CoreImage: React.FC<{
 export const CoreValuesSection: React.FC = () => {
   return (
     <section
-      className="w-full px-5 py-8 sm:py-12 sm:px-8 lg:px-12 flex flex-col gap-8 bg-[#eff4ff] rounded-3xl shadow-xs border border-blue-100/70"
+      className="w-full bg-white/90 rounded-3xl p-6 sm:p-10 lg:p-14 flex flex-col gap-10 shadow-xs border border-slate-200/90"
       id="core-values"
     >
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 55 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col text-center gap-1.5 max-w-2xl mx-auto"
       >
-        <span className="text-[13px] sm:text-[14px] text-[#006948] tracking-widest uppercase font-bold">
-          CORE VALUES
-        </span>
         <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#0F172A] leading-tight">
-          네이션스 솔루션이 약속하는 3가지 원칙
+          <span className="inline-block">네이션스 솔루션이 약속하는</span>{' '}
+          <span className="inline-block">3가지 원칙</span>
         </h2>
       </motion.div>
 
       {/* 3 Core Points: Responsive 3-Column Grid on Tablet & PC */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
         {/* Point 01: 사역 효율 극대화 */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 75 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.9, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full flex flex-col justify-between gap-4"
         >
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 01
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">trending_up</span>
-              </div>
-            </div>
             <div className="flex flex-col gap-1">
               <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
                 시간과 재정을 아끼는 명확한 사역 효율
@@ -79,21 +69,13 @@ export const CoreValuesSection: React.FC = () => {
 
         {/* Point 02: 누구나 쉬운 접근성 */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 75 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full flex flex-col justify-between gap-4"
         >
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 02
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">group</span>
-              </div>
-            </div>
             <div className="flex flex-col gap-1">
               <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
                 어르신부터 청년까지 탄탄한 접근성
@@ -115,21 +97,13 @@ export const CoreValuesSection: React.FC = () => {
 
         {/* Point 03: 교회의 안전을 지키는 철저한 데이터 보안 */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 75 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full flex flex-col justify-between gap-4"
         >
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 03
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">shield_person</span>
-              </div>
-            </div>
             <div className="flex flex-col gap-1">
               <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
                 교회의 안전을 지키는 철저한 데이터 보안
