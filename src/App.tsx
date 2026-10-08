@@ -241,7 +241,7 @@ export default function App() {
 
         {/* 4. All-in-One Ecosystem, Bottom CTA & Footer */}
         <div className="w-full max-w-6xl mx-auto flex flex-col px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 gap-12 sm:gap-16 lg:gap-20">
-          {/* 4. All-in-One Ecosystem: 제품 라인업 */}
+          {/* 4. All-in-One Ecosystem: 제품 라인업 (요구사항: 3) 이 부분은 그대로 두면 됨) */}
           <div id="ecosystem" className="scroll-mt-24 md:scroll-mt-28 w-full">
             <EcosystemSection
               onSelectProduct={(prod) => setSelectedProduct(prod)}
