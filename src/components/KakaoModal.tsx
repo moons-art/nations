@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NATIONS_ICON_URL, NATIONS_LOGO_ORIG_URL } from '../data/products';
+import { KakaoIcon } from './KakaoIcon';
 
 interface KakaoModalProps {
   isOpen: boolean;
@@ -81,8 +82,9 @@ export const KakaoModal: React.FC<KakaoModalProps> = ({
               href="http://pf.kakao.com/_cxjBxaX/chat"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 bg-[#FEE500] hover:brightness-95 active:scale-[0.98] text-[#371D1E] rounded-xl text-[14px] font-bold shadow-2xs border border-[#EBD300] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              className="w-full py-3 bg-[#FEE500] hover:brightness-95 active:scale-[0.98] text-[#371D1E] rounded-xl text-[14px] font-bold shadow-2xs border border-[#EBD300] flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
+              <KakaoIcon className="w-5 h-5" />
               <span>카카오톡 1:1 상담 바로가기</span>
               <span className="material-symbols-outlined text-[16px]">open_in_new</span>
             </a>

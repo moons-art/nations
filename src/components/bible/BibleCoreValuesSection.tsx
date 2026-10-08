@@ -1,167 +1,132 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { usePageImages } from '../../services/imageStorage';
+import { CoreCardImageSlot } from '../common/CoreCardImageSlot';
 
 export const BibleCoreValuesSection: React.FC = () => {
+  const images = usePageImages('bible');
+
   return (
     <section
-      className="w-full px-5 py-8 sm:py-12 sm:px-8 lg:px-12 flex flex-col gap-8 bg-[#fffbf5] rounded-3xl shadow-xs border border-amber-100"
+      className="w-full bg-[#F8F9FD] py-16 sm:py-24 border-y border-slate-200/80"
       id="core-values"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 55 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col text-center gap-1.5 max-w-2xl mx-auto"
-      >
-        <span className="text-[13px] sm:text-[14px] text-[#006948] tracking-widest uppercase font-bold">
-          CORE VALUES
-        </span>
-        <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#0F172A] leading-tight">
-          네이션스 성경이 약속하는 3가지 원칙
-        </h2>
-        <p className="text-[13px] sm:text-[14px] text-slate-600 mt-1">
-          말씀을 연구하고 전하는 설교자와 성도가 깊은 은혜의 통찰에 도달할 수 있도록 돕습니다.
-        </p>
-      </motion.div>
-
-      {/* 3 Core Points Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
-        {/* Point 01: 설교자를 위한 강력한 나만의 설교준비 데스크 */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 sm:gap-12">
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 75 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col text-center items-center gap-1.5 max-w-3xl mx-auto mb-2 sm:mb-4"
         >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 01
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">desktop_windows</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                설교자를 위한 강력한 맞춤 설교준비 데스크
-              </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                몰입을 방해하지 않는 깔끔한 인터페이스
-              </p>
-            </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              복잡하고 무거운 성경 소프트웨어 대신, 말씀 묵상과 설교 원고 작성에만 온전히 집중할 수 있는{' '}
-              <strong className="text-[#0F172A] font-semibold">초경량 고성능 설교 워크스페이스</strong>를 제공합니다. 태블릿과 노트북 어디서나 즉시 켜집니다.
-            </p>
-          </div>
+          <h2 className="text-[19px] sm:text-[23px] md:text-[27px] font-bold text-[#0F172A] tracking-tight leading-tight break-keep-all">
+            설교준비 어디서든 가능합니다.
+          </h2>
+          <p className="text-[13px] sm:text-[14.5px] text-slate-500 font-normal break-keep-all">
+            나만의 주석책을 만들어요
+          </p>
 
-          {/* Graphic Visual Box */}
-          <div className="w-full rounded-2xl p-4 bg-gradient-to-br from-slate-900 to-slate-800 text-white flex flex-col gap-2 mt-3 shadow-inner">
-            <div className="flex items-center justify-between text-[11px] text-amber-300 font-mono">
-              <span>PREACHER'S DESK</span>
-              <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">FAST LOAD</span>
-            </div>
-            <div className="flex items-center gap-2 py-2 border-y border-slate-700/80 text-[12px]">
-              <span className="material-symbols-outlined text-amber-400 text-[18px]">bolt</span>
-              <span>설교 본문과 원고 에디터가 좌우 분할로 즉시 연동</span>
-            </div>
-            <p className="text-[11px] text-slate-400">강단용 대형 텍스트 보기 모드 1초 전환</p>
+          {/* 무료로 앱 이용하기 버튼 */}
+          <div className="pt-3 sm:pt-4">
+            <a
+              href="https://bible.thenations.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#0F172A] hover:bg-black text-white text-[13.5px] sm:text-[14.5px] font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            >
+              <span>무료로 앱 이용하기</span>
+              <span className="material-symbols-outlined text-[17px] font-medium">arrow_forward</span>
+            </a>
           </div>
         </motion.div>
 
-        {/* Point 02: 다중 역본 동시 대조 & 원어 관주 */}
-        <motion.div
-          initial={{ opacity: 0, y: 75 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-        >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 02
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">compare_arrows</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                다중 역본 동시 대조 & 원어 관주 사전
+        {/* 3 Core Points List - Alternating 2-Column Showcase */}
+        <div className="flex flex-col gap-6 sm:gap-8">
+          {/* Row 1: 가볍고 쉬운 나만의 설교 데스크 */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Text */}
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                가볍고 쉬운 나만의 설교 데스크
               </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                원문의 뉘앙스를 한눈에 파악하는 직관성
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                복잡하고 무거운 성경 소프트웨어 대신, 말씀 묵상과 설교 원고 작성에만 온전히 집중할 수 있는 설교 워크스페이스를 제공합니다. 태블릿과 노트북, 데스크탑 어디서나 1초 만에 즉시 접속가능합니다.
               </p>
             </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              개역개정, 새번역, 공동번역, NIV, ESV, 히브리어/헬라어 스트롱 코드를 병렬로 나란히 비교합니다. 단어 하나하나에 담긴{' '}
-              <strong className="text-[#0F172A] font-semibold">원문 시제와 깊은 의미</strong>를 1초 만에 확인하세요.
-            </p>
-          </div>
 
-          {/* Graphic Visual Box */}
-          <div className="w-full rounded-2xl p-4 bg-gradient-to-br from-amber-950 to-slate-900 text-white flex flex-col gap-2 mt-3 shadow-inner">
-            <div className="flex items-center justify-between text-[11px] text-amber-300 font-mono">
-              <span>PARALLEL VERSIONS</span>
-              <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">SYNC VIEW</span>
+            {/* Right Visual Box */}
+            <div className="lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[0]}
+                altText="설교자를 위한 맞춤 설교데스크"
+                gradientClass="bg-gradient-to-br from-[#EAE6F5] via-[#E4E8F7] to-[#D5DCF5]"
+              />
             </div>
-            <div className="grid grid-cols-3 gap-1 py-1.5 text-center text-[10.5px]">
-              <div className="p-1 rounded bg-slate-800 font-bold text-white">개역개정</div>
-              <div className="p-1 rounded bg-slate-800 text-slate-300">표준새번역</div>
-              <div className="p-1 rounded bg-slate-800 text-slate-300">NIV English</div>
-            </div>
-            <p className="text-[11px] text-amber-200/80">스트롱 코드 원어 사전 클릭 즉시 팝업</p>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Point 03: 나만의 절별 노트와 주석 누적 */}
-        <motion.div
-          initial={{ opacity: 0, y: 75 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-        >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 03
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">history_edu</span>
-              </div>
+          {/* Row 2: 역본 동시 대조 & AI 원어 주석 (Alternating) */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Visual Box (Desktop) */}
+            <div className="order-last lg:order-first lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[1]}
+                altText="다중 역본 동시 대조 및 원어 사전"
+                gradientClass="bg-gradient-to-br from-[#E3F5EC] via-[#E8F3EE] to-[#D6EBE0]"
+              />
             </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                나만의 절별 노트, 주석 & 관주 링크 구축
+
+            {/* Right Text (Desktop) */}
+            <div className="order-first lg:order-last lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                역본 동시 대조 & AI 원어 주석
               </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                평생의 설교와 묵상이 나만의 보물창고로
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                여러 번역본을 멀티뷰로 대조하고, AI 원어 주석 으로 단어 하나하나에 담긴 원문 시제와 깊은 의미를 바로 확인하세요.
               </p>
             </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              설교와 묵상을 할 때마다 각 절에 남긴 개인 메모와 관련 구절 링크가 클라우드에 영구 저장됩니다. 나중에 같은 본문을 설교할 때{' '}
-              <strong className="text-[#0F172A] font-semibold">지난 묵상의 은혜가 즉시 되살아납니다</strong>.
-            </p>
-          </div>
+          </motion.div>
 
-          {/* Graphic Visual Box */}
-          <div className="w-full rounded-2xl p-4 bg-gradient-to-br from-emerald-950 to-slate-900 text-white flex flex-col gap-2 mt-3 shadow-inner">
-            <div className="flex items-center justify-between text-[11px] text-emerald-300 font-mono">
-              <span>LIFETIME SERMON ARCHIVE</span>
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">SAVED</span>
+          {/* Row 3: 흩어진 자료를 통합하여 나만의 주석책 */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Text */}
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                흩어진 자료를 통합하여 나만의 주석책
+              </h3>
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                오랜기간 설교를 하다보면, 모든 자료가 흩어집니다. 한번 참고한 자료를 다시 참고해야하는 번거로움 없이 성경구절마다 나만의 주석, 노트, 관주, 설교를 보관할수 있습니다. 수년 전의 은혜의 메시지도 성경 구절 검색 한 번으로 즉시 되살아납니다.
+              </p>
             </div>
-            <div className="flex items-center gap-2 py-2 border-y border-emerald-900/80 text-[12px]">
-              <span className="material-symbols-outlined text-[#85f8c4] text-[18px]">bookmark_added</span>
-              <span>창세기부터 요한계시록까지 절별 메모 자동 정리</span>
+
+            {/* Right Visual Box */}
+            <div className="lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[2]}
+                altText="성경 본문 연동 설교 아카이빙"
+                gradientClass="bg-gradient-to-br from-[#FFF3E6] via-[#FCEEE2] to-[#F7DFCD]"
+              />
             </div>
-            <p className="text-[11px] text-emerald-200/80">소그룹 성경공부 나눔 교재 1클릭 내보내기</p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

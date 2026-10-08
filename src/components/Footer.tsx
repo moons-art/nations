@@ -6,22 +6,48 @@ interface FooterProps {
   onOpenTerms: () => void;
   onOpenPrivacy: () => void;
   onOpenKakao: () => void;
+  onOpenAdmin?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onOpenTerms,
   onOpenPrivacy,
   onOpenKakao,
+  onOpenAdmin,
 }) => {
   return (
-    <footer className="w-full bg-[#1E293B] text-slate-400 mt-12 px-4 pt-8 pb-24 border-t border-slate-800">
+    <footer className="relative w-full bg-[#1E293B] text-slate-400 mt-12 px-4 pt-8 pb-24 border-t border-slate-800 overflow-hidden">
+      {/* Invisible Admin Trigger at Card's Left Corner (Top-left & Bottom-left) */}
+      <button
+        type="button"
+        onClick={onOpenAdmin}
+        aria-label="관리자 접속"
+        className="absolute left-0 bottom-0 w-24 h-24 opacity-0 cursor-pointer focus:outline-none z-20"
+        title=""
+      />
+      <button
+        type="button"
+        onClick={onOpenAdmin}
+        aria-label="관리자 접속"
+        className="absolute left-0 top-0 w-24 h-24 opacity-0 cursor-pointer focus:outline-none z-20"
+        title=""
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-lg mx-auto flex flex-col gap-4"
+        className="max-w-lg mx-auto flex flex-col gap-4 relative"
       >
+        {/* Invisible trigger also at content container's left corner */}
+        <button
+          type="button"
+          onClick={onOpenAdmin}
+          aria-label="관리자 접속"
+          className="absolute -bottom-2 left-0 w-16 h-12 opacity-0 cursor-pointer focus:outline-none z-20"
+          title=""
+        />
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <img
@@ -35,20 +61,11 @@ export const Footer: React.FC<FooterProps> = ({
               src={NATIONS_LOGO_URL}
             />
           </div>
-          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-[#85f8c4] border border-slate-700">
-            스마트 미니스트리
-          </span>
         </div>
 
         <div className="flex flex-col gap-1 text-[13px] leading-relaxed text-slate-400">
           <p className="font-semibold text-slate-200">
-            NATIONS 네이션스 솔루션 | 교회를 돕는 모든 것
-          </p>
-          <p>
-            문의 채널: 카카오톡 채널 [더네이션스 솔루션]
-          </p>
-          <p className="text-slate-400/90">
-            스마트 교회투표 · 악보 라이브러리 · 스마트 교회행정 ERP · 소그룹앱 · 스마트 성경
+            네이션스 솔루션 | 교회를 돕는 모든 것
           </p>
         </div>
 

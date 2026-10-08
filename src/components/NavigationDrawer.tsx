@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { NATIONS_LOGO_URL, NATIONS_ICON_URL } from '../data/products';
+import { ActivePage } from '../types';
+import { KakaoIcon } from './KakaoIcon';
 
 interface NavigationDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  activePage: 'vote' | 'score' | 'bible';
-  onSelectPage: (page: 'vote' | 'score' | 'bible') => void;
+  activePage: ActivePage;
+  onSelectPage: (page: ActivePage) => void;
   onOpenKakao: () => void;
   onOpenDemoModal: (preset?: { type?: 'demo' | 'free_under_100'; product?: string }) => void;
   onOpenTerms: () => void;
@@ -13,7 +15,7 @@ interface NavigationDrawerProps {
 }
 
 interface ProductItem {
-  id: 'vote' | 'score' | 'bible';
+  id: ActivePage;
   title: string;
   icon: string;
   desc: string;
@@ -21,6 +23,20 @@ interface ProductItem {
 }
 
 const PRODUCTS: ProductItem[] = [
+  {
+    id: 'sermon',
+    title: '네이션스 Sermon AI',
+    icon: 'smart_toy',
+    desc: '예배 풀영상에서 설교 릴스 자동 추출 & 목사님 어투 학습 설교문 및 5일치 묵상카드 생성',
+    url: 'https://sermon.thenations.kr/',
+  },
+  {
+    id: 'bible',
+    title: '네이션스 Bible AI',
+    icon: 'menu_book',
+    desc: 'AI 주석 제외한 모든 기능 무료',
+    url: 'https://bible.thenations.kr/',
+  },
   {
     id: 'vote',
     title: '네이션스 Vote',
@@ -35,18 +51,13 @@ const PRODUCTS: ProductItem[] = [
     desc: '악보 편집, 프린트 기능 무료 (악보, 콘티 라이브러리, 찬양팀 송폼 공유 기능 유료 서비스)',
     url: 'https://studio.thenations.kr/',
   },
-  {
-    id: 'bible',
-    title: '네이션스 Bible',
-    icon: 'menu_book',
-    desc: 'AI 주석 제외한 모든 기능 무료',
-    url: 'https://bible.thenations.kr/',
-  },
 ];
 
 export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   isOpen,
   onClose,
+  activePage: _activePage,
+  onSelectPage: _onSelectPage,
   onOpenKakao,
   onOpenTerms,
   onOpenPrivacy,
@@ -148,10 +159,13 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-[13.5px]">
           {/* Section 1: 제품 메뉴 (오직 앱에 들어가기 위한 메뉴) */}
           <div>
-            <div className="flex items-center justify-between mb-2 px-2">
+            <div className="mb-2.5 px-2 flex flex-col gap-0.5">
               <span className="text-[11px] font-extralight text-white/45 tracking-wider uppercase">
-                제품
+                제품 웹앱 바로가기
               </span>
+              <p className="text-[11px] sm:text-[11.5px] text-[#fb923c] font-light leading-tight">
+                원활한 작업을 원하면 pc, 테블릿 접속 권장
+              </p>
             </div>
 
             <div className="space-y-1">
@@ -184,7 +198,17 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
                             isExpanded ? 'text-white' : 'text-white/60 group-hover:text-white'
                           }`}
                         >
-                          {prod.title}
+                          {prod.id === 'sermon' ? (
+                            <span>
+                              네이션스 Sermon <span className="text-[#FB923C] font-semibold">AI</span>
+                            </span>
+                          ) : prod.id === 'bible' ? (
+                            <span>
+                              네이션스 Bible <span className="text-[#FB923C] font-semibold">AI</span>
+                            </span>
+                          ) : (
+                            prod.title
+                          )}
                         </span>
                       </button>
 
@@ -208,19 +232,19 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 
                     {/* 아래 글자와 버튼 */}
                     {isExpanded && (
-                      <div className="px-3 pt-1.5 pb-2.5 ml-7 mr-2 space-y-1.5 animate-in fade-in slide-in-from-top-0.5 duration-150">
+                      <div className="px-3 pt-1.5 pb-2.5 ml-7 mr-2 space-y-2 animate-in fade-in slide-in-from-top-0.5 duration-150">
                         <p className="text-[11.5px] text-white/55 font-light leading-snug">
                           {prod.desc}
                         </p>
 
-                        <div className="pt-0.5">
+                        <div className="pt-0.5 flex items-center">
                           <button
                             type="button"
                             onClick={(e) => handleLaunchApp(prod.url, e)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#006948] hover:bg-[#00855d] active:scale-[0.97] text-white text-[11px] font-light shadow-xs transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C15F3C] hover:bg-[#a94e30] active:scale-[0.97] text-white text-[11.5px] font-normal shadow-xs transition-all cursor-pointer"
                           >
                             <span
-                              className="material-symbols-outlined text-[13px] text-white/90"
+                              className="material-symbols-outlined text-[14px] text-white/90"
                               style={{ fontVariationSettings: "'wght' 200" }}
                             >
                               login
@@ -326,12 +350,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
               }}
               className="w-full py-2 px-3 rounded-xl bg-[#FEE500] hover:bg-[#ffe812] active:scale-[0.98] text-[#371D1E] font-medium flex items-center justify-center gap-1.5 shadow-[0_2px_10px_rgba(254,229,0,0.25)] transition-all cursor-pointer text-[12.5px]"
             >
-              <span
-                className="material-symbols-outlined text-[16px]"
-                style={{ fontVariationSettings: "'wght' 300" }}
-              >
-                chat
-              </span>
+              <KakaoIcon className="w-4 h-4" />
               <span>1:1 상담</span>
             </button>
           </div>

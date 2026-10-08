@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-interface BibleDifferentiationSectionProps {
+interface SermonDifferentiationSectionProps {
   onOpenKakao: () => void;
 }
 
-export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionProps> = ({
+export const SermonDifferentiationSection: React.FC<SermonDifferentiationSectionProps> = ({
   onOpenKakao: _onOpenKakao,
 }) => {
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
@@ -19,7 +19,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
 
   return (
     <section
-      id="bible-differentiation"
+      id="sermon-differentiation"
       className="w-full bg-[#F8F9FD] py-12 sm:py-16 lg:py-20 border-b border-slate-200/80"
     >
       {/* Main Inner Content */}
@@ -34,7 +34,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
         >
           {/* 무료로 앱 이용하기 버튼 */}
           <a
-            href="https://bible.thenations.kr/"
+            href="https://sermon.thenations.kr/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-5.5 sm:py-2.5 rounded-full bg-[#0F172A] hover:bg-black text-white text-[13px] sm:text-[14px] font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer mb-1"
@@ -43,33 +43,14 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
             <span className="material-symbols-outlined text-[16px] font-medium">arrow_forward</span>
           </a>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             <p className="text-[12px] sm:text-[13px] text-[#64748B] font-normal">
-              단순한 설교준비 앱은 많습니다.
+              목사님의 은혜로운 설교를 모든 성도들에게
             </p>
 
             <h2 className="text-[12.5px] sm:text-[13.5px] font-medium text-[#0F172A] leading-relaxed break-keep-all">
-              매주 강단에 오르기 전 말씀을 연구하고 씨름하는 목회자의 심정으로, 다년간 설교준비의 노하우를 담아 앱을 만들었습니다.
+              매주 강단에서 피워내는 말씀의 열정과 애타는 심정을 그대로 설교자의 마음을 담았습니다.
             </h2>
-
-            <p className="text-[12px] sm:text-[12.5px] text-[#64748B] font-normal leading-relaxed max-w-xl break-keep-all">
-              설교 준비의 모든 번잡함을 걷어내고 말씀의 본질에 집중할 수 있도록 돕습니다.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5 pt-0.5 text-[11.5px] sm:text-[12px] text-slate-600 font-medium">
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0F172A]" />
-              <span>주석 클라우드 실시간 연동</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0F172A]" />
-              <span>다중 역본 대조</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0F172A]" />
-              <span>절별 주석 설교 라이브러리</span>
-            </div>
           </div>
         </motion.div>
 
@@ -116,7 +97,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 20 }}
                   aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+                  className="shrink-0 p-0 text-slate-400 group-hover:text-slate-700 bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px] font-normal select-none">
                     add
@@ -144,7 +125,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
 
           <div className="w-full h-[1px] bg-slate-200/90" />
 
-          {/* Q&A 1: PC 프로그램 대비 장점 */}
+          {/* Q&A 1: 예배 전체 영상을 올려도 되나요? */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -154,16 +135,17 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
           >
             <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
               <span className="text-[#0F172A] font-bold mr-1">Q.</span>
-              기존에 사용하던 무거운 PC 성경 프로그램에 비해 어떤 실질적 장점이 있나요?
+              예배 전체 영상을 올려도 되나요?
             </h3>
 
+            {/* Answer 1 - 첫줄 노출 부분을 희미한 글자로 적용 */}
             <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
               <div
                 onClick={() => toggleItem(0)}
                 className="flex items-center justify-between gap-3 cursor-pointer group select-none"
               >
                 <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
-                  네이션스 성경은 무겁지 않으며 언제 어디서나 즉시 이어집니다.
+                  네, 예배 전체 영상 유튜브 링크만 입력해도 됩니다.
                 </p>
                 <motion.button
                   type="button"
@@ -179,7 +161,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 20 }}
                   aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+                  className="shrink-0 p-0 text-slate-400 group-hover:text-slate-700 bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px] font-normal select-none">
                     add
@@ -187,6 +169,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                 </motion.button>
               </div>
 
+              {/* 클릭 시 부드럽게 펼쳐지는 설명 답변 */}
               <AnimatePresence initial={false}>
                 {openItems[0] && (
                   <motion.div
@@ -197,7 +180,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                     className="overflow-hidden"
                   >
                     <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
-                      복잡하고 난해한 메뉴 대신 목회자가 가장 자주 쓰는 역본 대조와 절별 메모를 직관적으로 배치했습니다. 서재의 PC, 이동 중 스마트폰, 강단 위의 태블릿까지 실시간 클라우드로 완벽 동기화됩니다.
+                      AI가 찬양과 광고를 건너뛰고 설교 중 가장 은혜롭고 전달력 높은 60초 핵심 구간을 자동 분석하여 5개의 세로형 유튜브 쇼츠와 인스타그램 릴스로 생성해 줍니다.
                     </p>
                   </motion.div>
                 )}
@@ -207,7 +190,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
 
           <div className="w-full h-[1px] bg-slate-200/90" />
 
-          {/* Q&A 2: AI 원어 주석과 개인 주석 활용 */}
+          {/* Q&A 2: 영상없이 설교문만 올려도 숏폼영상을 만들 수 있나요? */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -217,16 +200,17 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
           >
             <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
               <span className="text-[#0F172A] font-bold mr-1">Q.</span>
-              AI 원어 주석과 개인 주석기능은 어떻게 활용하나요?
+              영상없이 설교문만 올려도 숏폼영상을 만들 수 있나요?
             </h3>
 
+            {/* Answer 2 - 첫줄 노출 부분을 희미한 글자로 적용 */}
             <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
               <div
                 onClick={() => toggleItem(1)}
                 className="flex items-center justify-between gap-3 cursor-pointer group select-none"
               >
                 <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
-                  네이션스 성경은 완벽한 나만의 주석을 추구합니다.
+                  네 물론 입니다. 자막, 혹은 AI음성으로 영상을 만듭니다.
                 </p>
                 <motion.button
                   type="button"
@@ -242,7 +226,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 350, damping: 20 }}
                   aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+                  className="shrink-0 p-0 text-slate-400 group-hover:text-slate-700 bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
                 >
                   <span className="material-symbols-outlined text-[18px] font-normal select-none">
                     add
@@ -250,6 +234,7 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                 </motion.button>
               </div>
 
+              {/* 클릭 시 부드럽게 펼쳐지는 설명 답변 */}
               <AnimatePresence initial={false}>
                 {openItems[1] && (
                   <motion.div
@@ -260,7 +245,72 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
                     className="overflow-hidden"
                   >
                     <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
-                      AI원어 주석을 통해 구절별, 단어별, 심층 주석을 제공받고, 사용자가 메모해둔 주석과 관주, 설교등이 모두 성경텍스트 안에 구절마다 담겨져 있습니다. 기존의 흩어져 있던 자료들을 찾느라 시간낭비 없이 나만의 주석이 완성됩니다.
+                      교정이 안 된 메모설교도 목사님이 자주 쓰시는 어휘, 문법, 감동적인 표현 방식을 AI가 학습한 후, 자막+배경음악, AI음성+자막+배경음악 선택하여 가장 감동적인 5개의 설교숏폼 영상을 생성합니다.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+
+          <div className="w-full h-[1px] bg-slate-200/90" />
+
+          {/* Q&A 3: 주일설교카드와 묵상카드는 무엇인가요? */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col gap-1.5"
+          >
+            <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
+              <span className="text-[#0F172A] font-bold mr-1">Q.</span>
+              주일설교카드와 묵상카드는 무엇인가요?
+            </h3>
+
+            {/* Answer 3 - 첫줄 노출 부분을 희미한 글자로 적용 */}
+            <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
+              <div
+                onClick={() => toggleItem(2)}
+                className="flex items-center justify-between gap-3 cursor-pointer group select-none"
+              >
+                <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
+                  목사님의 설교를 요약하여 성도들이 볼 수 있는 이미지 카드입니다.
+                </p>
+                <motion.button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleItem(2);
+                  }}
+                  animate={{
+                    rotate: openItems[2] ? 45 : 0,
+                    scale: openItems[2] ? 1.15 : 1,
+                  }}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 20 }}
+                  aria-label="답변 펼치기/접기"
+                  className="shrink-0 p-0 text-slate-400 group-hover:text-slate-700 bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px] font-normal select-none">
+                    add
+                  </span>
+                </motion.button>
+              </div>
+
+              {/* 클릭 시 부드럽게 펼쳐지는 설명 답변 */}
+              <AnimatePresence initial={false}>
+                {openItems[2] && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
+                      주일설교카드는 주일설교를 7장 정도의 이미지 카드로, 묵상카드는 주일설교를 성도들이 매일 기억하며 묵상할 수 있도록 6일치 분량의 묵상카드로 제작해 드립니다. 제작된 카드 이미지는 카톡이나 인스타 홈페이지에 올리시면 됩니다.
                     </p>
                   </motion.div>
                 )}

@@ -20,8 +20,14 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center select-none">
       {/* Main Tablet & Companion Device Showcase */}
       <div className="relative w-full flex items-center justify-center pt-2 pb-4">
-        {/* Central iPad Pro Style Music Sheet Viewer */}
-        <div className="relative z-20 w-full max-w-2xl bg-[#0f172a] rounded-[28px] p-3 sm:p-4 shadow-[0_24px_50px_rgba(15,23,42,0.22)] border-[5px] border-slate-800">
+        {/* Central iPad Pro Style Music Sheet Viewer - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+        <motion.div
+          initial={{ opacity: 0, y: 90 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-20 w-full max-w-2xl bg-[#0f172a] rounded-[28px] p-3 sm:p-4 shadow-[0_24px_50px_rgba(15,23,42,0.22)] border-[5px] border-slate-800 transition-all duration-300 hover:-translate-y-5 hover:scale-[1.02] hover:shadow-[0_36px_70px_rgba(15,23,42,0.32)] cursor-pointer"
+        >
           {/* Tablet Screen */}
           <div className="w-full bg-[#fdfdfd] rounded-[20px] overflow-hidden text-slate-900 flex flex-col shadow-inner min-h-[380px] sm:min-h-[440px]">
             {/* Top Music Bar */}
@@ -81,8 +87,14 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
 
               {/* Music Lines (Interactive Chords + Lyrics) */}
               <div className="flex flex-col gap-4 py-3 font-sans">
-                {/* Line 1 */}
-                <div className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70">
+                {/* Line 1 - 스크롤 시 부드럽게 떠오르는 카드 효과 */}
+                <motion.div
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-xs"
+                >
                   <div className="grid grid-cols-4 text-[13px] sm:text-[15px] font-black text-[#006948] font-mono">
                     <span>{chords.c1}</span>
                     <span>{chords.c2}</span>
@@ -95,10 +107,16 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                     <span>주 나의 눈물 아시네</span>
                     <span>홀로 울던 맘 아시네</span>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Line 2 (Chorus) */}
-                <div className="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/80">
+                {/* Line 2 (Chorus) - 스크롤 시 부드럽게 떠오르는 카드 효과 */}
+                <motion.div
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/80 shadow-xs"
+                >
                   <div className="flex items-center justify-between text-[11px] font-bold text-emerald-800 mb-1">
                     <span className="px-1.5 py-0.2 rounded bg-emerald-200 text-emerald-900 font-mono">
                       CHORUS
@@ -117,7 +135,7 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                     <span>살아가는 이 모든 순간이</span>
                     <span>주 은혜임을 나는 믿네</span>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               {/* Tablet Bottom Controls */}
@@ -133,10 +151,16 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Left Side Smartphone Mockup (Singer & Session Sync View) */}
-        <div className="hidden lg:block absolute -left-6 bottom-4 z-30 w-52 bg-slate-900 rounded-[24px] p-2.5 shadow-2xl border-[3px] border-slate-700 transform -rotate-3 hover:rotate-0 transition-transform">
+        {/* Left Side Smartphone Mockup (Singer & Session Sync View) - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+        <motion.div
+          initial={{ opacity: 0, y: 110 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden lg:block absolute -left-6 bottom-4 z-30 w-52 bg-slate-900 rounded-[24px] p-2.5 shadow-2xl border-[3px] border-slate-700 transform -rotate-3 hover:rotate-0 hover:-translate-y-6 hover:scale-105 transition-all duration-300 cursor-pointer"
+        >
           <div className="bg-white rounded-[18px] p-3 text-[11px] flex flex-col gap-2 shadow-inner">
             <div className="flex items-center justify-between border-b pb-1">
               <span className="font-bold text-[#006948]">싱어 파트 보면대</span>
@@ -155,7 +179,7 @@ export const ScoreDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
               <span className="font-bold text-blue-600">4마디 전주</span>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {onExploreClick && (

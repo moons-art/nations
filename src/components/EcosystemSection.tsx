@@ -2,147 +2,134 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ProductItem } from '../types';
 import { PRODUCTS_LIST } from '../data/products';
-import { TriplePhoneMockup } from './hero-devices/TriplePhoneMockup';
+import { MonochromeYouTubeIcon } from './common/MonochromeYouTubeIcon';
 
 interface EcosystemSectionProps {
   onSelectProduct: (product: ProductItem) => void;
   highlightedProductId?: string | null;
+  isSermonPage?: boolean;
 }
+
+const SHORT_INTROS: Record<string, string> = {
+  sermon: '유튜브 링크로 설교 숏폼 5개 & 주일 묵상카드 완성',
+  bible: '다중 역본 대조와 설교자를 위한 나만의 주석 노트',
+  vote: '90% 시간 단축, 실시간 집계 무설치 모바일 교회투표',
+  score: '악보 라이브러리 편집부터 찬양팀 실시간 동기화',
+  erp: '어려운 행정을 덜어낸 간결한 올인원 스마트 교적관리',
+  group: '구역·셀 모임의 은혜로운 삶의 나눔과 기도제목 공유',
+};
+
+const renderTitleWithAi = (title: string) => {
+  if (title.includes('AI')) {
+    const parts = title.split('AI');
+    return (
+      <>
+        {parts.map((part, i) => (
+          <React.Fragment key={i}>
+            {part}
+            {i < parts.length - 1 && <span className="text-[#FB923C] font-bold">AI</span>}
+          </React.Fragment>
+        ))}
+      </>
+    );
+  }
+  return title;
+};
 
 export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
   onSelectProduct,
   highlightedProductId,
+  isSermonPage: _isSermonPage,
 }) => {
   return (
     <section className="w-full flex flex-col gap-8" id="ecosystem">
       <motion.div
-        initial={{ opacity: 0, y: 55 }}
+        initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
+        viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col gap-2 text-center max-w-2xl mx-auto"
       >
-        <div className="inline-flex items-center justify-center gap-1.5 text-[#006948] text-[13px] sm:text-[14px] font-bold tracking-wide">
-          <span className="material-symbols-outlined text-[18px]">hub</span>
-          <span>ALL-IN-ONE MINISTRY ECOSYSTEM</span>
+        <div className="inline-flex items-center justify-center gap-1.5 text-black text-[12px] sm:text-[13px] font-bold tracking-wide">
+          <span className="material-symbols-outlined text-[16px] text-black">hub</span>
+          <span className="text-black">ALL-IN-ONE MINISTRY ECOSYSTEM</span>
         </div>
-        <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#0F172A] leading-tight">
+        <h2 className="text-[18px] sm:text-[22px] md:text-[26px] font-bold text-[#0F172A] leading-tight">
           교회를 돕는 모든 것,
           <br className="sm:hidden" />
           {' '}NATIONS 스마트 생태계
         </h2>
-        <p className="text-[14px] sm:text-[15px] text-[#475569] max-w-xl mx-auto">
-          예배, 행정, 선거, 양육까지 하나로 이어지는 통합 미니스트리 솔루션
+        <p className="text-[13px] sm:text-[14px] text-[#475569] max-w-xl mx-auto">
+          설교, 찬양, 미디어, 행정, 선거, 소그룹 까지 하나로 이어지는 미니스트리 솔루션
         </p>
       </motion.div>
 
-      {/* 5 Product Cards: Responsive 2 or 3-Column Grid on Tablet & PC */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {PRODUCTS_LIST.map((product, index) => {
-          const isHighlighted = highlightedProductId === product.id;
+      {/* 모든 페이지 공통: 옆으로 흐르는 작은 카드 (아이콘, 이름, 짧은 한토막 소개, 배경선 없음) */}
+      <div className="relative w-full overflow-hidden py-1">
+        <style>{`
+          @keyframes sermonMarqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .sermon-marquee-track {
+            display: flex;
+            gap: 14px;
+            width: max-content;
+            animation: sermonMarqueeScroll 40s linear infinite;
+            will-change: transform;
+          }
+          .sermon-marquee-track:hover,
+          .sermon-marquee-track:focus-within {
+            animation-play-state: paused;
+          }
+        `}</style>
 
-          return (
-            <motion.div
-              key={product.id}
-              id={`product-${product.id}`}
-              onClick={() => onSelectProduct(product)}
-              initial={{ opacity: 0, y: 70 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{
-                duration: 0.85,
-                delay: index * 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className={`bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-between gap-4 border transition-all duration-300 cursor-pointer group hover:shadow-lg hover:-translate-y-1 ${
-                isHighlighted
-                  ? 'border-[#006948] ring-4 ring-[#006948]/20 shadow-lg bg-emerald-50/20 scale-[1.02]'
-                  : 'border-[#E2E8F0] hover:border-[#006948]/60'
-              }`}
-            >
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-xs">
-                    <span className="material-symbols-outlined text-[26px]">{product.icon}</span>
+        {/* 좌우 부드러운 그라데이션 페이드 마스크 */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-10 sm:w-20 bg-gradient-to-r from-[#f8f9ff] via-[#f8f9ff]/70 to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-10 sm:w-20 bg-gradient-to-l from-[#f8f9ff] via-[#f8f9ff]/70 to-transparent z-10" />
+
+        {/* 가로로 흐르는 트랙 */}
+        <div className="sermon-marquee-track py-2">
+          {[...PRODUCTS_LIST, ...PRODUCTS_LIST, ...PRODUCTS_LIST, ...PRODUCTS_LIST].map(
+            (product, idx) => {
+              const isHighlighted = highlightedProductId === product.id;
+              const shortIntro = SHORT_INTROS[product.id] || product.badge;
+
+              return (
+                <div
+                  key={`${product.id}-${idx}`}
+                  id={idx < PRODUCTS_LIST.length ? `product-${product.id}` : undefined}
+                  onClick={() => onSelectProduct(product)}
+                  className={`w-[260px] sm:w-[285px] shrink-0 bg-white rounded-2xl p-4 sm:p-4.5 transition-all duration-200 cursor-pointer select-none group flex flex-col justify-between gap-2.5 shadow-xs hover:shadow-lg hover:-translate-y-1 ${
+                    isHighlighted
+                      ? 'ring-2 ring-slate-900/15 bg-slate-50/90 shadow-md'
+                      : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8.5 h-8.5 rounded-xl bg-slate-100/90 flex items-center justify-center shrink-0 group-hover:bg-[#0F172A] group-hover:text-white transition-colors text-slate-800">
+                      {product.icon === 'youtube' ? (
+                        <MonochromeYouTubeIcon size={19} className="shrink-0" />
+                      ) : (
+                        <span className="material-symbols-outlined text-[20px] leading-none">
+                          {product.icon}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-[14px] sm:text-[15px] font-bold text-[#0F172A] group-hover:text-black transition-colors leading-snug break-keep-all truncate">
+                      {renderTitleWithAi(product.name)}
+                    </h3>
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-[12px] font-bold ${
-                      product.badgeColor === 'emerald'
-                        ? 'bg-[#ECFDF5] text-[#006948]'
-                        : 'bg-[#eff4ff] text-[#475569]'
-                    }`}
-                  >
-                    {product.badge}
-                  </span>
-                </div>
 
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-[17px] sm:text-[18px] font-bold text-[#0F172A] group-hover:text-[#006948] transition-colors leading-snug">
-                    {product.name}
-                  </h3>
-                  <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed line-clamp-2 sm:line-clamp-3">
-                    {product.description}
+                  <p className="text-[12px] sm:text-[12.5px] text-[#64748B] font-normal leading-relaxed break-keep-all line-clamp-2">
+                    {shortIntro}
                   </p>
                 </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[13px] text-[#006948] font-semibold">
-                <span className="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  상세 기능 및 특장점 보기
-                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                </span>
-              </div>
-            </motion.div>
-          );
-        })}
+              );
+            }
+          )}
+        </div>
       </div>
-
-      {/* Interactive Showcase Highlight Banner: Expanded on Tablet & PC */}
-      <motion.div
-        initial={{ opacity: 0, y: 75 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-8 border border-[#E2E8F0]"
-      >
-        <div className="flex flex-col gap-4 max-w-xl lg:max-w-[360px] xl:max-w-[420px] shrink-0">
-          <div className="flex items-center gap-2 text-[#006948] text-[13px] font-bold">
-            <span className="material-symbols-outlined text-[20px]">verified_user</span>
-            <span>통합 미니스트리 클라우드</span>
-          </div>
-
-          <h3 className="text-[20px] sm:text-[24px] lg:text-[26px] font-extrabold text-[#0F172A] leading-snug">
-            성도와 교역자 모두가 편안한
-            <br />
-            스마트 목회 환경의 구축
-          </h3>
-
-          <p className="text-[14px] sm:text-[15px] text-[#475569] leading-relaxed">
-            복잡한 프로그램 설치 없이 웹과 모바일 앱 어디서나 유기적으로 연동됩니다. 데이터 분실 우려 없는 클라우드 백업과 보안 체계로 사역의 안정을 약속합니다.
-          </p>
-
-          {/* Ecosystem Badge Chips */}
-          <div className="flex flex-wrap gap-2 pt-2">
-            <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
-              교회투표 시스템
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
-              악보 편집, 송품 공유&뷰어
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
-              스마트 교적 ERP
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-[#eff4ff] text-[13px] text-[#0F172A] font-medium">
-              셀·구역 목양 모바일
-            </span>
-          </div>
-        </div>
-
-        {/* 3 Mobile Screens Showcase: 본인 인증 + 대기 화면 + 투표 화면 */}
-        <div className="w-full lg:flex-1 min-w-0 rounded-2xl bg-[#f8fafc] p-3 sm:p-4 border border-slate-200/80 shadow-xs flex items-center justify-center overflow-hidden">
-          <TriplePhoneMockup />
-        </div>
-      </motion.div>
     </section>
   );
 };

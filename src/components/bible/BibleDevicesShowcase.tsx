@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 
 export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = ({ onExploreClick }) => {
   const [activeTabVersion, setActiveTabVersion] = useState<'all' | 'kor' | 'new' | 'niv'>('all');
@@ -6,8 +7,14 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center select-none">
-      {/* Interactive Controls Bar */}
-      <div className="w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-md border border-slate-200/80 mb-4 flex flex-wrap items-center justify-between gap-3 text-[13px]">
+      {/* Interactive Controls Bar - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+      <motion.div
+        initial={{ opacity: 0, y: 55 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-2xl p-3 shadow-md border border-slate-200/80 mb-4 flex flex-wrap items-center justify-between gap-3 text-[13px]"
+      >
         {/* Versions Toggle */}
         <div className="flex items-center gap-1.5">
           <span className="font-bold text-slate-500 text-[11.5px] uppercase tracking-wider pl-1">
@@ -71,12 +78,18 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
             <span>{fontSize === 'normal' ? '보통' : '크게'}</span>
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Tablet & Preacher Desk Showcase */}
       <div className="relative w-full flex items-center justify-center pt-2 pb-4">
-        {/* Tablet Mockup */}
-        <div className="relative z-20 w-full max-w-2xl bg-[#0f172a] rounded-[28px] p-3 sm:p-4 shadow-[0_24px_50px_rgba(15,23,42,0.22)] border-[5px] border-slate-800">
+        {/* Tablet Mockup - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+        <motion.div
+          initial={{ opacity: 0, y: 90 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-20 w-full max-w-2xl bg-[#0f172a] rounded-[28px] p-3 sm:p-4 shadow-[0_24px_50px_rgba(15,23,42,0.22)] border-[5px] border-slate-800 transition-all duration-300 hover:-translate-y-5 hover:scale-[1.02] hover:shadow-[0_36px_70px_rgba(15,23,42,0.32)] cursor-pointer"
+        >
           <div className="w-full bg-[#fdfdfd] rounded-[20px] overflow-hidden text-slate-900 flex flex-col shadow-inner min-h-[390px] sm:min-h-[440px]">
             {/* Top Preacher Header */}
             <div className="bg-[#1e293b] text-white px-4 py-2.5 flex items-center justify-between text-[12px]">
@@ -110,10 +123,16 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
 
             {/* Bible Verse Comparison Content */}
             <div className="p-4 sm:p-5 flex-1 flex flex-col gap-3.5 bg-gradient-to-b from-white to-slate-50">
-              {/* Romans 8:28 Parallel Grid */}
+              {/* Romans 8:28 Parallel Grid - 스크롤 시 부드럽게 떠오르는 카드 효과 */}
               <div className="flex flex-col gap-2.5">
                 {(activeTabVersion === 'all' || activeTabVersion === 'kor') && (
-                  <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-1">
+                  <motion.div
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-col gap-1"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-[#006948]">
                         개역개정 4판
@@ -124,11 +143,17 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                       우리가 알거니와 하나님을 사랑하는 자 곧 그의 뜻대로 부르심을 입은 자들에게는{' '}
                       <span className="bg-amber-100 text-amber-900 font-bold px-1 rounded">모든 것이 합력하여 선을 이루느니라</span>
                     </p>
-                  </div>
+                  </motion.div>
                 )}
 
                 {(activeTabVersion === 'all' || activeTabVersion === 'new') && (
-                  <div className="p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex flex-col gap-1">
+                  <motion.div
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                    className="p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex flex-col gap-1 shadow-xs"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
                         표준새번역
@@ -138,11 +163,17 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                     <p className={`text-slate-800 leading-relaxed mt-1 ${fontSize === 'large' ? 'text-[15px]' : 'text-[13px]'}`}>
                       하나님을 사랑하는 사람들, 곧 하나님의 뜻대로 부르심을 받은 사람들에게는, 모든 일이 서로 협력해서 선을 이룬다는 것을 우리는 압니다.
                     </p>
-                  </div>
+                  </motion.div>
                 )}
 
                 {(activeTabVersion === 'all' || activeTabVersion === 'niv') && (
-                  <div className="p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex flex-col gap-1">
+                  <motion.div
+                    initial={{ opacity: 0, y: 25 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    transition={{ duration: 0.6, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+                    className="p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex flex-col gap-1 shadow-xs"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">
                         NIV (English)
@@ -152,12 +183,18 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                     <p className={`text-slate-800 font-serif leading-relaxed mt-1 ${fontSize === 'large' ? 'text-[14.5px]' : 'text-[12.5px]'}`}>
                       "And we know that in all things God works for the good of those who love him, who have been called according to his purpose."
                     </p>
-                  </div>
+                  </motion.div>
                 )}
               </div>
 
-              {/* Preacher's Personal Verse Note (Bottom Section of Tablet) */}
-              <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/90 flex flex-col gap-1.5">
+              {/* Preacher's Personal Verse Note (Bottom Section of Tablet) - 스크롤 시 떠오르는 효과 */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="p-3 rounded-xl bg-amber-50/80 border border-amber-200/90 flex flex-col gap-1.5 shadow-xs"
+              >
                 <div className="flex items-center justify-between text-[11.5px] font-bold text-amber-900">
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px] text-amber-700">edit_note</span>
@@ -168,7 +205,7 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
                 <p className="text-[12px] text-slate-700 leading-relaxed font-sans">
                   '합력하여(sunergei)'는 모든 사건이 독립된 것이 아니라 하나님의 주권 안에서 조화롭게 엮여감을 의미. 고난 속 성도들에게 하나님의 궁극적 선하심을 선포할 것.
                 </p>
-              </div>
+              </motion.div>
             </div>
 
             {/* Bottom Footer of Tablet */}
@@ -180,10 +217,16 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
               <span className="text-[#006948] font-bold">소그룹 나눔 묵상 연동 지원</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Left Floating Feature Callout */}
-        <div className="hidden lg:block absolute -left-6 bottom-4 z-30 w-52 bg-slate-900 rounded-[24px] p-3 shadow-2xl border-[3px] border-slate-700 transform -rotate-3 hover:rotate-0 transition-transform">
+        {/* Left Floating Feature Callout - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+        <motion.div
+          initial={{ opacity: 0, y: 110 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden lg:block absolute -left-6 bottom-4 z-30 w-52 bg-slate-900 rounded-[24px] p-3 shadow-2xl border-[3px] border-slate-700 transform -rotate-3 hover:rotate-0 hover:-translate-y-6 hover:scale-105 transition-all duration-300 cursor-pointer"
+        >
           <div className="bg-white rounded-[18px] p-3 text-[11px] flex flex-col gap-2 shadow-inner">
             <div className="flex items-center justify-between border-b pb-1">
               <span className="font-bold text-amber-800">강단 설교 모드</span>
@@ -195,10 +238,16 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
               설교 시선에 최적화된 큰 글씨와 절별 하이라이트로 강단에서 원고와 말씀을 막힘없이 확인합니다.
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Floating Feature Callout */}
-        <div className="hidden lg:block absolute -right-6 top-8 z-30 w-56 bg-slate-900/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-slate-700 text-white transform rotate-2 hover:rotate-0 transition-transform">
+        {/* Right Floating Feature Callout - 스크롤 시 아래에서 위로 떠오르는 효과 */}
+        <motion.div
+          initial={{ opacity: 0, y: 110 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.15 }}
+          transition={{ duration: 0.9, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden lg:block absolute -right-6 top-8 z-30 w-56 bg-slate-900/90 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-slate-700 text-white transform rotate-2 hover:rotate-0 hover:-translate-y-6 hover:scale-105 transition-all duration-300 cursor-pointer"
+        >
           <div className="flex items-center gap-2 text-amber-400 font-bold text-[12px] mb-1">
             <span className="material-symbols-outlined text-[16px]">menu_book</span>
             <span>나만의 신학 주석</span>
@@ -206,7 +255,7 @@ export const BibleDevicesShowcase: React.FC<{ onExploreClick?: () => void }> = (
           <p className="text-[11px] text-slate-300 leading-relaxed">
             한번 연구한 성경 본문의 주해와 설교 자료가 절별로 영구 축적되어 나만의 평생 설교 라이브러리가 완성됩니다.
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {onExploreClick && (

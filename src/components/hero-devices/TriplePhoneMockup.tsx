@@ -58,19 +58,19 @@ export const TriplePhoneMockup: React.FC<TriplePhoneMockupProps> = ({ className 
           transform: `translateX(-50%) scale(${scale})`,
         }}
       >
-        {/* Phone 1: 본인 인증 */}
-        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:scale-[1.02]">
-          <PhoneAuthScreen className="w-full shadow-lg" />
+        {/* Phone 1: 본인 인증 - 더 크게 떠오르는 효과 */}
+        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:-translate-y-4 hover:scale-[1.04] cursor-pointer">
+          <PhoneAuthScreen className="w-full shadow-xl hover:shadow-2xl transition-shadow" />
         </div>
 
-        {/* Phone 2: 대기 화면 */}
-        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:scale-[1.02]">
-          <PhoneWaitingScreen className="w-full shadow-lg" />
+        {/* Phone 2: 대기 화면 - 더 크게 떠오르는 효과 */}
+        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:-translate-y-4 hover:scale-[1.04] cursor-pointer">
+          <PhoneWaitingScreen className="w-full shadow-xl hover:shadow-2xl transition-shadow" />
         </div>
 
-        {/* Phone 3: 투표 진행 */}
-        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:scale-[1.02]">
-          <PhoneVotingScreen className="w-full shadow-lg" />
+        {/* Phone 3: 투표 진행 - 더 크게 떠오르는 효과 */}
+        <div className="w-[214px] shrink-0 transform transition-all duration-300 hover:-translate-y-4 hover:scale-[1.04] cursor-pointer">
+          <PhoneVotingScreen className="w-full shadow-xl hover:shadow-2xl transition-shadow" />
         </div>
       </div>
     </div>

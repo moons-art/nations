@@ -6,7 +6,6 @@
 import { useState } from 'react';
 import { ProductItem, ConsultationRequest, ActivePage } from './types';
 import { Header } from './components/Header';
-import { NavigationDrawer } from './components/NavigationDrawer';
 import { HeroSection } from './components/HeroSection';
 import { CoreValuesSection } from './components/CoreValuesSection';
 import { DifferentiationSection } from './components/DifferentiationSection';
@@ -16,21 +15,26 @@ import { ScoreDifferentiationSection } from './components/score/ScoreDifferentia
 import { BibleHeroSection } from './components/bible/BibleHeroSection';
 import { BibleCoreValuesSection } from './components/bible/BibleCoreValuesSection';
 import { BibleDifferentiationSection } from './components/bible/BibleDifferentiationSection';
+import { SermonHeroSection } from './components/sermon/SermonHeroSection';
+import { SermonCoreValuesSection } from './components/sermon/SermonCoreValuesSection';
+import { SermonDifferentiationSection } from './components/sermon/SermonDifferentiationSection';
 import { EcosystemSection } from './components/EcosystemSection';
 import { BottomCtaSection } from './components/BottomCtaSection';
+import { SiteDirectorySection } from './components/SiteDirectorySection';
 import { Footer } from './components/Footer';
 import { FixedBottomBar } from './components/FixedBottomBar';
 import { ConsultationModal } from './components/ConsultationModal';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { KakaoModal } from './components/KakaoModal';
 import { PolicyModal } from './components/PolicyModal';
+import { AdminDashboardModal } from './components/admin/AdminDashboardModal';
 
 export default function App() {
-  // Active Page Routing ('vote' | 'score' | 'bible')
-  const [activePage, setActivePage] = useState<ActivePage>('vote');
+  // Active Page Routing ('sermon' | 'vote' | 'score' | 'bible') - 기본 진입 시 새로 생성된 sermon AI 페이지 활성화
+  const [activePage, setActivePage] = useState<ActivePage>('sermon');
 
-  // Navigation & Drawer
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Admin Dashboard Modal
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   // Modals
   const [isKakaoOpen, setIsKakaoOpen] = useState(false);
@@ -48,9 +52,6 @@ export default function App() {
     isOpen: boolean;
     type: 'terms' | 'privacy';
   }>({ isOpen: false, type: 'terms' });
-
-  // Search toast notification
-  const [searchFeedback, setSearchFeedback] = useState<string | null>(null);
 
   // Stored requests history in memory
   const [requestsList, setRequestsList] = useState<ConsultationRequest[]>([]);
@@ -83,8 +84,6 @@ export default function App() {
   const handleSearchQuery = (query: string) => {
     // Check if query corresponds to a product
     const clean = query.replace('?', '').trim();
-    setSearchFeedback(`'${clean}' 관련 솔루션으로 이동합니다`);
-    setTimeout(() => setSearchFeedback(null), 3000);
 
     // If query contains vote/투표 or '네이션스'
     if (clean.includes('투표') || clean.includes('네이션스')) {
@@ -119,7 +118,16 @@ export default function App() {
       return;
     }
 
-    if (clean.includes('성경') || clean.includes('설교') || clean.includes('말씀')) {
+    if (clean.includes('설교') || clean.includes('릴스') || clean.includes('쇼츠') || clean.includes('영상') || clean.includes('묵상') || clean.includes('sermon') || clean.includes('ai')) {
+      setActivePage('sermon');
+      setHighlightedProductId('sermon');
+      const el = document.getElementById('core-values') || document.getElementById('differentiation');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => setHighlightedProductId(null), 3500);
+      return;
+    }
+
+    if (clean.includes('성경') || clean.includes('말씀') || clean.includes('주석')) {
       setHighlightedProductId('bible');
       const el = document.getElementById('product-bible') || document.getElementById('ecosystem');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -140,38 +148,37 @@ export default function App() {
 
   return (
     <div className="bg-[#f8f9ff] min-h-screen flex flex-col font-sans text-[#0F172A] selection:bg-[#85f8c4] selection:text-[#002114]">
-      {/* Toast Feedback */}
-      {searchFeedback && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#006948] text-white px-4 py-2 rounded-xl text-[13px] font-semibold shadow-lg flex items-center gap-2 animate-bounce">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
-          <span>{searchFeedback}</span>
-        </div>
-      )}
-
       {/* Header */}
       <Header
         activePage={activePage}
         onSelectPage={(page) => setActivePage(page)}
         onOpenKakao={handleOpenKakao}
-        onOpenMenu={() => setIsMenuOpen(true)}
         onOpenDemoModal={() => handleOpenDemoModal({ type: 'free_under_100' })}
-      />
-
-      {/* Navigation Drawer */}
-      <NavigationDrawer
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        activePage={activePage}
-        onSelectPage={(page) => setActivePage(page)}
-        onOpenKakao={handleOpenKakao}
-        onOpenDemoModal={handleOpenDemoModal}
-        onOpenTerms={handleOpenTerms}
-        onOpenPrivacy={handleOpenPrivacy}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full pb-20 flex flex-col items-center">
-        {/* Conditional Page Rendering based on activePage: 'vote' | 'score' | 'bible' */}
+        {/* Conditional Page Rendering based on activePage: 'sermon' | 'vote' | 'score' | 'bible' */}
+        {activePage === 'sermon' && (
+          <>
+            {/* 1. Sermon Hero Section with Hero Video (Nations Vote 영상 활용) */}
+            <SermonHeroSection
+              onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo', product: '네이션스 sermon AI' })}
+              onSearchQuery={handleSearchQuery}
+            />
+
+            {/* 2. Sermon Core Values: 3대 원칙 */}
+            <div id="core-values" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <SermonCoreValuesSection />
+            </div>
+
+            {/* 3. Sermon Differentiation */}
+            <div id="differentiation" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <SermonDifferentiationSection onOpenKakao={handleOpenKakao} />
+            </div>
+          </>
+        )}
+
         {activePage === 'vote' && (
           <>
             {/* 1. Hero Section with Hero Video */}
@@ -181,10 +188,8 @@ export default function App() {
             />
 
             {/* 2. Core Values: 3대 원칙 */}
-            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
-              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
-                <CoreValuesSection />
-              </div>
+            <div id="core-values" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <CoreValuesSection />
             </div>
 
             {/* 3. Differentiation: 네이션스만의 차별점 */}
@@ -203,10 +208,8 @@ export default function App() {
             />
 
             {/* 2. Score Core Values: 3대 원칙 */}
-            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
-              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
-                <ScoreCoreValuesSection />
-              </div>
+            <div id="core-values" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <ScoreCoreValuesSection />
             </div>
 
             {/* 3. Score Differentiation */}
@@ -225,10 +228,8 @@ export default function App() {
             />
 
             {/* 2. Bible Core Values: 3대 원칙 */}
-            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 lg:pt-14 pb-12 sm:pb-16 lg:pb-20">
-              <div id="core-values" className="scroll-mt-24 md:scroll-mt-28 w-full">
-                <BibleCoreValuesSection />
-              </div>
+            <div id="core-values" className="w-full scroll-mt-24 md:scroll-mt-28">
+              <BibleCoreValuesSection />
             </div>
 
             {/* 3. Bible Differentiation */}
@@ -240,11 +241,12 @@ export default function App() {
 
         {/* 4. All-in-One Ecosystem, Bottom CTA & Footer */}
         <div className="w-full max-w-6xl mx-auto flex flex-col px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 lg:pt-24 gap-12 sm:gap-16 lg:gap-20">
-          {/* 4. All-in-One Ecosystem: 제품 라인업 (요구사항: 3) 이 부분은 그대로 두면 됨) */}
+          {/* 4. All-in-One Ecosystem: 제품 라인업 */}
           <div id="ecosystem" className="scroll-mt-24 md:scroll-mt-28 w-full">
             <EcosystemSection
               onSelectProduct={(prod) => setSelectedProduct(prod)}
               highlightedProductId={highlightedProductId}
+              isSermonPage={activePage === 'sermon'}
             />
           </div>
 
@@ -273,11 +275,20 @@ export default function App() {
             </div>
           )}
 
-          {/* 6. Footer */}
+          {/* 6. Site Directory Section (간편한 스마트 목회 환경을 추구합니다 + 4개 열 디렉토리) */}
+          <SiteDirectorySection
+            onSelectProduct={(prod) => setSelectedProduct(prod)}
+            onOpenKakao={handleOpenKakao}
+            onOpenTerms={handleOpenTerms}
+            onOpenPrivacy={handleOpenPrivacy}
+          />
+
+          {/* 7. Footer (검은색 카드) */}
           <Footer
             onOpenTerms={handleOpenTerms}
             onOpenPrivacy={handleOpenPrivacy}
             onOpenKakao={handleOpenKakao}
+            onOpenAdmin={() => setIsAdminOpen(true)}
           />
         </div>
       </main>
@@ -320,6 +331,12 @@ export default function App() {
         isOpen={policyModal.isOpen}
         type={policyModal.type}
         onClose={() => setPolicyModal({ isOpen: false, type: 'terms' })}
+      />
+
+      {/* Admin Content Management Dashboard Modal */}
+      <AdminDashboardModal
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
       />
     </div>
   );

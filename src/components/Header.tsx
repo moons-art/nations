@@ -6,7 +6,6 @@ interface HeaderProps {
   activePage: ActivePage;
   onSelectPage: (page: ActivePage) => void;
   onOpenKakao: () => void;
-  onOpenMenu: () => void;
   onOpenDemoModal: () => void;
 }
 
@@ -14,10 +13,10 @@ export const Header: React.FC<HeaderProps> = ({
   activePage,
   onSelectPage,
   onOpenKakao: _onOpenKakao,
-  onOpenMenu,
   onOpenDemoModal: _onOpenDemoModal,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showSermonTooltip, setShowSermonTooltip] = useState(false);
   const [showVoteTooltip, setShowVoteTooltip] = useState(false);
   const [showStudioTooltip, setShowStudioTooltip] = useState(false);
   const [showBibleTooltip, setShowBibleTooltip] = useState(false);
@@ -32,6 +31,17 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleScrollTo = (id: string) => {
     setIsDropdownOpen(false);
+    if (id === 'differentiation' || id === 'qna') {
+      const element =
+        document.getElementById('sermon-differentiation') ||
+        document.getElementById('differentiation') ||
+        document.getElementById('score-differentiation') ||
+        document.getElementById('bible-differentiation');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -84,9 +94,49 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="sr-only">NATIONS</span>
           </button>
 
-          {/* Desktop & Tablet Navigation Links (sm/md부터 상단 전체 메뉴 노출) */}
+          {/* Desktop & Tablet Navigation Links (sm/md부터 상단 전체 메뉴 노출 - 메뉴순서: 설교ai, 투표, 스튜디오, 바이블) */}
           <nav className="hidden sm:flex items-center gap-1 sm:gap-1.5 md:gap-2 text-[13.5px] md:text-[14.5px] lg:text-[15px] font-normal text-white/90 drop-shadow-md">
-            {/* 1. 네이션스 Vote */}
+            {/* 1. 네이션스 Sermon AI (AI는 주황색) */}
+            <div
+              className="relative group py-1.5"
+              onMouseEnter={() => setShowSermonTooltip(true)}
+              onMouseLeave={() => setShowSermonTooltip(false)}
+            >
+              <button
+                type="button"
+                id="nav-tab-sermon"
+                onClick={() => {
+                  handlePageChange('sermon');
+                  setShowSermonTooltip((prev) => !prev);
+                }}
+                className="relative px-2.5 sm:px-3 py-1.5 transition-all cursor-pointer whitespace-nowrap text-white/90 hover:text-white"
+              >
+                <span className="font-normal">
+                  네이션스 Sermon <span className="text-[#FB923C] font-bold">AI</span>
+                </span>
+                {activePage === 'sermon' ? (
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-white rounded-full" />
+                ) : (
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-white/40 transition-all rounded-full" />
+                )}
+              </button>
+
+              {/* Sermon AI 서브 텍스트: 네이션스 설교 AI & 설교숏폼 제작앱 */}
+              <div
+                className={`absolute top-full left-1/2 -translate-x-1/2 pt-1 transition-all duration-150 pointer-events-none ${
+                  showSermonTooltip
+                    ? 'opacity-100 translate-y-0 visible'
+                    : 'opacity-0 -translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible'
+                }`}
+              >
+                <div className="flex flex-col items-center whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none leading-tight">
+                  <span>네이션스 설교 <span className="text-[#FB923C] font-bold">AI</span></span>
+                  <span>설교숏폼 제작앱</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. 네이션스 Vote */}
             <div
               className="relative group py-1.5"
               onMouseEnter={() => setShowVoteTooltip(true)}
@@ -97,19 +147,19 @@ export const Header: React.FC<HeaderProps> = ({
                 id="nav-tab-vote"
                 onClick={() => {
                   handlePageChange('vote');
-                  setShowVoteTooltip(prev => !prev);
+                  setShowVoteTooltip((prev) => !prev);
                 }}
                 className="relative px-2.5 sm:px-3 py-1.5 transition-all cursor-pointer whitespace-nowrap text-white/90 hover:text-white"
               >
                 <span className="font-normal">네이션스 Vote</span>
                 {activePage === 'vote' ? (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-white rounded-full" />
                 ) : (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-[#006948]/50 transition-all rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-white/40 transition-all rounded-full" />
                 )}
               </button>
 
-              {/* Vote 서브 텍스트: 네이션스 교회투표 */}
+              {/* Vote 서브 텍스트: 네이션스 교회투표 & 직분자선거, 총회앱 */}
               <div
                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-1 transition-all duration-150 pointer-events-none ${
                   showVoteTooltip
@@ -117,13 +167,14 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'opacity-0 -translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible'
                 }`}
               >
-                <span className="whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none">
-                  네이션스 교회투표
-                </span>
+                <div className="flex flex-col items-center whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none leading-tight">
+                  <span>네이션스 교회투표</span>
+                  <span>직분자선거, 총회앱</span>
+                </div>
               </div>
             </div>
 
-            {/* 2. 네이션스 Studio */}
+            {/* 3. 네이션스 Studio */}
             <div
               className="relative group py-1.5"
               onMouseEnter={() => setShowStudioTooltip(true)}
@@ -134,19 +185,19 @@ export const Header: React.FC<HeaderProps> = ({
                 id="nav-tab-score"
                 onClick={() => {
                   handlePageChange('score');
-                  setShowStudioTooltip(prev => !prev);
+                  setShowStudioTooltip((prev) => !prev);
                 }}
                 className="relative px-2.5 sm:px-3 py-1.5 transition-all cursor-pointer whitespace-nowrap text-white/90 hover:text-white"
               >
                 <span className="font-normal">네이션스 Studio</span>
                 {activePage === 'score' ? (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-white rounded-full" />
                 ) : (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-[#006948]/50 transition-all rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-white/40 transition-all rounded-full" />
                 )}
               </button>
 
-              {/* 마우스를 대거나 터치했을 때 나타나는 서브 텍스트: 화살표 없음, 특별한 배경 없음, 메뉴와 같은 폰트 */}
+              {/* 마우스를 대거나 터치했을 때 나타나는 서브 텍스트: 구 네이션스 악보 & 찬양인도자 앱 */}
               <div
                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-1 transition-all duration-150 pointer-events-none ${
                   showStudioTooltip
@@ -154,13 +205,14 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'opacity-0 -translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible'
                 }`}
               >
-                <span className="whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none">
-                  구 네이션스 악보
-                </span>
+                <div className="flex flex-col items-center whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none leading-tight">
+                  <span>구 네이션스 악보</span>
+                  <span>찬양인도자 앱</span>
+                </div>
               </div>
             </div>
 
-            {/* 3. 네이션스 Bible */}
+            {/* 4. 네이션스 Bible AI (AI는 주황색) */}
             <div
               className="relative group py-1.5"
               onMouseEnter={() => setShowBibleTooltip(true)}
@@ -171,19 +223,21 @@ export const Header: React.FC<HeaderProps> = ({
                 id="nav-tab-bible"
                 onClick={() => {
                   handlePageChange('bible');
-                  setShowBibleTooltip(prev => !prev);
+                  setShowBibleTooltip((prev) => !prev);
                 }}
                 className="relative px-2.5 sm:px-3 py-1.5 transition-all cursor-pointer whitespace-nowrap text-white/90 hover:text-white"
               >
-                <span className="font-normal">네이션스 Bible</span>
+                <span className="font-normal">
+                  네이션스 Bible <span className="text-[#FB923C] font-bold">AI</span>
+                </span>
                 {activePage === 'bible' ? (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-white rounded-full" />
                 ) : (
-                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-[#006948]/50 transition-all rounded-full" />
+                  <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-transparent group-hover:bg-white/40 transition-all rounded-full" />
                 )}
               </button>
 
-              {/* Bible 서브 텍스트: 네이션스 성경 */}
+              {/* Bible AI 서브 텍스트: 네이션스 성경AI & 나만의 주석앱 */}
               <div
                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-1 transition-all duration-150 pointer-events-none ${
                   showBibleTooltip
@@ -191,9 +245,10 @@ export const Header: React.FC<HeaderProps> = ({
                     : 'opacity-0 -translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible'
                 }`}
               >
-                <span className="whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none">
-                  네이션스 성경
-                </span>
+                <div className="flex flex-col items-center whitespace-nowrap text-[13px] md:text-[14px] font-normal text-white/90 drop-shadow-md select-none leading-tight">
+                  <span>네이션스 성경<span className="text-[#FB923C] font-bold">AI</span></span>
+                  <span>나만의 주석앱</span>
+                </div>
               </div>
             </div>
 
@@ -243,10 +298,10 @@ export const Header: React.FC<HeaderProps> = ({
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleScrollTo('core-values')}
+                      onClick={() => handleScrollTo('differentiation')}
                       className="w-full text-center px-3 py-1.5 text-[13px] font-normal text-white hover:bg-white/10 rounded-lg transition-all cursor-pointer whitespace-nowrap"
                     >
-                      네이션스 가치
+                      Q&A
                     </button>
                   </div>
                 </div>
@@ -254,8 +309,40 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </nav>
 
-          {/* Mobile Text-Only Selector: 글자 크기를 키우고 Vote, Studio, Bible 로 변경 */}
-          <div className="flex sm:hidden items-center gap-3 xs:gap-4 shrink-0">
+          {/* Mobile Text-Only Selector: 글자 크기를 키우고 설교ai, Vote, Studio, Bible 순서로 노출 */}
+          <div className="flex sm:hidden items-center gap-2 xs:gap-3 shrink-0">
+            {/* Mobile sermon AI */}
+            <div className="relative group">
+              <button
+                type="button"
+                onClick={() => {
+                  handlePageChange('sermon');
+                  setShowSermonTooltip((prev) => !prev);
+                  setShowVoteTooltip(false);
+                  setShowStudioTooltip(false);
+                  setShowBibleTooltip(false);
+                }}
+                className="relative text-[13px] xs:text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
+              >
+                <span>
+                  Sermon <span className="text-[#FB923C] font-bold">AI</span>
+                </span>
+                {activePage === 'sermon' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white rounded-full" />
+                )}
+              </button>
+
+              {/* 모바일 sermon AI 터치 시 아래에 표시되는 네이션스 설교 AI & 설교숏폼 제작앱 */}
+              {showSermonTooltip && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap z-50">
+                  <div className="flex flex-col items-center text-[11px] font-normal text-white/95 drop-shadow-md select-none bg-black/80 px-2 py-1 rounded leading-tight">
+                    <span>네이션스 설교 <span className="text-[#FB923C] font-bold">AI</span></span>
+                    <span>설교숏폼 제작앱</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Mobile Vote */}
             <div className="relative group">
               <button
@@ -263,23 +350,25 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => {
                   handlePageChange('vote');
                   setShowVoteTooltip(prev => !prev);
+                  setShowSermonTooltip(false);
                   setShowStudioTooltip(false);
                   setShowBibleTooltip(false);
                 }}
-                className="relative text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
+                className="relative text-[13px] xs:text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
               >
                 <span>Vote</span>
                 {activePage === 'vote' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white rounded-full" />
                 )}
               </button>
 
-              {/* 모바일 Vote 터치 시 아래에 표시되는 네이션스 교회투표 */}
+              {/* 모바일 Vote 터치 시 아래에 표시되는 네이션스 교회투표 & 직분자선거, 총회앱 */}
               {showVoteTooltip && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap">
-                  <span className="text-[12px] font-normal text-white/90 drop-shadow-md select-none">
-                    네이션스 교회투표
-                  </span>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap z-50">
+                  <div className="flex flex-col items-center text-[11px] font-normal text-white/95 drop-shadow-md select-none bg-black/80 px-2 py-1 rounded leading-tight">
+                    <span>네이션스 교회투표</span>
+                    <span>직분자선거, 총회앱</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -291,23 +380,25 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => {
                   handlePageChange('score');
                   setShowStudioTooltip(prev => !prev);
+                  setShowSermonTooltip(false);
                   setShowVoteTooltip(false);
                   setShowBibleTooltip(false);
                 }}
-                className="relative text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
+                className="relative text-[13px] xs:text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
               >
                 <span>Studio</span>
                 {activePage === 'score' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white rounded-full" />
                 )}
               </button>
 
-              {/* 모바일 Studio 터치 시 아래에 표시되는 구 네이션스 악보 */}
+              {/* 모바일 Studio 터치 시 아래에 표시되는 구 네이션스 악보 & 찬양인도자 앱 */}
               {showStudioTooltip && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap">
-                  <span className="text-[12px] font-normal text-white/90 drop-shadow-md select-none">
-                    구 네이션스 악보
-                  </span>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap z-50">
+                  <div className="flex flex-col items-center text-[11px] font-normal text-white/95 drop-shadow-md select-none bg-black/80 px-2 py-1 rounded leading-tight">
+                    <span>구 네이션스 악보</span>
+                    <span>찬양인도자 앱</span>
+                  </div>
                 </div>
               )}
             </div>
@@ -319,39 +410,30 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => {
                   handlePageChange('bible');
                   setShowBibleTooltip(prev => !prev);
+                  setShowSermonTooltip(false);
                   setShowVoteTooltip(false);
                   setShowStudioTooltip(false);
                 }}
-                className="relative text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
+                className="relative text-[13px] xs:text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
               >
-                <span>Bible</span>
+                <span>
+                  Bible <span className="text-[#FB923C] font-bold">AI</span>
+                </span>
                 {activePage === 'bible' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#006948] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white rounded-full" />
                 )}
               </button>
 
-              {/* 모바일 Bible 터치 시 아래에 표시되는 네이션스 성경 */}
+              {/* 모바일 Bible 터치 시 아래에 표시되는 네이션스 성경AI & 나만의 주석앱 */}
               {showBibleTooltip && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap">
-                  <span className="text-[12px] font-normal text-white/90 drop-shadow-md select-none">
-                    네이션스 성경
-                  </span>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap z-50">
+                  <div className="flex flex-col items-center text-[11px] font-normal text-white/95 drop-shadow-md select-none bg-black/80 px-2 py-1 rounded leading-tight">
+                    <span>네이션스 성경<span className="text-[#FB923C] font-bold">AI</span></span>
+                    <span>나만의 주석앱</span>
+                  </div>
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Right Action: Menu Button (마우스만 대도 열리도록 onMouseEnter 추가) */}
-          <div className="flex items-center">
-            <button
-              onClick={onOpenMenu}
-              onMouseEnter={onOpenMenu}
-              aria-label="전체 메뉴 열기"
-              className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center rounded-lg text-white hover:bg-white/20 active:scale-95 transition-colors cursor-pointer drop-shadow-md"
-              type="button"
-            >
-              <span className="material-symbols-outlined text-[22px] sm:text-[24px] md:text-[26px]">menu</span>
-            </button>
           </div>
         </div>
       </div>

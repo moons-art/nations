@@ -1,32 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { SCORE_HERO_VIDEO_MP4 } from '../../data/products';
+import { HERO_VIDEO_MP4 } from '../../data/products';
 import { QuestionCardCursor } from '../common/QuestionCardCursor';
 
-interface ScoreHeroSectionProps {
+interface SermonHeroSectionProps {
   onOpenDemoModal: () => void;
   onSearchQuery: (query: string) => void;
 }
 
-export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
+export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
   onOpenDemoModal: _onOpenDemoModal,
   onSearchQuery,
 }) => {
-  const [searchValue] = useState('네이션스 스튜디오는?');
+  const [searchValue, setSearchValue] = useState('네이션스 설교 AI는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
   const phrases = [
-    '예배준비 네이션스가 해결해 드릴게요',
+    '설교숏츠, 릴스 네이션스가 해결해 드릴게요',
     '교회를 돕는 모든 것 네이션스',
   ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Continuous Typewriter & Erase effect matching Nations Sermon concept
+  // Continuous Typewriter & Erase effect matching user's reference image
   const fullQuestionsContinuous =
-    '매주 찬양팀 악보 복사와 콘티 정리에 드는 시간을 줄일 순 없을까? 찬양 인도자부터 반주자, 싱어까지 각자의 파트보와 송폼을 실시간으로 공유할 수 없을까? 조옮김(Key 변환) 악보를 1초 만에 만들어 연습할 순 없을까? 소그룹과 금요기도회에서도 태블릿 하나로 찬양할 순 없을까?';
+    '유튜브 링크만 넣어도 60초 가장 은혜로운 핵심 숏츠·릴스를 자동으로 만들 수 없을까요? 설교 영상이 없는 교회도 설교숏폼 영상을 만들수 있을까요? 주일 설교를 카드뉴스로 성도들에게 보내 한주간 묵상하게 하는 방법은 없을까? 대형교회처럼 주일광고 영상을 만들 순 없을까?';
   const [displayedText, setDisplayedText] = useState('');
   const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
 
@@ -39,6 +39,7 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
           setDisplayedText(fullQuestionsContinuous.slice(0, displayedText.length + 1));
         }, 32);
       } else {
+        // Once all questions are fully typed, pause for 2.8s before erasing from the back
         timer = setTimeout(() => {
           setIsQuestionDeleting(true);
         }, 2800);
@@ -47,8 +48,9 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
       if (displayedText.length > 0) {
         timer = setTimeout(() => {
           setDisplayedText(fullQuestionsContinuous.slice(0, displayedText.length - 1));
-        }, 14);
+        }, 14); // Smooth backspacing from the end
       } else {
+        // Once erased down to the beginning, pause 450ms then start typing again
         timer = setTimeout(() => {
           setIsQuestionDeleting(false);
         }, 450);
@@ -88,6 +90,7 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
     return () => clearTimeout(timer);
   }, [displayedSecondLine, isDeleting, phraseIndex]);
 
+  // Guarantee video auto-playback on mount
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch((err) => {
@@ -97,7 +100,7 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
   }, []);
 
   const handleSearchClick = () => {
-    const target = document.getElementById('score-differentiation');
+    const target = document.getElementById('sermon-differentiation');
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
     }
@@ -124,33 +127,44 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
     return <span>{displayedSecondLine}</span>;
   };
 
+  // Render question typewriter:
+  // All text is clean, standard black, with shared 50% thinner purple rectangle cursor
+  const renderQuestionTypewriter = () => {
+    return (
+      <>
+        <span className="text-slate-800">{displayedText}</span>
+        <QuestionCardCursor />
+      </>
+    );
+  };
+
   return (
     <div className="w-full flex flex-col">
-      {/* 1. HERO VIDEO */}
+      {/* 1. HERO VIDEO: Same video as Nations Vote (요구사항: 히어로 영상은 네이션스 vote 영상을 그대로 써) */}
       <section className="relative w-full h-[68vh] min-h-[490px] max-h-[700px] sm:h-auto sm:min-h-0 sm:max-h-[85vh] sm:aspect-video overflow-hidden bg-black flex items-center justify-start">
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <video
             ref={videoRef}
-            key={SCORE_HERO_VIDEO_MP4}
+            key={HERO_VIDEO_MP4}
             autoPlay
             loop
             muted
             playsInline
             className="w-full h-full object-cover object-center opacity-85 sm:opacity-90"
-            src={SCORE_HERO_VIDEO_MP4}
+            src={HERO_VIDEO_MP4}
           >
-            <source src={SCORE_HERO_VIDEO_MP4} type="video/mp4" />
+            <source src={HERO_VIDEO_MP4} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
         </div>
 
-        {/* Overlaid Catchphrase */}
+        {/* Overlaid Catchphrase ONLY */}
         <div className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-12 md:px-16 flex flex-col justify-center pt-16 sm:pt-14 md:pt-18">
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
-                찬양 준비와 예배에만 집중하세요
+                목사님의 설교를 모든 성도에게
               </span>
               <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
                 {renderSecondLine()}
@@ -161,10 +175,10 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
         </div>
       </section>
 
-      {/* 2. OUTSIDE THE VIDEO: Nations Score Focus & Typewriter Showcase */}
+      {/* 2. OUTSIDE THE VIDEO: Sermon AI Focus & Showcase */}
       <section className="w-full bg-[#F8F9FD] py-12 sm:py-16 px-3 sm:px-6 flex flex-col items-center text-center">
         <div className="max-w-5xl lg:max-w-6xl mx-auto w-full flex flex-col items-center">
-          {/* Narrative Pain Point Heading & Big Question Box */}
+          {/* Narrative Pain Point Heading & Big Question Box for Preaching AI - 스크롤 시 아래에서 위로 떠오르는 효과 */}
           <motion.div
             initial={{ opacity: 0, y: 70 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -173,30 +187,32 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
             className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
             <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
-              <span>예배와 찬양 준비로 분주한 사역자의 고민</span>
+              <span>숏폼 세대에게 설교를 전달하고 싶어하는 목사님의 고민</span>
             </h2>
 
-            {/* Outer Container with Clean Minimal Styling */}
+            {/* Outer Container with Clean, Non-AI Minimal Styling */}
             <div className="w-full max-w-4xl lg:max-w-5xl p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 rounded-[26px] min-[360px]:rounded-[30px] sm:rounded-[40px] md:rounded-[44px] bg-slate-100/80 border border-slate-200/80 shadow-[0_10px_35px_-10px_rgba(15,23,42,0.04)]">
               {/* Card Surface */}
               <div className="w-full bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/60">
-                {/* Inner Input Box */}
+                {/* Inner Input Box: 4번 스타일 - 하단 툴바형 (상태 태그 + 액션 버튼) */}
                 <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
+                  {/* Top-aligned continuous typewriter text: 모바일에서 카드 안에 온전히 다 들어가는 사이즈 */}
                   <div className="w-full">
                     <p className="text-[11.2px] min-[360px]:text-[12px] min-[390px]:text-[12.6px] min-[430px]:text-[13.5px] sm:text-[16px] md:text-[17px] text-slate-800 leading-[1.52] min-[360px]:leading-[1.58] sm:leading-[1.78] font-normal tracking-tight break-keep-all whitespace-pre-wrap select-text">
-                      <span>{displayedText}</span>
-                      <QuestionCardCursor />
+                      {renderQuestionTypewriter()}
                     </p>
                   </div>
 
                   {/* 하단 툴바: 구분선 없는 좌측 심플 + 및 우측 화살표 액션 버튼 */}
                   <div className="w-full pt-1 sm:pt-2 flex items-center justify-between gap-2 mt-auto">
+                    {/* Left: 아이콘 대신 심플한 텍스트 '+' */}
                     <div className="flex items-center pl-1">
                       <span className="text-slate-400 hover:text-slate-600 text-[20px] sm:text-[22px] font-light leading-none select-none cursor-default transition-colors">
                         +
                       </span>
                     </div>
 
+                    {/* Right: 알아보기 글자를 제외한 심플 화살표 버튼 */}
                     <button
                       type="button"
                       onClick={handleSearchClick}

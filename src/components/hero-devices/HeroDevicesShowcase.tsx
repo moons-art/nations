@@ -69,18 +69,18 @@ export const HeroDevicesShowcase: React.FC<HeroDevicesShowcaseProps> = ({
           }}
           className="flex flex-row items-center justify-center gap-4"
         >
-          {/* Left Device: Phone Waiting Screen (김은혜 대기화면) */}
-          <div className="w-[260px] shrink-0 drop-shadow-xl hover:scale-[1.01] transition-transform duration-200">
+          {/* Left Device: Phone Waiting Screen (김은혜 대기화면) - 활발히 떠오르는 효과 */}
+          <div className="w-[260px] shrink-0 drop-shadow-xl hover:-translate-y-4 hover:scale-[1.03] hover:drop-shadow-2xl transition-all duration-300 cursor-pointer">
             <PhoneWaitingScreen />
           </div>
 
-          {/* Center Device: Pad Dashboard Screen (현장 상황실 데스크 - 와이드 가로비율) */}
-          <div className="w-[580px] shrink-0 drop-shadow-2xl hover:scale-[1.01] transition-transform duration-200 z-10">
+          {/* Center Device: Pad Dashboard Screen (현장 상황실 데스크 - 중앙 메인 디바이스 입체적 부양) */}
+          <div className="w-[580px] shrink-0 drop-shadow-2xl hover:-translate-y-5 hover:scale-[1.025] hover:drop-shadow-[0_30px_60px_rgba(0,0,0,0.35)] transition-all duration-300 z-10 cursor-pointer">
             <PadDashboardScreen />
           </div>
 
-          {/* Right Device: Phone Voting Screen (홍길동 선거인 투표화면) */}
-          <div className="w-[260px] shrink-0 drop-shadow-xl hover:scale-[1.01] transition-transform duration-200">
+          {/* Right Device: Phone Voting Screen (홍길동 선거인 투표화면) - 활발히 떠오르는 효과 */}
+          <div className="w-[260px] shrink-0 drop-shadow-xl hover:-translate-y-4 hover:scale-[1.03] hover:drop-shadow-2xl transition-all duration-300 cursor-pointer">
             <PhoneVotingScreen />
           </div>
         </div>

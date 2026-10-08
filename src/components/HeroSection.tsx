@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { HERO_VIDEO_MP4 } from '../data/products';
-import { HeroDevicesShowcase } from './hero-devices/HeroDevicesShowcase';
+import { QuestionCardCursor } from './common/QuestionCardCursor';
 
 interface HeroSectionProps {
   onOpenFreeModal: () => void;
@@ -9,21 +9,54 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
-  onOpenFreeModal,
+  onOpenFreeModal: _onOpenFreeModal,
   onSearchQuery,
 }) => {
-  const [searchValue, setSearchValue] = useState('네이션스 교회투표는?');
-  const [isEditing, setIsEditing] = useState(false);
+  const [searchValue] = useState('네이션스 교회투표는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
   const phrases = [
-    '교회투표 네이션스가 해결해 드릴게요',
+    '교회 투표 네이션스가 해결해 드릴게요',
     '교회를 돕는 모든 것 네이션스',
   ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Continuous Typewriter & Erase effect matching Nations Sermon concept
+  const fullQuestionsContinuous =
+    '종이투표 인쇄와 개표에 주일 하루가 다 가는데 모바일로 안전하게 바꿀 수 없을까? 어르신들도 어려움 없이 스마트폰으로 투표할 수 있을까? 투표 결과의 공정성과 교인 명부 보안은 완벽하게 지킬 수 있을까? 총회와 공동의회 투표를 실시간으로 집계할 순 없을까?';
+  const [displayedText, setDisplayedText] = useState('');
+  const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (!isQuestionDeleting) {
+      if (displayedText.length < fullQuestionsContinuous.length) {
+        timer = setTimeout(() => {
+          setDisplayedText(fullQuestionsContinuous.slice(0, displayedText.length + 1));
+        }, 32);
+      } else {
+        timer = setTimeout(() => {
+          setIsQuestionDeleting(true);
+        }, 2800);
+      }
+    } else {
+      if (displayedText.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayedText(fullQuestionsContinuous.slice(0, displayedText.length - 1));
+        }, 14);
+      } else {
+        timer = setTimeout(() => {
+          setIsQuestionDeleting(false);
+        }, 450);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayedText, isQuestionDeleting, fullQuestionsContinuous]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -35,7 +68,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           setDisplayedSecondLine(currentPhrase.slice(0, displayedSecondLine.length + 1));
         }, 110);
       } else {
-        // Pause when completely typed out so the user can read it comfortably
         timer = setTimeout(() => {
           setIsDeleting(true);
         }, 2000);
@@ -46,7 +78,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           setDisplayedSecondLine(currentPhrase.slice(0, displayedSecondLine.length - 1));
         }, 55);
       } else {
-        // Pause briefly after complete deletion, then switch to the other phrase
         timer = setTimeout(() => {
           setPhraseIndex((prev) => (prev + 1) % phrases.length);
           setIsDeleting(false);
@@ -67,9 +98,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   }, []);
 
   const handleSearchClick = () => {
-    // Scroll to DifferentiationSection as requested:
-    // "네이션스 교회투표는? 검색창 이미지 부분 ->
-    //  단순한 앱 개발 회사는 많습니다. 하지만 우리는 교회를 모른 채 기술만 만들지 않습니다!"
     const target = document.getElementById('differentiation');
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
@@ -77,17 +105,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     onSearchQuery(searchValue);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearchClick();
-    }
-  };
-
-  // Render second line with brand green color on "네이션스" in the last phrase
   const renderSecondLine = () => {
     if (phraseIndex === 1) {
-      // '교회를 돕는 모든 것 네이션스'
-      // 0..11 is '교회를 돕는 모든 것' (11 chars), 11 is ' ', 12+ is '네이션스'
       if (displayedSecondLine.length <= 11) {
         return <span>{displayedSecondLine}</span>;
       }
@@ -108,9 +127,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <div className="w-full flex flex-col">
-      {/* 1. HERO VIDEO: Extra-tall vertical height on mobile (cropped left/right), 16:9 aspect-video on tablet/desktop */}
+      {/* 1. HERO VIDEO */}
       <section className="relative w-full h-[68vh] min-h-[490px] max-h-[700px] sm:h-auto sm:min-h-0 sm:max-h-[85vh] sm:aspect-video overflow-hidden bg-black flex items-center justify-start">
-        {/* HTML5 Native Autoplay Video Player */}
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <video
             ref={videoRef}
@@ -124,110 +142,80 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           >
             <source src={HERO_VIDEO_MP4} type="video/mp4" />
           </video>
-          {/* Subtle Scrim Gradients for text contrast without darkening the top header */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10" />
         </div>
 
-        {/* Overlaid Catchphrase ONLY (Responsive Typography & Cursor) */}
+        {/* Overlaid Catchphrase */}
         <div className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-12 md:px-16 flex flex-col justify-center pt-16 sm:pt-14 md:pt-18">
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-              {/* First Line: Lighter, medium weight with clear contrast */}
-              <span className="block text-[16px] min-[390px]:text-[18px] min-[430px]:text-[20px] sm:text-[23px] md:text-[28px] lg:text-[32px] font-medium text-white/90 mb-1.5 sm:mb-2.5">
-                목회와 사역에만 집중하세요
+              <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
+                목회에만 집중하도록 돕습니다.
               </span>
-              {/* Second Line: Significantly larger, ultra-bold font-black, high contrast with glowing green accent */}
-              <span className="inline-flex flex-wrap items-center text-[26px] min-[390px]:text-[29px] min-[430px]:text-[32px] sm:text-[36px] md:text-[46px] lg:text-[54px] font-black text-white leading-tight break-keep-all">
+              <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
                 {renderSecondLine()}
-                <span className="inline-block w-[3.5px] sm:w-[4.5px] h-[0.85em] bg-white ml-2 align-middle animate-pulse flex-shrink-0" />
+                <span className="inline-block w-[3px] sm:w-[4px] h-[0.85em] bg-white ml-2 align-middle animate-pulse flex-shrink-0" />
               </span>
             </h1>
           </div>
         </div>
       </section>
 
-      {/* 2. OUTSIDE THE VIDEO (White / Light Canvas Section, exactly like Screenshot 1 & 2) */}
-      <section className="w-full bg-[#F8F9FD] py-14 sm:py-20 px-3 sm:px-6 flex flex-col items-center text-center">
-        <div className="max-w-xl sm:max-w-3xl md:max-w-4xl mx-auto w-full flex flex-col items-center">
-          {/* Narrative Pain Point Heading - Strict single-line display across all mobile screens */}
+      {/* 2. OUTSIDE THE VIDEO: Nations Vote Focus & Typewriter Showcase (Sermon Concept Applied) */}
+      <section className="w-full bg-[#F8F9FD] py-12 sm:py-16 px-3 sm:px-6 flex flex-col items-center text-center">
+        <div className="max-w-5xl lg:max-w-6xl mx-auto w-full flex flex-col items-center">
+          {/* Narrative Pain Point Heading & Big Question Box */}
           <motion.div
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 70 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center"
+            className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
-            <h2 className="text-[#006948] font-black text-[18px] min-[360px]:text-[21px] min-[400px]:text-[24px] sm:text-[32px] md:text-[36px] mb-3.5 tracking-tight leading-snug">
-              <span className="block whitespace-nowrap">중요한 교회투표를 앞둔 목회자의 고민</span>
+            <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
+              <span>중요한 교회투표를 앞둔 목회자의 고민</span>
             </h2>
-            <p className="text-slate-600 text-[10.5px] min-[360px]:text-[12px] min-[390px]:text-[13.5px] min-[430px]:text-[15px] sm:text-[17px] md:text-[19px] whitespace-nowrap tracking-tighter min-[390px]:tracking-tight sm:tracking-normal">
-              종이투표? 비효율적인 시간과 행정으로 지치지는 않을지...
-            </p>
-            <p className="text-slate-600 text-[10.5px] min-[360px]:text-[12px] min-[390px]:text-[13.5px] min-[430px]:text-[15px] sm:text-[17px] md:text-[19px] whitespace-nowrap tracking-tighter min-[390px]:tracking-tight sm:tracking-normal mt-1 sm:mt-1.5">
-              스마트 투표? 온 성도가 가능한지, 퀄리티는 믿을 수 있는지...
-            </p>
-          </motion.div>
 
-          {/* Large Pill-Shaped Search Bar (Expanded on pad & PC) */}
-          <motion.div
-            initial={{ opacity: 0, y: 65 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.9, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-md sm:max-w-xl md:max-w-2xl bg-white rounded-full py-3.5 px-6 sm:px-8 shadow-[0_12px_32px_rgba(0,0,0,0.07)] border border-slate-200/90 flex items-center justify-between mt-8 group hover:shadow-[0_16px_36px_rgba(0,0,0,0.11)] transition-all"
-          >
-            <div className="text-left flex-1 min-w-0 pr-3">
-              <span className="text-[11px] font-bold text-slate-400 tracking-wider block uppercase">
-                nations
-              </span>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onBlur={() => setIsEditing(false)}
-                  onKeyDown={handleKeyDown}
-                  autoFocus
-                  className="w-full text-[19px] sm:text-[23px] md:text-[26px] font-black text-[#006948] outline-none bg-transparent"
-                  placeholder="궁금한 솔루션을 검색하세요"
-                />
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(true)}
-                  className="text-left font-black text-[19px] sm:text-[23px] md:text-[26px] text-[#006948] truncate hover:text-[#00855d] transition-colors cursor-text w-full block"
-                >
-                  {searchValue}
-                </button>
-              )}
+            {/* Outer Container with Clean Minimal Styling */}
+            <div className="w-full max-w-4xl lg:max-w-5xl p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 rounded-[26px] min-[360px]:rounded-[30px] sm:rounded-[40px] md:rounded-[44px] bg-slate-100/80 border border-slate-200/80 shadow-[0_10px_35px_-10px_rgba(15,23,42,0.04)]">
+              {/* Card Surface */}
+              <div className="w-full bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/60">
+                {/* Inner Input Box: 4번 스타일 - 하단 툴바형 */}
+                <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
+                  {/* Top-aligned continuous typewriter text */}
+                  <div className="w-full">
+                    <p className="text-[11.2px] min-[360px]:text-[12px] min-[390px]:text-[12.6px] min-[430px]:text-[13.5px] sm:text-[16px] md:text-[17px] text-slate-800 leading-[1.52] min-[360px]:leading-[1.58] sm:leading-[1.78] font-normal tracking-tight break-keep-all whitespace-pre-wrap select-text">
+                      <span>{displayedText}</span>
+                      <QuestionCardCursor />
+                    </p>
+                  </div>
+
+                  {/* 하단 툴바: 구분선 없는 좌측 심플 + 및 우측 화살표 액션 버튼 */}
+                  <div className="w-full pt-1 sm:pt-2 flex items-center justify-between gap-2 mt-auto">
+                    <div className="flex items-center pl-1">
+                      <span className="text-slate-400 hover:text-slate-600 text-[20px] sm:text-[22px] font-light leading-none select-none cursor-default transition-colors">
+                        +
+                      </span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleSearchClick}
+                      aria-label="솔루션으로 이동"
+                      className="w-7 h-7 min-[360px]:w-7.5 min-[360px]:h-7.5 sm:w-8.5 sm:h-8.5 rounded-full bg-[#0F172A] hover:bg-[#1E293B] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+                    >
+                      <span className="material-symbols-outlined text-[13px] min-[360px]:text-[14px] sm:text-[16px] font-bold">
+                        arrow_forward
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <button
-              onClick={handleSearchClick}
-              aria-label="솔루션 검색 확인"
-              type="button"
-              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#006948] hover:bg-[#006948] hover:text-white transition-all shrink-0 cursor-pointer shadow-xs"
-            >
-              <span className="material-symbols-outlined text-[26px] sm:text-[28px]">search</span>
-            </button>
-          </motion.div>
-
-          {/* Device Showcase (Pad & Smartphone UI Screens: 2 Phones + 1 Pad) */}
-          <motion.div
-            initial={{ opacity: 0, y: 75 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.95, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full mt-10 sm:mt-14 flex justify-center"
-          >
-            <HeroDevicesShowcase onExploreClick={handleSearchClick} />
           </motion.div>
         </div>
       </section>
     </div>
   );
 };
-
-
-

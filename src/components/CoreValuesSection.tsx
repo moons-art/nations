@@ -1,153 +1,132 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { CORE_POINT_IMAGES } from '../data/products';
-
-const CoreImage: React.FC<{
-  src: string;
-  altText: string;
-}> = ({ src, altText }) => {
-  return (
-    <div className="w-full rounded-2xl overflow-hidden mt-3 shadow-inner bg-slate-900 relative group select-none">
-      <img
-        className="w-full h-40 sm:h-44 md:h-40 lg:h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-        alt={altText}
-        src={src}
-        loading="lazy"
-      />
-    </div>
-  );
-};
+import { usePageImages } from '../services/imageStorage';
+import { CoreCardImageSlot } from './common/CoreCardImageSlot';
 
 export const CoreValuesSection: React.FC = () => {
+  const images = usePageImages('vote');
+
   return (
     <section
-      className="w-full px-5 py-8 sm:py-12 sm:px-8 lg:px-12 flex flex-col gap-8 bg-[#eff4ff] rounded-3xl shadow-xs border border-blue-100/70"
+      className="w-full bg-[#F8F9FD] py-16 sm:py-24 border-y border-slate-200/80"
       id="core-values"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 55 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col text-center gap-1.5 max-w-2xl mx-auto"
-      >
-        <span className="text-[13px] sm:text-[14px] text-[#006948] tracking-widest uppercase font-bold">
-          CORE VALUES
-        </span>
-        <h2 className="text-[22px] sm:text-[28px] md:text-[32px] font-extrabold text-[#0F172A] leading-tight">
-          네이션스 솔루션이 약속하는 3가지 원칙
-        </h2>
-      </motion.div>
-
-      {/* 3 Core Points: Responsive 3-Column Grid on Tablet & PC */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
-        {/* Point 01: 사역 효율 극대화 */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 sm:gap-12">
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 75 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col text-center items-center gap-1.5 max-w-3xl mx-auto mb-2 sm:mb-4"
         >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 01
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">trending_up</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                시간과 재정을 아끼는 명확한 사역 효율
-              </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                불필요한 행정 비용의 혁신적 절감
-              </p>
-            </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              매번 반복되는 종이 인쇄, 수작업 명부 대조, 복잡한 수기 정리를 모바일 원스톱으로 전환합니다. 예산 낭비 없이 교회의 규모에 맞춘 합리적인 시스템으로 가장 실속 있는{' '}
-              <strong className="text-[#0F172A] font-semibold">스마트 목회를 실현</strong>합니다.
-            </p>
+          <h2 className="text-[19px] sm:text-[23px] md:text-[27px] font-bold text-[#0F172A] tracking-tight leading-tight break-keep-all">
+            90% 이상 시간을 줄입니다.
+          </h2>
+          <p className="text-[13px] sm:text-[14.5px] text-slate-500 font-normal break-keep-all">
+            투표가 즐겁습니다.
+          </p>
+
+          {/* 무료로 앱 이용하기 버튼 */}
+          <div className="pt-3 sm:pt-4">
+            <a
+              href="https://vote.thenations.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#0F172A] hover:bg-black text-white text-[13.5px] sm:text-[14.5px] font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            >
+              <span>무료로 앱 이용하기</span>
+              <span className="material-symbols-outlined text-[17px] font-medium">arrow_forward</span>
+            </a>
           </div>
-          <CoreImage
-            src={CORE_POINT_IMAGES.point1}
-            altText="현장 상황실 실시간 집계 현황 및 사역 효율 스마트 목회 대시보드"
-          />
         </motion.div>
 
-        {/* Point 02: 누구나 쉬운 접근성 */}
-        <motion.div
-          initial={{ opacity: 0, y: 75 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-        >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 02
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">group</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                어르신부터 청년까지 탄탄한 접근성
+        {/* 3 Core Points List - Alternating 2-Column Showcase */}
+        <div className="flex flex-col gap-6 sm:gap-8">
+          {/* Row 1: 시간과 재정을 아끼는 사역 */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Text */}
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                시간과 재정을 아끼는 사역
               </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                디지털 소외 없는 모두의 기술
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                매번 반복되는 종이 인쇄, 수작업 명부 대조, 복잡한 수기 정리를 모바일 원스톱으로 진행됩니다. 예산과 시간을 획기적으로 아낍니다.
               </p>
             </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              시스템은 고도화하되 사용법은 직관적으로 설계합니다. 복잡한 앱 설치 없이 QR과 링크 하나로 어르신 성도까지 막힘없이 참여할 수 있는{' '}
-              <strong className="text-[#0F172A] font-semibold">포용적 UX 환경</strong>을 제공합니다.
-            </p>
-          </div>
-          <CoreImage
-            src={CORE_POINT_IMAGES.point2}
-            altText="어르신부터 청년까지 누구나 쉽게 사용하는 스마트폰 모바일 투표 준비 화면"
-          />
-        </motion.div>
 
-        {/* Point 03: 교회의 안전을 지키는 철저한 데이터 보안 */}
-        <motion.div
-          initial={{ opacity: 0, y: 75 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.9, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col justify-between gap-4 border border-[#E2E8F0]/80 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-        >
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full bg-[#ECFDF5] text-[#006948] text-[12px] font-bold">
-                Point 03
-              </span>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#006948] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[22px]">shield_person</span>
-              </div>
+            {/* Right Visual Box */}
+            <div className="lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[0]}
+                altText="현장 상황실 실시간 집계 현황 및 사역 효율 스마트 목회 대시보드"
+                gradientClass="bg-gradient-to-br from-[#EAE6F5] via-[#E4E8F7] to-[#D5DCF5]"
+              />
             </div>
-            <div className="flex flex-col gap-1">
-              <h3 className="text-[18px] sm:text-[19px] font-bold text-[#0F172A] leading-snug">
-                교회의 안전을 지키는 철저한 데이터 보안
+          </motion.div>
+
+          {/* Row 2: 어르신부터 청년까지 (Alternating) */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Visual Box (Desktop) */}
+            <div className="order-last lg:order-first lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[1]}
+                altText="어르신부터 청년까지 누구나 쉽게 사용하는 스마트폰 모바일 투표 준비 화면"
+                gradientClass="bg-gradient-to-br from-[#E3F5EC] via-[#E8F3EE] to-[#D6EBE0]"
+              />
+            </div>
+
+            {/* Right Text (Desktop) */}
+            <div className="order-first lg:order-last lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                어르신부터 청년까지
               </h3>
-              <p className="text-[13px] sm:text-[14px] text-[#006948] font-semibold">
-                투명하고 안전한 성도 정보 관리
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                시스템은 고도화하되 사용법은 직관적으로 설계됩니다. 앱 설치 없이 QR과 링크 하나로 어르신 성도까지 막힘없이 참여할 수 있습니다.
               </p>
             </div>
-            <p className="text-[13px] sm:text-[14px] text-[#475569] leading-relaxed">
-              선거 투표의 비밀 보장부터 교인 명부 암호화까지, 철저한 권한 분리와 보안 클라우드 환경을 통해{' '}
-              <strong className="text-[#0F172A] font-semibold">성도의 소중한 정보</strong>를 지켜냅니다.
-            </p>
-          </div>
-          <CoreImage
-            src={CORE_POINT_IMAGES.point3}
-            altText="선거관리위원회 일정표와 투표 절차 안내 및 철저한 보안 검표 현장"
-          />
-        </motion.div>
+          </motion.div>
+
+          {/* Row 3: 너무나 쉬운 실시간 현장 관리 */}
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full bg-white rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+          >
+            {/* Left Text */}
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
+                너무나 쉬운 실시간 현장 관리
+              </h3>
+              <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
+                선거관리위원-현장데스크-도우미-방송실-실시간 현황 프레젠테이션까지 버튼 하나로 진행됩니다. 특별한 훈련없이 누구나 운영할수 있습니다.
+              </p>
+            </div>
+
+            {/* Right Visual Box */}
+            <div className="lg:col-span-6 w-full flex items-center justify-center">
+              <CoreCardImageSlot
+                imageSrc={images[2]}
+                altText="교회의 안전과 신뢰를 지키는 철저한 암호화 데이터 보안 체계"
+                gradientClass="bg-gradient-to-br from-[#FFF3E6] via-[#FCEEE2] to-[#F7DFCD]"
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
