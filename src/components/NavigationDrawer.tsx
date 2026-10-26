@@ -25,7 +25,7 @@ interface ProductItem {
 const PRODUCTS: ProductItem[] = [
   {
     id: 'sermon',
-    title: '네이션스 Sermon AI',
+    title: '네이션스 Sermon Video',
     icon: 'smart_toy',
     desc: '예배 풀영상에서 설교 릴스 자동 추출 & 목사님 어투 학습 설교문 및 5일치 묵상카드 생성',
     url: 'https://sermon.thenations.kr/',
@@ -200,7 +200,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
                         >
                           {prod.id === 'sermon' ? (
                             <span>
-                              네이션스 Sermon <span className="text-[#FB923C] font-semibold">AI</span>
+                              네이션스 Sermon <span className="text-[#FB923C] font-semibold">Video</span>
                             </span>
                           ) : prod.id === 'bible' ? (
                             <span>

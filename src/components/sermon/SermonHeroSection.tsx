@@ -12,7 +12,7 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
   onOpenDemoModal: _onOpenDemoModal,
   onSearchQuery,
 }) => {
-  const [searchValue, setSearchValue] = useState('네이션스 설교 AI는?');
+  const [searchValue, setSearchValue] = useState('네이션스 Sermon Video는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
@@ -175,7 +175,7 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
         </div>
       </section>
 
-      {/* 2. OUTSIDE THE VIDEO: Sermon AI Focus & Showcase */}
+      {/* 2. OUTSIDE THE VIDEO: Sermon Video Focus & Showcase */}
       <section className="w-full bg-[#F8F9FD] py-12 sm:py-16 px-3 sm:px-6 flex flex-col items-center text-center">
         <div className="max-w-5xl lg:max-w-6xl mx-auto w-full flex flex-col items-center">
           {/* Narrative Pain Point Heading & Big Question Box for Preaching AI - 스크롤 시 아래에서 위로 떠오르는 효과 */}

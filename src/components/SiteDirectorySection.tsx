@@ -57,7 +57,7 @@ export const SiteDirectorySection: React.FC<SiteDirectorySectionProps> = ({
                   }}
                   className="hover:text-black transition-colors text-left cursor-pointer"
                 >
-                  NATIONS SERMON AI (숏폼 미디어)
+                  NATIONS SERMON VIDEO (숏폼 미디어)
                 </button>
               </li>
               <li>

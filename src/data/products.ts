@@ -36,7 +36,7 @@ export const PRODUCTS_LIST: ProductItem[] = [
   {
     id: 'sermon',
     number: '01',
-    name: '네이션스 Sermon AI',
+    name: '네이션스 Sermon Video',
     badge: '설교 쇼츠·릴스 & 묵상카드 AI',
     badgeColor: 'emerald',
     appUrl: 'https://sermon.thenations.kr/',

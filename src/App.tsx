@@ -163,7 +163,7 @@ export default function App() {
           <>
             {/* 1. Sermon Hero Section with Hero Video (Nations Vote 영상 활용) */}
             <SermonHeroSection
-              onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo', product: '네이션스 sermon AI' })}
+              onOpenDemoModal={() => handleOpenDemoModal({ type: 'demo', product: '네이션스 Sermon Video' })}
               onSearchQuery={handleSearchQuery}
             />
 

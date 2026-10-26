@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop & Tablet Navigation Links (sm/md부터 상단 전체 메뉴 노출 - 메뉴순서: 설교ai, 투표, 스튜디오, 바이블) */}
           <nav className="hidden sm:flex items-center gap-1 sm:gap-1.5 md:gap-2 text-[13.5px] md:text-[14.5px] lg:text-[15px] font-normal text-white/90 drop-shadow-md">
-            {/* 1. 네이션스 Sermon AI (AI는 주황색) */}
+            {/* 1. 네이션스 Sermon Video */}
             <div
               className="relative group py-1.5"
               onMouseEnter={() => setShowSermonTooltip(true)}
@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="relative px-2.5 sm:px-3 py-1.5 transition-all cursor-pointer whitespace-nowrap text-white/90 hover:text-white"
               >
                 <span className="font-normal">
-                  네이션스 Sermon <span className="text-[#FB923C] font-bold">AI</span>
+                  네이션스 Sermon <span className="text-[#FB923C] font-bold">Video</span>
                 </span>
                 {activePage === 'sermon' ? (
                   <span className="absolute bottom-0 left-2.5 right-2.5 h-[2.5px] bg-white rounded-full" />
@@ -121,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </button>
 
-              {/* Sermon AI 서브 텍스트: 네이션스 설교 AI & 설교숏폼 제작앱 */}
+              {/* Sermon Video 서브 텍스트: 네이션스 설교 Video & 설교숏폼 제작앱 */}
               <div
                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-1 transition-all duration-150 pointer-events-none ${
                   showSermonTooltip
@@ -311,7 +311,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Mobile Text-Only Selector: 글자 크기를 키우고 설교ai, Vote, Studio, Bible 순서로 노출 */}
           <div className="flex sm:hidden items-center gap-2 xs:gap-3 shrink-0">
-            {/* Mobile sermon AI */}
+            {/* Mobile sermon Video */}
             <div className="relative group">
               <button
                 type="button"
@@ -325,14 +325,14 @@ export const Header: React.FC<HeaderProps> = ({
                 className="relative text-[13px] xs:text-[14px] tracking-tight transition-all cursor-pointer whitespace-nowrap py-1 text-white font-normal"
               >
                 <span>
-                  Sermon <span className="text-[#FB923C] font-bold">AI</span>
+                  Sermon <span className="text-[#FB923C] font-bold">Video</span>
                 </span>
                 {activePage === 'sermon' && (
                   <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-white rounded-full" />
                 )}
               </button>
 
-              {/* 모바일 sermon AI 터치 시 아래에 표시되는 네이션스 설교 AI & 설교숏폼 제작앱 */}
+              {/* 모바일 sermon Video 터치 시 아래에 표시되는 네이션스 설교 Video & 설교숏폼 제작앱 */}
               {showSermonTooltip && (
                 <div className="absolute top-full left-1/2 -translate-x-1/2 pt-1 pointer-events-none whitespace-nowrap z-50">
                   <div className="flex flex-col items-center text-[11px] font-normal text-white/95 drop-shadow-md select-none bg-black/80 px-2 py-1 rounded leading-tight">

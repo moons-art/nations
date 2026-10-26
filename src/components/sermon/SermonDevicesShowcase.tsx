@@ -699,7 +699,7 @@ export const SermonDevicesShowcase: React.FC<SermonDevicesShowcaseProps> = ({ on
           onClick={onExploreClick}
           className="mt-2 text-[12px] font-bold text-[#006948] hover:text-[#00855d] flex items-center gap-1 transition-colors cursor-pointer"
         >
-          <span>네이션스 sermon AI 기능 더 알아보기</span>
+          <span>네이션스 Sermon Video 기능 더 알아보기</span>
           <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
         </button>
       )}

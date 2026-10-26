@@ -18,7 +18,7 @@ const STORE_NAME = 'images';
 const UPDATE_EVENT = 'nations-images-updated';
 
 export const PAGE_TITLES: Record<PageKey, string> = {
-  sermon: '네이션스 설교 (Sermon AI)',
+  sermon: '네이션스 설교 (Sermon Video)',
   vote: '네이션스 투표 (Vote)',
   score: '네이션스 악보 (Studio)',
   bible: '네이션스 성경 (Bible)',

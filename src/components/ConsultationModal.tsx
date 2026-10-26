@@ -98,7 +98,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
         <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-4 sm:py-6 bg-white">
           <div className="max-w-[420px] mx-auto w-full divide-y divide-slate-100">
           
-            {/* Item 0: 네이션스 sermon AI */}
+            {/* Item 0: 네이션스 Sermon Video */}
             <div className="pb-5 pt-1 flex flex-col gap-2">
               <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
                 <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
@@ -106,7 +106,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                     <MonochromeYouTubeIcon size={19} className="text-black" />
                   </div>
                   <h4 className="text-[15px] sm:text-[16.5px] font-bold text-[#0F172A] tracking-tight">
-                    네이션스 Sermon <span className="text-[#EA580C] font-black">AI</span>
+                    네이션스 Sermon <span className="text-[#EA580C] font-black">Video</span>
                   </h4>
                 </div>
                 <span className="px-2 sm:px-2.5 py-0.5 rounded-full text-[10.5px] sm:text-[11px] font-medium text-black border border-black shrink-0">
@@ -124,7 +124,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 onClick={handleSermonAppClick}
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 bg-[#111827] hover:bg-black active:scale-[0.98] text-white rounded-xl text-[13.5px] sm:text-[14px] font-medium flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer group text-center"
               >
-                <span className="text-white">네이션스 Sermon AI 앱 들어가기</span>
+                <span className="text-white">네이션스 Sermon Video 앱 들어가기</span>
                 <span className="material-symbols-outlined text-[17px] text-white group-hover:translate-x-0.5 transition-transform">
                   arrow_forward
                 </span>
