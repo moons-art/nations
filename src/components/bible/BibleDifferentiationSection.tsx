@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSiteIntro } from '../../services/siteIntroStorage';
 
 interface BibleDifferentiationSectionProps {
   onOpenKakao: () => void;
@@ -8,6 +9,8 @@ interface BibleDifferentiationSectionProps {
 export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionProps> = ({
   onOpenKakao: _onOpenKakao,
 }) => {
+  const siteIntro = useSiteIntro('bible');
+  const faqs = siteIntro.faqs || [];
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
   const toggleItem = (idx: number) => {
@@ -81,192 +84,74 @@ export const BibleDifferentiationSection: React.FC<BibleDifferentiationSectionPr
           transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col gap-4.5 lg:col-span-7 justify-center"
         >
-          {/* Q&A 0: 무료 이용 관련 질문 (제일 첫번째 질문) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-1.5"
-          >
-            <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
-              <span className="text-[#0F172A] font-bold mr-1">Q.</span>
-              가입 및 이용은 무료인가요?
-            </h3>
-
-            <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
-              <div
-                onClick={() => toggleItem(999)}
-                className="flex items-center justify-between gap-3 cursor-pointer group select-none"
-              >
-                <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
-                  네 무료로 가입하여도 기본 기능을 충분히 이용하실 수 있습니다.
-                </p>
-                <motion.button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleItem(999);
-                  }}
-                  animate={{
-                    rotate: openItems[999] ? 45 : 0,
-                    scale: openItems[999] ? 1.15 : 1,
-                  }}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 20 }}
-                  aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+          {/* Q&A List - Dynamic from siteIntro.faqs */}
+          {faqs.map((faq, idx) => {
+            const isOpen = !!openItems[idx];
+            return (
+              <React.Fragment key={idx}>
+                {idx > 0 && <div className="w-full h-[1px] bg-slate-200/90" />}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: 0.05 * (idx + 1), ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-1.5"
                 >
-                  <span className="material-symbols-outlined text-[18px] font-normal select-none">
-                    add
-                  </span>
-                </motion.button>
-              </div>
+                  <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
+                    <span className="text-[#0F172A] font-bold mr-1">Q.</span>
+                    {faq.q}
+                  </h3>
 
-              <AnimatePresence initial={false}>
-                {openItems[999] && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
-                      유료기능은 크레딧을 구매하여 사용한 만큼 차감하는 구조입니다. 심혈을 기울여 만든 고급기능을 유료로 결제하여 차원이 다른 편리함을 경험해 보세요.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
+                  <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
+                    <div
+                      onClick={() => toggleItem(idx)}
+                      className="flex items-center justify-between gap-3 cursor-pointer group select-none"
+                    >
+                      <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
+                        {faq.preview || faq.a}
+                      </p>
+                      <motion.button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleItem(idx);
+                        }}
+                        animate={{
+                          rotate: isOpen ? 45 : 0,
+                          scale: isOpen ? 1.15 : 1,
+                        }}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{ type: 'spring', stiffness: 350, damping: 20 }}
+                        aria-label="답변 펼치기/접기"
+                        className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[18px] font-normal select-none">
+                          add
+                        </span>
+                      </motion.button>
+                    </div>
 
-          <div className="w-full h-[1px] bg-slate-200/90" />
-
-          {/* Q&A 1: PC 프로그램 대비 장점 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-1.5"
-          >
-            <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
-              <span className="text-[#0F172A] font-bold mr-1">Q.</span>
-              기존에 사용하던 무거운 PC 성경 프로그램에 비해 어떤 실질적 장점이 있나요?
-            </h3>
-
-            <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
-              <div
-                onClick={() => toggleItem(0)}
-                className="flex items-center justify-between gap-3 cursor-pointer group select-none"
-              >
-                <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
-                  네이션스 성경은 무겁지 않으며 언제 어디서나 즉시 이어집니다.
-                </p>
-                <motion.button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleItem(0);
-                  }}
-                  animate={{
-                    rotate: openItems[0] ? 45 : 0,
-                    scale: openItems[0] ? 1.15 : 1,
-                  }}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 20 }}
-                  aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px] font-normal select-none">
-                    add
-                  </span>
-                </motion.button>
-              </div>
-
-              <AnimatePresence initial={false}>
-                {openItems[0] && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
-                      복잡하고 난해한 메뉴 대신 목회자가 가장 자주 쓰는 역본 대조와 절별 메모를 직관적으로 배치했습니다. 서재의 PC, 이동 중 스마트폰, 강단 위의 태블릿까지 실시간 클라우드로 완벽 동기화됩니다.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-
-          <div className="w-full h-[1px] bg-slate-200/90" />
-
-          {/* Q&A 2: AI 원어 주석과 개인 주석 활용 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col gap-1.5"
-          >
-            <h3 className="text-[13.5px] sm:text-[14.5px] font-bold text-[#0F172A] leading-snug break-keep-all">
-              <span className="text-[#0F172A] font-bold mr-1">Q.</span>
-              AI 원어 주석과 개인 주석기능은 어떻게 활용하나요?
-            </h3>
-
-            <div className="flex flex-col gap-1 w-full pl-3.5 sm:pl-4">
-              <div
-                onClick={() => toggleItem(1)}
-                className="flex items-center justify-between gap-3 cursor-pointer group select-none"
-              >
-                <p className="text-[12px] sm:text-[13px] text-slate-400 font-normal leading-snug break-keep-all group-hover:text-slate-600 transition-colors">
-                  네이션스 성경은 완벽한 나만의 주석을 추구합니다.
-                </p>
-                <motion.button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleItem(1);
-                  }}
-                  animate={{
-                    rotate: openItems[1] ? 45 : 0,
-                    scale: openItems[1] ? 1.15 : 1,
-                  }}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 20 }}
-                  aria-label="답변 펼치기/접기"
-                  className="shrink-0 p-0 text-slate-400 group-hover:text-[#0F172A] bg-transparent border-0 cursor-pointer flex items-center justify-center leading-none focus:outline-none transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px] font-normal select-none">
-                    add
-                  </span>
-                </motion.button>
-              </div>
-
-              <AnimatePresence initial={false}>
-                {openItems[1] && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all">
-                      AI원어 주석을 통해 구절별, 단어별, 심층 주석을 제공받고, 사용자가 메모해둔 주석과 관주, 설교등이 모두 성경텍스트 안에 구절마다 담겨져 있습니다. 기존의 흩어져 있던 자료들을 찾느라 시간낭비 없이 나만의 주석이 완성됩니다.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pt-1 text-[11.5px] sm:text-[12.5px] text-[#475569] leading-relaxed break-keep-all whitespace-pre-wrap">
+                            {faq.a}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              </React.Fragment>
+            );
+          })}
         </motion.div>
       </div>
     </section>

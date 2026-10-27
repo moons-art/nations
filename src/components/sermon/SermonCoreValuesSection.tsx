@@ -1,10 +1,12 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { usePageImages } from '../../services/imageStorage';
+import { useSiteIntro } from '../../services/siteIntroStorage';
 import { CoreCardImageSlot } from '../common/CoreCardImageSlot';
 
 export const SermonCoreValuesSection: React.FC = () => {
   const images = usePageImages('sermon');
+  const intro = useSiteIntro('sermon');
 
   return (
     <section
@@ -20,11 +22,11 @@ export const SermonCoreValuesSection: React.FC = () => {
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col text-center items-center gap-1.5 max-w-3xl mx-auto mb-2 sm:mb-4"
         >
-          <h2 className="text-[19px] sm:text-[23px] md:text-[27px] font-bold text-[#0F172A] tracking-tight leading-tight break-keep-all">
-            AI 매니저가 알아서 만듭니다.
+          <h2 className="text-[19px] sm:text-[23px] md:text-[27px] font-bold text-[#0F172A] tracking-tight leading-tight break-keep-all text-balance [text-wrap:balance]">
+            {intro.subHeadingLine1 || 'AI 매니저가 알아서 만듭니다.'}
           </h2>
-          <p className="text-[13px] sm:text-[14.5px] text-slate-500 font-normal break-keep-all">
-            링크 하나로 끝나요
+          <p className="text-[13px] sm:text-[14.5px] text-slate-500 font-normal break-keep-all text-balance [text-wrap:balance]">
+            {intro.subHeadingLine2 || '링크 하나로 끝나요'}
           </p>
 
           {/* 무료로 앱 이용하기 버튼 */}
@@ -53,12 +55,11 @@ export const SermonCoreValuesSection: React.FC = () => {
           >
             {/* Left Text */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                유튜브 링크 하나로<br />
-                은혜로운 숏폼 5개 완성
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line text-balance [text-wrap:balance]">
+                {intro.corePoints?.[0]?.title || '유튜브 링크 하나로\n은혜로운 숏폼 5개 완성'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                예배 전체영상도 괜찮습니다. AI가 설교의 핵심 구간을 찾아냅니다. 설교문만 올려도 AI 음성으로 영상이 완성됩니다.
+                {intro.corePoints?.[0]?.desc || '예배 전체영상도 괜찮습니다. AI가 설교의 핵심 구간을 찾아냅니다. 설교문만 올려도 AI 음성으로 영상이 완성됩니다.'}
               </p>
             </div>
 
@@ -66,7 +67,7 @@ export const SermonCoreValuesSection: React.FC = () => {
             <div className="lg:col-span-6 w-full flex items-center justify-center">
               <CoreCardImageSlot
                 imageSrc={images[0]}
-                altText="유튜브 링크 하나로 은혜로운 숏폼 5개 완성"
+                altText={intro.corePoints?.[0]?.title || '유튜브 링크 하나로 은혜로운 숏폼 5개 완성'}
                 gradientClass="bg-gradient-to-br from-[#EAE6F5] via-[#E4E8F7] to-[#D5DCF5]"
               />
             </div>
@@ -84,18 +85,18 @@ export const SermonCoreValuesSection: React.FC = () => {
             <div className="order-last lg:order-first lg:col-span-6 w-full flex items-center justify-center">
               <CoreCardImageSlot
                 imageSrc={images[1]}
-                altText="목사님 고유의 설교톤 학습"
+                altText={intro.corePoints?.[1]?.title || '목사님 고유의 설교톤 학습'}
                 gradientClass="bg-gradient-to-br from-[#E3F5EC] via-[#E8F3EE] to-[#D6EBE0]"
               />
             </div>
 
             {/* Right Text (Desktop) */}
             <div className="order-first lg:order-last lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                목사님 고유의<br className="hidden sm:inline" /> 설교톤 학습
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line text-balance [text-wrap:balance]">
+                {intro.corePoints?.[1]?.title || '목사님 고유의 설교톤 학습'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                교정되지 않은 설교문, 설교 아이디어도 AI가 목사님의 설교톤으로 완성해 드립니다.
+                {intro.corePoints?.[1]?.desc || '교정되지 않은 설교문, 설교 아이디어도 AI가 목사님의 설교톤으로 완성해 드립니다.'}
               </p>
             </div>
           </motion.div>
@@ -110,11 +111,11 @@ export const SermonCoreValuesSection: React.FC = () => {
           >
             {/* Left Text */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                인스타, 카카오톡<br className="hidden sm:inline" /> 카드뉴스
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line text-balance [text-wrap:balance]">
+                {intro.corePoints?.[2]?.title || '인스타, 카카오톡 카드뉴스'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                편집 수고 없이도 주일설교 요약카드, 6일치 묵상카드가 뚝딱 완성됩니다.
+                {intro.corePoints?.[2]?.desc || '편집 수고 없이도 주일설교 요약카드, 6일치 묵상카드가 뚝딱 완성됩니다.'}
               </p>
             </div>
 

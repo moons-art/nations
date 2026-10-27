@@ -176,38 +176,35 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
               <span>예배와 찬양 준비로 분주한 사역자의 고민</span>
             </h2>
 
-            {/* Outer Container with Clean Minimal Styling */}
-            <div className="w-full max-w-4xl lg:max-w-5xl p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 rounded-[26px] min-[360px]:rounded-[30px] sm:rounded-[40px] md:rounded-[44px] bg-slate-100/80 border border-slate-200/80 shadow-[0_10px_35px_-10px_rgba(15,23,42,0.04)]">
-              {/* Card Surface */}
-              <div className="w-full bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/60">
-                {/* Inner Input Box */}
-                <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
-                  <div className="w-full">
-                    <p className="text-[11.2px] min-[360px]:text-[12px] min-[390px]:text-[12.6px] min-[430px]:text-[13.5px] sm:text-[16px] md:text-[17px] text-slate-800 leading-[1.52] min-[360px]:leading-[1.58] sm:leading-[1.78] font-normal tracking-tight break-keep-all whitespace-pre-wrap select-text">
-                      <span>{displayedText}</span>
-                      <QuestionCardCursor />
-                    </p>
+            {/* Question Card Surface (Outer border removed) */}
+            <div className="w-full max-w-4xl lg:max-w-5xl bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/80">
+              {/* Inner Input Box */}
+              <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
+                <div className="w-full">
+                  <p className="text-[11.2px] min-[360px]:text-[12px] min-[390px]:text-[12.6px] min-[430px]:text-[13.5px] sm:text-[16px] md:text-[17px] text-slate-800 leading-[1.52] min-[360px]:leading-[1.58] sm:leading-[1.78] font-normal tracking-tight break-keep-all whitespace-pre-wrap select-text">
+                    <span>{displayedText}</span>
+                    <QuestionCardCursor />
+                  </p>
+                </div>
+
+                {/* 하단 툴바: 구분선 없는 좌측 심플 + 및 우측 화살표 액션 버튼 */}
+                <div className="w-full pt-1 sm:pt-2 flex items-center justify-between gap-2 mt-auto">
+                  <div className="flex items-center pl-1">
+                    <span className="text-slate-400 hover:text-slate-600 text-[20px] sm:text-[22px] font-light leading-none select-none cursor-default transition-colors">
+                      +
+                    </span>
                   </div>
 
-                  {/* 하단 툴바: 구분선 없는 좌측 심플 + 및 우측 화살표 액션 버튼 */}
-                  <div className="w-full pt-1 sm:pt-2 flex items-center justify-between gap-2 mt-auto">
-                    <div className="flex items-center pl-1">
-                      <span className="text-slate-400 hover:text-slate-600 text-[20px] sm:text-[22px] font-light leading-none select-none cursor-default transition-colors">
-                        +
-                      </span>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={handleSearchClick}
-                      aria-label="솔루션으로 이동"
-                      className="w-7 h-7 min-[360px]:w-7.5 min-[360px]:h-7.5 sm:w-8.5 sm:h-8.5 rounded-full bg-[#0F172A] hover:bg-[#1E293B] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
-                    >
-                      <span className="material-symbols-outlined text-[13px] min-[360px]:text-[14px] sm:text-[16px] font-bold">
-                        arrow_forward
-                      </span>
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSearchClick}
+                    aria-label="솔루션으로 이동"
+                    className="w-7 h-7 min-[360px]:w-7.5 min-[360px]:h-7.5 sm:w-8.5 sm:h-8.5 rounded-full bg-[#0F172A] hover:bg-[#1E293B] text-white flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer shrink-0"
+                  >
+                    <span className="material-symbols-outlined text-[13px] min-[360px]:text-[14px] sm:text-[16px] font-bold">
+                      arrow_forward
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>

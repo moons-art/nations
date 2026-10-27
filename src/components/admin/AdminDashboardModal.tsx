@@ -13,6 +13,14 @@ import {
   exportDataJSON,
   importDataJSON,
 } from '../../services/imageStorage';
+import {
+  useSiteIntro,
+  saveSiteIntro,
+  resetSiteIntro,
+  SiteIntroData,
+  CorePointText,
+  DEFAULT_SITE_INTROS,
+} from '../../services/siteIntroStorage';
 
 interface AdminDashboardModalProps {
   isOpen: boolean;
@@ -40,6 +48,100 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [feedback, setFeedback] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [confirmResetAll, setConfirmResetAll] = useState(false);
+
+  // Management Mode: 'texts' (문구 관리) vs 'images' (대표 이미지 관리)
+  const [activeTabType, setActiveTabType] = useState<'texts' | 'images'>('texts');
+
+  // Real-time Site Intro for selected page
+  const liveIntro = useSiteIntro(selectedPage);
+  const [introForm, setIntroForm] = useState<SiteIntroData>(liveIntro);
+  const [isSavingIntro, setIsSavingIntro] = useState(false);
+  const [confirmResetIntro, setConfirmResetIntro] = useState(false);
+
+  React.useEffect(() => {
+    if (liveIntro) {
+      setIntroForm(liveIntro);
+    }
+  }, [liveIntro, selectedPage]);
+
+  const handleSaveIntro = async () => {
+    try {
+      setIsSavingIntro(true);
+      await saveSiteIntro(selectedPage, introForm);
+      showToast(
+        `${PAGE_TITLES[selectedPage]} 문구가 저장되었습니다! (sermon 앱에 즉시 스트리밍 반영)`,
+        'success'
+      );
+    } catch (err) {
+      console.error(err);
+      showToast('문구 저장에 실패했습니다. 다시 시도해 주세요.', 'error');
+    } finally {
+      setIsSavingIntro(false);
+    }
+  };
+
+  const handleResetIntro = async () => {
+    if (!confirmResetIntro) {
+      setConfirmResetIntro(true);
+      setTimeout(() => setConfirmResetIntro(false), 3500);
+      return;
+    }
+    try {
+      setIsSavingIntro(true);
+      await resetSiteIntro(selectedPage);
+      setConfirmResetIntro(false);
+      showToast(`${PAGE_TITLES[selectedPage]} 문구가 기본값으로 복원되었습니다.`, 'info');
+    } catch (err) {
+      console.error(err);
+      showToast('초기화에 실패했습니다.', 'error');
+    } finally {
+      setIsSavingIntro(false);
+    }
+  };
+
+  const handleFaqChange = (index: number, field: 'q' | 'preview' | 'a', value: string) => {
+    setIntroForm((prev) => {
+      const updated = [...(prev.faqs || [])];
+      if (updated[index]) {
+        updated[index] = { ...updated[index], [field]: value };
+      }
+      return { ...prev, faqs: updated };
+    });
+  };
+
+  const handleAddFaq = () => {
+    setIntroForm((prev) => ({
+      ...prev,
+      faqs: [
+        ...(prev.faqs || []),
+        {
+          q: '새로운 질문을 입력하세요',
+          preview: '답변 미리보기/요약 문구',
+          a: '상세 답변 내용을 입력하세요.',
+        },
+      ],
+    }));
+  };
+
+  const handleRemoveFaq = (index: number) => {
+    setIntroForm((prev) => {
+      const updated = [...(prev.faqs || [])];
+      updated.splice(index, 1);
+      return { ...prev, faqs: updated };
+    });
+  };
+
+  const handleMoveFaq = (index: number, direction: 'up' | 'down') => {
+    setIntroForm((prev) => {
+      const updated = [...(prev.faqs || [])];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= updated.length) return prev;
+      const temp = updated[index];
+      updated[index] = updated[targetIdx];
+      updated[targetIdx] = temp;
+      return { ...prev, faqs: updated };
+    });
+  };
 
   // Single reliable top-level file input ref
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -384,156 +486,612 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 ))}
               </div>
 
-              {/* Storage Status & Backup Toolbar Banner */}
-              <div className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-[12.5px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                    <span className="font-semibold text-white">
-                      Firebase 클라우드 실시간 연동 (모든 방문자에게 자동 노출)
+              {/* Sub-navigation: Texts vs Images */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabType('texts')}
+                    className={`px-4 py-2 rounded-xl text-[13px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      activeTabType === 'texts'
+                        ? 'bg-slate-900 text-white shadow-sm'
+                        : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[17px]">edit_note</span>
+                    <span>페이지 문구 실시간 관리</span>
+                    <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-emerald-500 text-white font-mono">
+                      LIVE
                     </span>
-                    <span className="text-[11.5px] text-slate-300">
-                      총 등록: <strong className="text-emerald-400">{totalUploadedCount}</strong> / 12개 슬롯
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTabType('images')}
+                    className={`px-4 py-2 rounded-xl text-[13px] font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      activeTabType === 'images'
+                        ? 'bg-slate-900 text-white shadow-sm'
+                        : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[17px]">image</span>
+                    <span>대표 사진 관리 (Point 01~03)</span>
+                  </button>
+                </div>
+
+                <div className="text-[12px] text-slate-500 flex items-center gap-1 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>수정 즉시 sermon 앱에 실시간 스트리밍 반영</span>
+                </div>
+              </div>
+              {activeTabType === 'texts' ? (
+                /* ── 문구 관리 폼 ── */
+                <div className="flex flex-col gap-6">
+                  {/* 안내 배너 */}
+                  <div className="px-4 py-3 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white text-[12.5px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+                      <div>
+                        <span className="font-semibold text-white">
+                          [{PAGE_TITLES[selectedPage]}] 페이지 문구 편집
+                        </span>
+                        <span className="text-slate-300 ml-2 text-[11.5px]">
+                          아래 문구를 수정하고 저장하면 홈페이지와 sermon 앱 화면에 즉각 실시간 스트리밍 반영됩니다.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 1. 히어로 영상 상단 문구 & 순환 멘트 */}
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
+                    <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                      <span className="material-symbols-outlined text-indigo-600 text-[20px]">movie</span>
+                      <h4 className="text-[15px] font-bold text-slate-900">
+                        1. 최상단 히어로 영상 문구
+                      </h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          히어로 상단 고정 문구
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.heroTopText || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, heroTopText: e.target.value }))
+                          }
+                          placeholder="예: 목사님의 설교를 모든 성도에게"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13.5px] bg-slate-50 focus:bg-white transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          히어로 타이핑/순환 문구 (줄바꿈으로 구분)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={(introForm.heroPhrases || []).join('\n')}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({
+                              ...prev,
+                              heroPhrases: e.target.value
+                                .split('\n')
+                                .map((s) => s.trim())
+                                .filter(Boolean),
+                            }))
+                          }
+                          placeholder="설교숏츠, 릴스 네이션스가 해결해 드릴게요&#10;교회를 돕는 모든 것 네이션스"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. 목사님의 고민 (질문 카드) */}
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
+                    <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                      <span className="material-symbols-outlined text-amber-600 text-[20px]">help</span>
+                      <h4 className="text-[15px] font-bold text-slate-900">
+                        2. 목사님의 고민 (질문 카드)
+                      </h4>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          질문 카드 상단 제목
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.questionHeading || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, questionHeading: e.target.value }))
+                          }
+                          placeholder="예: 숏폼 세대에게 설교를 전달하고 싶어하는 목사님의 고민"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13.5px] bg-slate-50 focus:bg-white transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          질문 카드 내부 문구 (타이핑 애니메이션 텍스트)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={introForm.questionText || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, questionText: e.target.value }))
+                          }
+                          placeholder="목사님들의 고민 질문 내용을 입력해주세요."
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white transition-colors leading-relaxed"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. 기능소개 카드 상단의 메인 문구와 보조 문구 */}
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
+                    <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                      <span className="material-symbols-outlined text-emerald-600 text-[20px]">title</span>
+                      <h4 className="text-[15px] font-bold text-slate-900">
+                        3. 기능소개 섹션 상단 헤딩 문구
+                      </h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          상단 메인 문구 1행 (sermon 로그인 카드 헤딩)
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.mainHeadingLine1 || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, mainHeadingLine1: e.target.value }))
+                          }
+                          placeholder="예: 목사님의 은혜로운 설교를"
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          상단 메인 문구 2행 (sermon 로그인 카드 헤딩)
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.mainHeadingLine2 || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, mainHeadingLine2: e.target.value }))
+                          }
+                          placeholder="예: 숏폼세대와 모든 성도에게"
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          기능소개 상단 보조 문구 1행 (메인 타이틀)
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.subHeadingLine1 || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, subHeadingLine1: e.target.value }))
+                          }
+                          placeholder="예: AI 매니저가 알아서 만듭니다."
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-bold text-slate-700">
+                          기능소개 상단 보조 문구 2행 (서브 카피)
+                        </label>
+                        <input
+                          type="text"
+                          value={introForm.subHeadingLine2 || ''}
+                          onChange={(e) =>
+                            setIntroForm((prev) => ({ ...prev, subHeadingLine2: e.target.value }))
+                          }
+                          placeholder="예: 링크 하나로 끝나요"
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4. 기능소개 카드 3개 내부의 제목과 설명글 */}
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
+                    <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
+                      <span className="material-symbols-outlined text-purple-600 text-[20px]">view_column</span>
+                      <h4 className="text-[15px] font-bold text-slate-900">
+                        4. 핵심 기능 3개 카드 내부 문구 (POINT 01, 02, 03)
+                      </h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {([0, 1, 2] as PointIndex[]).map((idx) => {
+                        const point = introForm.corePoints?.[idx] || { title: '', desc: '' };
+                        return (
+                          <div
+                            key={idx}
+                            className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col gap-3"
+                          >
+                            <span className="text-[11px] font-bold text-slate-500 font-mono">
+                              POINT 0{idx + 1}
+                            </span>
+
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[11.5px] font-bold text-slate-700">
+                                카드 제목 (줄바꿈 가능)
+                              </label>
+                              <textarea
+                                rows={2}
+                                value={point.title || ''}
+                                onChange={(e) => {
+                                  const updated = [...(introForm.corePoints || [])] as [
+                                    CorePointText,
+                                    CorePointText,
+                                    CorePointText
+                                  ];
+                                  updated[idx] = { ...updated[idx], title: e.target.value };
+                                  setIntroForm((prev) => ({ ...prev, corePoints: updated }));
+                                }}
+                                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none text-[12.5px] bg-white font-medium"
+                              />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[11.5px] font-bold text-slate-700">
+                                카드 설명글
+                              </label>
+                              <textarea
+                                rows={4}
+                                value={point.desc || ''}
+                                onChange={(e) => {
+                                  const updated = [...(introForm.corePoints || [])] as [
+                                    CorePointText,
+                                    CorePointText,
+                                    CorePointText
+                                  ];
+                                  updated[idx] = { ...updated[idx], desc: e.target.value };
+                                  setIntroForm((prev) => ({ ...prev, corePoints: updated }));
+                                }}
+                                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none text-[12px] bg-white leading-relaxed text-slate-600"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 5. 질문과 답변 (Q&A / FAQ 관리) */}
+                  <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-blue-600 text-[20px]">quiz</span>
+                        <h4 className="text-[15px] font-bold text-slate-900">
+                          5. 자주 묻는 질문(FAQ) 및 답변 관리
+                        </h4>
+                        <span className="text-[12px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                          {(introForm.faqs || []).length}개 항목
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddFaq}
+                        className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-[12px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">add</span>
+                        <span>질문 추가</span>
+                      </button>
+                    </div>
+
+                    <p className="text-[12px] text-slate-500 leading-relaxed -mt-1">
+                      각 페이지 하단의 Q&A 섹션에 노출되는 질문, 한 줄 요약(미리보기), 상세 답변을 수정할 수 있습니다.
+                    </p>
+
+                    <div className="flex flex-col gap-4">
+                      {(introForm.faqs || []).map((faq, idx) => (
+                        <div
+                          key={idx}
+                          className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col gap-3 transition-colors hover:border-slate-300"
+                        >
+                          {/* Item Header & Controls */}
+                          <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80">
+                            <div className="flex items-center gap-2">
+                              <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center">
+                                {idx + 1}
+                              </span>
+                              <span className="text-[12px] font-bold text-slate-700">
+                                질문 #{idx + 1}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                disabled={idx === 0}
+                                onClick={() => handleMoveFaq(idx, 'up')}
+                                title="위로 이동"
+                                className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:hover:bg-white text-slate-600 flex items-center justify-center cursor-pointer transition-colors"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                              </button>
+                              <button
+                                type="button"
+                                disabled={idx === (introForm.faqs?.length || 0) - 1}
+                                onClick={() => handleMoveFaq(idx, 'down')}
+                                title="아래로 이동"
+                                className="w-7 h-7 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 disabled:opacity-30 disabled:hover:bg-white text-slate-600 flex items-center justify-center cursor-pointer transition-colors"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveFaq(idx)}
+                                title="질문 삭제"
+                                className="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 flex items-center justify-center cursor-pointer transition-colors ml-1"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">delete</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* 1. 질문 (Q) */}
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[11.5px] font-bold text-slate-700 flex items-center gap-1">
+                              <span className="text-blue-600 font-extrabold">Q.</span>
+                              <span>질문 문구</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={faq.q || ''}
+                              onChange={(e) => handleFaqChange(idx, 'q', e.target.value)}
+                              placeholder="예: 가입 및 이용은 무료인가요?"
+                              className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-white font-medium"
+                            />
+                          </div>
+
+                          {/* 2. 한 줄 요약 프리뷰 (Preview) */}
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[11.5px] font-bold text-slate-700 flex items-center gap-1">
+                              <span className="text-slate-500 font-bold">Preview.</span>
+                              <span>한 줄 요약 (목록에서 기본 노출되는 회색 텍스트)</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={faq.preview || ''}
+                              onChange={(e) => handleFaqChange(idx, 'preview', e.target.value)}
+                              placeholder="예: 네 무료로 가입하여도 기본 기능을 충분히 이용하실 수 있습니다."
+                              className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none text-[12.5px] bg-white text-slate-600"
+                            />
+                          </div>
+
+                          {/* 3. 상세 답변 (A) */}
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[11.5px] font-bold text-slate-700 flex items-center gap-1">
+                              <span className="text-emerald-600 font-extrabold">A.</span>
+                              <span>상세 답변 (펼쳤을 때 나타나는 전체 내용)</span>
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={faq.a || ''}
+                              onChange={(e) => handleFaqChange(idx, 'a', e.target.value)}
+                              placeholder="질문을 클릭했을 때 펼쳐지는 상세 답변 내용을 입력하세요."
+                              className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:border-slate-900 focus:outline-none text-[12.5px] bg-white leading-relaxed text-slate-700"
+                            />
+                          </div>
+                        </div>
+                      ))}
+
+                      {(!introForm.faqs || introForm.faqs.length === 0) && (
+                        <div className="p-8 rounded-xl border border-dashed border-slate-300 text-center flex flex-col items-center justify-center gap-2">
+                          <span className="material-symbols-outlined text-slate-400 text-[32px]">help_outline</span>
+                          <p className="text-[13px] text-slate-500 font-medium">등록된 질문이 없습니다.</p>
+                          <button
+                            type="button"
+                            onClick={handleAddFaq}
+                            className="mt-1 px-3.5 py-1.5 rounded-xl bg-slate-900 text-white text-[12px] font-bold hover:bg-black transition-colors cursor-pointer"
+                          >
+                            첫 번째 질문 추가하기
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 하단 액션 버튼 바 */}
+                  <div className="sticky bottom-0 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <button
+                      type="button"
+                      disabled={isSavingIntro}
+                      onClick={handleResetIntro}
+                      className={`text-[12px] px-3.5 py-2.5 rounded-xl font-bold transition-all cursor-pointer ${
+                        confirmResetIntro
+                          ? 'bg-red-600 text-white animate-pulse'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {confirmResetIntro ? '한 번 더 누르면 기본 문구로 복원' : '기본 문구로 초기화'}
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={isSavingIntro}
+                      onClick={handleSaveIntro}
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-black disabled:bg-slate-400 text-white font-bold text-[13.5px] flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">
+                        {isSavingIntro ? 'sync' : 'cloud_upload'}
+                      </span>
+                      <span>
+                        {isSavingIntro
+                          ? 'Firebase 클라우드 저장 중...'
+                          : `[${PAGE_TITLES[selectedPage]}] 문구 저장 및 즉각 스트리밍 반영`}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* ── 대표 이미지 관리 화면 ── */
+                <div className="flex flex-col gap-6">
+                  {/* Storage Status & Backup Toolbar Banner */}
+                  <div className="px-4 py-3 rounded-2xl bg-slate-900 text-white text-[12.5px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <span className="font-semibold text-white">
+                          Firebase 클라우드 실시간 연동 (모든 방문자에게 자동 노출)
+                        </span>
+                        <span className="text-[11.5px] text-slate-300">
+                          총 등록: <strong className="text-emerald-400">{totalUploadedCount}</strong> / 12개 슬롯
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleExportBackup}
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11.5px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                        title="등록된 모든 사진과 데이터를 JSON 파일로 다운로드 백업"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">download</span>
+                        <span>데이터 백업</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => jsonFileInputRef.current?.click()}
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11.5px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                        title="백업한 JSON 파일에서 모든 사진과 데이터 복원"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">upload_file</span>
+                        <span>데이터 복원</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleResetAllClick}
+                        className={`text-[11.5px] px-2.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
+                          confirmResetAll
+                            ? 'bg-red-600 text-white animate-pulse'
+                            : 'bg-red-950/70 hover:bg-red-900 text-red-300'
+                        }`}
+                      >
+                        {confirmResetAll ? '한 번 더 누르면 전체 비움' : '전체 비움'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 3 Core Point Image Upload Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {([0, 1, 2] as PointIndex[]).map((index) => {
+                      const imageSrc = currentImages[index];
+                      const dynamicTitle = introForm.corePoints?.[index]?.title?.replace(/\n/g, ' ') || POINT_LABELS[selectedPage][index];
+                      const label = dynamicTitle;
+
+                      return (
+                        <div
+                          key={index}
+                          className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between gap-4"
+                        >
+                          {/* Slot Header */}
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[11px] font-bold text-slate-500 font-mono">
+                              POINT 0{index + 1}
+                            </span>
+                            <h4 className="text-[14px] font-bold text-slate-900 leading-snug break-keep-all line-clamp-2">
+                              {label}
+                            </h4>
+                          </div>
+
+                          {/* Live Preview Container (배경색 카드 없이 이미지 바로 부드럽게 노출) */}
+                          <div
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => handleDrop(e, index)}
+                            className="w-full rounded-[22px] sm:rounded-[26px] p-2 bg-slate-50 border border-slate-200/60 flex items-center justify-center min-h-[190px] max-h-[220px] relative overflow-hidden group"
+                          >
+                            {imageSrc ? (
+                              <div className="relative w-full h-[175px] rounded-[20px] sm:rounded-[24px] flex items-center justify-center overflow-hidden">
+                                <img
+                                  src={imageSrc}
+                                  alt={label}
+                                  className="w-full h-full object-contain rounded-[20px] sm:rounded-[24px] drop-shadow-sm"
+                                />
+                                <span className="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-medium shadow-xs">
+                                  등록 완료
+                                </span>
+                              </div>
+                            ) : (
+                              <div
+                                onClick={() => triggerUpload(index)}
+                                className="w-full h-[170px] rounded-[20px] sm:rounded-[24px] border-2 border-dashed border-slate-300 hover:border-slate-400 flex flex-col items-center justify-center text-slate-500 gap-1.5 p-3 text-center cursor-pointer transition-colors"
+                              >
+                                <span className="material-symbols-outlined text-2xl opacity-40">
+                                  add_photo_alternate
+                                </span>
+                                <span className="text-[11.5px] font-semibold text-slate-700">
+                                  이미지 비워짐
+                                </span>
+                                <span className="text-[10.5px] text-slate-400">
+                                  클릭하거나 사진을 드롭하여 등록
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Upload / Action Buttons */}
+                          <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+                            <button
+                              type="button"
+                              disabled={isProcessing}
+                              onClick={() => triggerUpload(index)}
+                              className="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white text-[12px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">
+                                {imageSrc ? 'change_circle' : 'upload'}
+                              </span>
+                              <span>{imageSrc ? '사진 변경' : '사진 업로드'}</span>
+                            </button>
+
+                            {imageSrc && (
+                              <button
+                                type="button"
+                                disabled={isProcessing}
+                                onClick={() => handleDirectRemove(index)}
+                                className="py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-[12px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
+                                title="사진 즉시 삭제"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">delete</span>
+                                <span className="text-[11.5px]">삭제</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Bottom Quick Help */}
+                  <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-600 text-[12px] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <span className="material-symbols-outlined text-emerald-600 text-[18px]">
+                        cloud_done
+                      </span>
+                      등록된 모든 사진은 Firebase Cloud에 자동 저장되어, 새로고침은 물론 앱에 접속하는 모든 방문자 화면에 즉시 딱 박혀서 나타납니다.
+                    </span>
+                    <span className="text-slate-400 font-mono text-[11px] shrink-0">
+                      Cloud Sync: Firebase Firestore + Local Cache
                     </span>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                  <button
-                    type="button"
-                    onClick={handleExportBackup}
-                    className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11.5px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
-                    title="등록된 모든 사진과 데이터를 JSON 파일로 다운로드 백업"
-                  >
-                    <span className="material-symbols-outlined text-[15px]">download</span>
-                    <span>데이터 백업</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => jsonFileInputRef.current?.click()}
-                    className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11.5px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
-                    title="백업한 JSON 파일에서 모든 사진과 데이터 복원"
-                  >
-                    <span className="material-symbols-outlined text-[15px]">upload_file</span>
-                    <span>데이터 복원</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleResetAllClick}
-                    className={`text-[11.5px] px-2.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
-                      confirmResetAll
-                        ? 'bg-red-600 text-white animate-pulse'
-                        : 'bg-red-950/70 hover:bg-red-900 text-red-300'
-                    }`}
-                  >
-                    {confirmResetAll ? '한 번 더 누르면 전체 비움' : '전체 비움'}
-                  </button>
-                </div>
-              </div>
-
-              {/* 3 Core Point Image Upload Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {([0, 1, 2] as PointIndex[]).map((index) => {
-                  const imageSrc = currentImages[index];
-                  const label = POINT_LABELS[selectedPage][index];
-                  const gradient = CARD_GRADIENTS[index];
-
-                  return (
-                    <div
-                      key={index}
-                      className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col justify-between gap-4"
-                    >
-                      {/* Slot Header */}
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[11px] font-bold text-slate-500 font-mono">
-                          POINT 0{index + 1}
-                        </span>
-                        <h4 className="text-[14px] font-bold text-slate-900 leading-snug break-keep-all line-clamp-2">
-                          {label}
-                        </h4>
-                      </div>
-
-                      {/* Live Preview Container (Matches the live site container aspect & card background!) */}
-                      <div
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => handleDrop(e, index)}
-                        className={`w-full rounded-2xl p-3 ${gradient} border border-slate-200/80 shadow-inner flex items-center justify-center min-h-[190px] max-h-[220px] relative overflow-hidden group`}
-                      >
-                        {imageSrc ? (
-                          <div className="relative w-full h-[170px] rounded-xl flex items-center justify-center overflow-hidden">
-                            <img
-                              src={imageSrc}
-                              alt={label}
-                              className="w-full h-full object-contain drop-shadow-sm rounded-lg"
-                            />
-                            <span className="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-medium shadow-xs">
-                              등록 완료
-                            </span>
-                          </div>
-                        ) : (
-                          <div
-                            onClick={() => triggerUpload(index)}
-                            className="w-full h-[170px] rounded-xl border-2 border-dashed border-slate-400/40 hover:border-slate-500/70 flex flex-col items-center justify-center text-slate-500 gap-1.5 p-3 text-center cursor-pointer transition-colors"
-                          >
-                            <span className="material-symbols-outlined text-2xl opacity-40">
-                              add_photo_alternate
-                            </span>
-                            <span className="text-[11.5px] font-semibold text-slate-700">
-                              이미지 비워짐
-                            </span>
-                            <span className="text-[10.5px] text-slate-400">
-                              클릭하거나 사진을 드롭하여 등록
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Upload / Action Buttons */}
-                      <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
-                        <button
-                          type="button"
-                          disabled={isProcessing}
-                          onClick={() => triggerUpload(index)}
-                          className="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white text-[12px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">
-                            {imageSrc ? 'change_circle' : 'upload'}
-                          </span>
-                          <span>{imageSrc ? '사진 변경' : '사진 업로드'}</span>
-                        </button>
-
-                        {imageSrc && (
-                          <button
-                            type="button"
-                            disabled={isProcessing}
-                            onClick={() => handleDirectRemove(index)}
-                            className="py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-[12px] font-bold flex items-center gap-1 transition-colors cursor-pointer"
-                            title="사진 즉시 삭제"
-                          >
-                            <span className="material-symbols-outlined text-[16px]">delete</span>
-                            <span className="text-[11.5px]">삭제</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Bottom Quick Help */}
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-600 text-[12px] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-                <span className="flex items-center gap-1.5 font-medium">
-                  <span className="material-symbols-outlined text-emerald-600 text-[18px]">
-                    cloud_done
-                  </span>
-                  등록된 모든 사진은 Firebase Cloud에 자동 저장되어, 새로고침은 물론 앱에 접속하는 모든 방문자 화면에 즉시 딱 박혀서 나타납니다.
-                </span>
-                <span className="text-slate-400 font-mono text-[11px] shrink-0">
-                  Cloud Sync: Firebase Firestore + Local Cache
-                </span>
-              </div>
+              )}
             </div>
           )}
         </div>

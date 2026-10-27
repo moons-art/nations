@@ -1,10 +1,12 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { usePageImages } from '../services/imageStorage';
+import { useSiteIntro } from '../services/siteIntroStorage';
 import { CoreCardImageSlot } from './common/CoreCardImageSlot';
 
 export const CoreValuesSection: React.FC = () => {
   const images = usePageImages('vote');
+  const intro = useSiteIntro('vote');
 
   return (
     <section
@@ -21,10 +23,10 @@ export const CoreValuesSection: React.FC = () => {
           className="flex flex-col text-center items-center gap-1.5 max-w-3xl mx-auto mb-2 sm:mb-4"
         >
           <h2 className="text-[19px] sm:text-[23px] md:text-[27px] font-bold text-[#0F172A] tracking-tight leading-tight break-keep-all">
-            90% 이상 시간을 줄입니다.
+            {intro.subHeadingLine1 || '90% 이상 시간을 줄입니다.'}
           </h2>
           <p className="text-[13px] sm:text-[14.5px] text-slate-500 font-normal break-keep-all">
-            투표가 즐겁습니다.
+            {intro.subHeadingLine2 || '투표가 즐겁습니다.'}
           </p>
 
           {/* 무료로 앱 이용하기 버튼 */}
@@ -53,11 +55,11 @@ export const CoreValuesSection: React.FC = () => {
           >
             {/* Left Text */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                시간과 재정을 아끼는 사역
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line">
+                {intro.corePoints?.[0]?.title || '시간과 재정을 아끼는 사역'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                매번 반복되는 종이 인쇄, 수작업 명부 대조, 복잡한 수기 정리를 모바일 원스톱으로 진행됩니다. 예산과 시간을 획기적으로 아낍니다.
+                {intro.corePoints?.[0]?.desc || '매번 반복되는 종이 인쇄, 수작업 명부 대조, 복잡한 수기 정리를 모바일 원스톱으로 진행됩니다. 예산과 시간을 획기적으로 아낍니다.'}
               </p>
             </div>
 
@@ -65,7 +67,7 @@ export const CoreValuesSection: React.FC = () => {
             <div className="lg:col-span-6 w-full flex items-center justify-center">
               <CoreCardImageSlot
                 imageSrc={images[0]}
-                altText="현장 상황실 실시간 집계 현황 및 사역 효율 스마트 목회 대시보드"
+                altText={intro.corePoints?.[0]?.title || '현장 상황실 실시간 집계 현황 및 사역 효율 스마트 목회 대시보드'}
                 gradientClass="bg-gradient-to-br from-[#EAE6F5] via-[#E4E8F7] to-[#D5DCF5]"
               />
             </div>
@@ -83,18 +85,18 @@ export const CoreValuesSection: React.FC = () => {
             <div className="order-last lg:order-first lg:col-span-6 w-full flex items-center justify-center">
               <CoreCardImageSlot
                 imageSrc={images[1]}
-                altText="어르신부터 청년까지 누구나 쉽게 사용하는 스마트폰 모바일 투표 준비 화면"
+                altText={intro.corePoints?.[1]?.title || '어르신부터 청년까지 누구나 쉽게 사용하는 스마트폰 모바일 투표 준비 화면'}
                 gradientClass="bg-gradient-to-br from-[#E3F5EC] via-[#E8F3EE] to-[#D6EBE0]"
               />
             </div>
 
             {/* Right Text (Desktop) */}
             <div className="order-first lg:order-last lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                어르신부터 청년까지
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line">
+                {intro.corePoints?.[1]?.title || '어르신부터 청년까지'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                시스템은 고도화하되 사용법은 직관적으로 설계됩니다. 앱 설치 없이 QR과 링크 하나로 어르신 성도까지 막힘없이 참여할 수 있습니다.
+                {intro.corePoints?.[1]?.desc || '시스템은 고도화하되 사용법은 직관적으로 설계됩니다. 앱 설치 없이 QR과 링크 하나로 어르신 성도까지 막힘없이 참여할 수 있습니다.'}
               </p>
             </div>
           </motion.div>
@@ -109,11 +111,11 @@ export const CoreValuesSection: React.FC = () => {
           >
             {/* Left Text */}
             <div className="lg:col-span-6 flex flex-col justify-center">
-              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all">
-                너무나 쉬운 실시간 현장 관리
+              <h3 className="text-[17px] sm:text-[20px] md:text-[23px] font-bold text-[#0F172A] leading-[1.3] tracking-tight break-keep-all whitespace-pre-line">
+                {intro.corePoints?.[2]?.title || '너무나 쉬운 실시간 현장 관리'}
               </h3>
               <p className="text-[13px] sm:text-[14px] text-slate-600 leading-relaxed mt-3.5 break-keep-all max-w-lg">
-                선거관리위원-현장데스크-도우미-방송실-실시간 현황 프레젠테이션까지 버튼 하나로 진행됩니다. 특별한 훈련없이 누구나 운영할수 있습니다.
+                {intro.corePoints?.[2]?.desc || '선거관리위원-현장데스크-도우미-방송실-실시간 현황 프레젠테이션까지 버튼 하나로 진행됩니다. 특별한 훈련없이 누구나 운영할수 있습니다.'}
               </p>
             </div>
 
@@ -121,7 +123,7 @@ export const CoreValuesSection: React.FC = () => {
             <div className="lg:col-span-6 w-full flex items-center justify-center">
               <CoreCardImageSlot
                 imageSrc={images[2]}
-                altText="교회의 안전과 신뢰를 지키는 철저한 암호화 데이터 보안 체계"
+                altText={intro.corePoints?.[2]?.title || '교회의 안전과 신뢰를 지키는 철저한 암호화 데이터 보안 체계'}
                 gradientClass="bg-gradient-to-br from-[#FFF3E6] via-[#FCEEE2] to-[#F7DFCD]"
               />
             </div>

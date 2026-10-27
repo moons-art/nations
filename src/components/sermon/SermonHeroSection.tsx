@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { HERO_VIDEO_MP4 } from '../../data/products';
 import { QuestionCardCursor } from '../common/QuestionCardCursor';
+import { useSiteIntro } from '../../services/siteIntroStorage';
 
 interface SermonHeroSectionProps {
   onOpenDemoModal: () => void;
@@ -12,20 +13,24 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
   onOpenDemoModal: _onOpenDemoModal,
   onSearchQuery,
 }) => {
+  const intro = useSiteIntro('sermon');
   const [searchValue, setSearchValue] = useState('네이션스 Sermon Video는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
-  const phrases = [
-    '설교숏츠, 릴스 네이션스가 해결해 드릴게요',
-    '교회를 돕는 모든 것 네이션스',
-  ];
+  const phrases = intro.heroPhrases && intro.heroPhrases.length > 0
+    ? intro.heroPhrases
+    : [
+        '설교숏츠, 릴스 네이션스가 해결해 드릴게요',
+        '교회를 돕는 모든 것 네이션스',
+      ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Continuous Typewriter & Erase effect matching user's reference image
   const fullQuestionsContinuous =
+    intro.questionText ||
     '유튜브 링크만 넣어도 60초 가장 은혜로운 핵심 숏츠·릴스를 자동으로 만들 수 없을까요? 설교 영상이 없는 교회도 설교숏폼 영상을 만들수 있을까요? 주일 설교를 카드뉴스로 성도들에게 보내 한주간 묵상하게 하는 방법은 없을까? 대형교회처럼 주일광고 영상을 만들 순 없을까?';
   const [displayedText, setDisplayedText] = useState('');
   const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
@@ -163,10 +168,10 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
         <div className="relative z-20 w-full max-w-6xl mx-auto px-5 sm:px-12 md:px-16 flex flex-col justify-center pt-16 sm:pt-14 md:pt-18">
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-              <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
-                목사님의 설교를 모든 성도에게
+              <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2 text-balance [text-wrap:balance]">
+                {intro.heroTopText || '목사님의 설교를 모든 성도에게'}
               </span>
-              <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
+              <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all text-balance [text-wrap:balance]">
                 {renderSecondLine()}
                 <span className="inline-block w-[3px] sm:w-[4px] h-[0.85em] bg-white ml-2 align-middle animate-pulse flex-shrink-0" />
               </span>
@@ -186,16 +191,14 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
             transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
             className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
-            <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
-              <span>숏폼 세대에게 설교를 전달하고 싶어하는 목사님의 고민</span>
+            <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-balance [text-wrap:balance] text-center px-2">
+              <span>{intro.questionHeading || '숏폼 세대에게 설교를 전달하고 싶어하는 목사님의 고민'}</span>
             </h2>
 
-            {/* Outer Container with Clean, Non-AI Minimal Styling */}
-            <div className="w-full max-w-4xl lg:max-w-5xl p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 rounded-[26px] min-[360px]:rounded-[30px] sm:rounded-[40px] md:rounded-[44px] bg-slate-100/80 border border-slate-200/80 shadow-[0_10px_35px_-10px_rgba(15,23,42,0.04)]">
-              {/* Card Surface */}
-              <div className="w-full bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/60">
-                {/* Inner Input Box: 4번 스타일 - 하단 툴바형 (상태 태그 + 액션 버튼) */}
-                <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
+            {/* Question Card Surface (Outer border removed) */}
+            <div className="w-full max-w-4xl lg:max-w-5xl bg-white rounded-[22px] min-[360px]:rounded-[26px] sm:rounded-[32px] md:rounded-[36px] p-2 min-[360px]:p-2.5 sm:p-3.5 md:p-4 shadow-sm border border-slate-200/80">
+              {/* Inner Input Box: 4번 스타일 - 하단 툴바형 (상태 태그 + 액션 버튼) */}
+              <div className="relative w-full bg-[#FAFBFD] hover:bg-white rounded-[18px] min-[360px]:rounded-[20px] sm:rounded-[26px] md:rounded-[28px] border border-slate-200/90 hover:border-slate-300 transition-colors duration-200 p-3.5 min-[360px]:p-4 min-[400px]:p-5 sm:p-7 md:p-8 h-[195px] min-[360px]:h-[205px] min-[400px]:h-[215px] sm:h-[240px] md:h-[255px] flex flex-col justify-between text-left overflow-hidden">
                   {/* Top-aligned continuous typewriter text: 모바일에서 카드 안에 온전히 다 들어가는 사이즈 */}
                   <div className="w-full">
                     <p className="text-[11.2px] min-[360px]:text-[12px] min-[390px]:text-[12.6px] min-[430px]:text-[13.5px] sm:text-[16px] md:text-[17px] text-slate-800 leading-[1.52] min-[360px]:leading-[1.58] sm:leading-[1.78] font-normal tracking-tight break-keep-all whitespace-pre-wrap select-text">
@@ -226,7 +229,6 @@ export const SermonHeroSection: React.FC<SermonHeroSectionProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
           </motion.div>
         </div>
       </section>
