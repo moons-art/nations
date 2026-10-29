@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { HERO_VIDEO_MP4 } from '../data/products';
 import { QuestionCardCursor } from './common/QuestionCardCursor';
+import { useSiteIntro } from '../services/siteIntroStorage';
 
 interface HeroSectionProps {
   onOpenFreeModal: () => void;
@@ -12,20 +13,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenFreeModal: _onOpenFreeModal,
   onSearchQuery,
 }) => {
+  const intro = useSiteIntro('vote');
   const [searchValue] = useState('네이션스 교회투표는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
-  const phrases = [
-    '교회 투표 네이션스가 해결해 드릴게요',
-    '교회를 돕는 모든 것 네이션스',
-  ];
+  const phrases = intro.heroPhrases && intro.heroPhrases.length > 0
+    ? intro.heroPhrases
+    : [
+        '교회 투표 네이션스가 해결해 드릴게요',
+        '교회를 돕는 모든 것 네이션스',
+      ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Continuous Typewriter & Erase effect matching Nations Sermon concept
   const fullQuestionsContinuous =
+    intro.questionText ||
     '종이투표 인쇄와 개표에 주일 하루가 다 가는데 모바일로 안전하게 바꿀 수 없을까? 어르신들도 어려움 없이 스마트폰으로 투표할 수 있을까? 투표 결과의 공정성과 교인 명부 보안은 완벽하게 지킬 수 있을까? 총회와 공동의회 투표를 실시간으로 집계할 순 없을까?';
   const [displayedText, setDisplayedText] = useState('');
   const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
@@ -151,7 +156,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
-                목회에만 집중하도록 돕습니다.
+                {intro.heroTopText || '목회에만 집중하도록 돕습니다.'}
               </span>
               <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
                 {renderSecondLine()}
@@ -174,7 +179,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
             <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
-              <span>중요한 교회투표를 앞둔 목회자의 고민</span>
+              <span>{intro.questionHeading || '중요한 교회투표를 앞둔 목회자의 고민'}</span>
             </h2>
 
             {/* Question Card Surface (Outer border removed) */}

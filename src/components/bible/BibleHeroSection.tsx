@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { BIBLE_HERO_VIDEO_MP4 } from '../../data/products';
 import { QuestionCardCursor } from '../common/QuestionCardCursor';
+import { useSiteIntro } from '../../services/siteIntroStorage';
 
 interface BibleHeroSectionProps {
   onOpenDemoModal: () => void;
@@ -12,20 +13,24 @@ export const BibleHeroSection: React.FC<BibleHeroSectionProps> = ({
   onOpenDemoModal: _onOpenDemoModal,
   onSearchQuery,
 }) => {
+  const intro = useSiteIntro('bible');
   const [searchValue] = useState('네이션스 성경은?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect
-  const phrases = [
-    '설교준비 네이션스가 해결해 드릴게요',
-    '교회를 돕는 모든 것 네이션스',
-  ];
+  const phrases = intro.heroPhrases && intro.heroPhrases.length > 0
+    ? intro.heroPhrases
+    : [
+        '설교준비 네이션스가 해결해 드릴게요',
+        '교회를 돕는 모든 것 네이션스',
+      ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Continuous Typewriter & Erase effect matching Nations Sermon concept
   const fullQuestionsContinuous =
+    intro.questionText ||
     '설교 준비할 때 여러 역본과 원어 주석을 한 화면에서 바로 대조할 순 없을까? 묵상한 성경 구절과 설교 원고를 흩어지지 않게 하나로 정리할 순 없을까? 강단에서 태블릿으로 보기에 가장 편안하고 가벼운 성경 프로그램은 없을까? 복잡한 프로그램 없이 어디서나 1초 만에 켜질 순 없을까?';
   const [displayedText, setDisplayedText] = useState('');
   const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
@@ -150,7 +155,7 @@ export const BibleHeroSection: React.FC<BibleHeroSectionProps> = ({
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
-                묵상과 성경연구에만 집중하세요
+                {intro.heroTopText || '묵상과 성경연구에만 집중하세요'}
               </span>
               <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
                 {renderSecondLine()}
@@ -173,7 +178,7 @@ export const BibleHeroSection: React.FC<BibleHeroSectionProps> = ({
             className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
             <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
-              <span>설교준비와 말씀 연구로 분주한 설교자의 고민</span>
+              <span>{intro.questionHeading || '설교준비와 말씀 연구로 분주한 설교자의 고민'}</span>
             </h2>
 
             {/* Question Card Surface (Outer border removed) */}

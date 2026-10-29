@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { SCORE_HERO_VIDEO_MP4 } from '../../data/products';
 import { QuestionCardCursor } from '../common/QuestionCardCursor';
+import { useSiteIntro } from '../../services/siteIntroStorage';
 
 interface ScoreHeroSectionProps {
   onOpenDemoModal: () => void;
@@ -12,20 +13,24 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
   onOpenDemoModal: _onOpenDemoModal,
   onSearchQuery,
 }) => {
+  const intro = useSiteIntro('score');
   const [searchValue] = useState('네이션스 스튜디오는?');
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Infinite Typewriter & Delete effect: alternates between phrases
-  const phrases = [
-    '예배준비 네이션스가 해결해 드릴게요',
-    '교회를 돕는 모든 것 네이션스',
-  ];
+  const phrases = intro.heroPhrases && intro.heroPhrases.length > 0
+    ? intro.heroPhrases
+    : [
+        '예배준비 네이션스가 해결해 드릴게요',
+        '교회를 돕는 모든 것 네이션스',
+      ];
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [displayedSecondLine, setDisplayedSecondLine] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Continuous Typewriter & Erase effect matching Nations Sermon concept
   const fullQuestionsContinuous =
+    intro.questionText ||
     '매주 찬양팀 악보 복사와 콘티 정리에 드는 시간을 줄일 순 없을까? 찬양 인도자부터 반주자, 싱어까지 각자의 파트보와 송폼을 실시간으로 공유할 수 없을까? 조옮김(Key 변환) 악보를 1초 만에 만들어 연습할 순 없을까? 소그룹과 금요기도회에서도 태블릿 하나로 찬양할 순 없을까?';
   const [displayedText, setDisplayedText] = useState('');
   const [isQuestionDeleting, setIsQuestionDeleting] = useState(false);
@@ -150,7 +155,7 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
           <div className="w-full max-w-4xl text-left">
             <h1 className="tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
               <span className="block text-[14px] min-[390px]:text-[15.5px] min-[430px]:text-[17px] sm:text-[19px] md:text-[23px] lg:text-[26px] font-medium text-white/90 mb-1 sm:mb-2">
-                찬양 준비와 예배에만 집중하세요
+                {intro.heroTopText || '찬양 준비와 예배에만 집중하세요'}
               </span>
               <span className="inline-flex flex-wrap items-center text-[22px] min-[390px]:text-[24px] min-[430px]:text-[26px] sm:text-[30px] md:text-[38px] lg:text-[44px] font-bold text-white leading-tight break-keep-all">
                 {renderSecondLine()}
@@ -173,7 +178,7 @@ export const ScoreHeroSection: React.FC<ScoreHeroSectionProps> = ({
             className="w-full text-slate-700 leading-relaxed font-medium flex flex-col items-center gap-5 sm:gap-6"
           >
             <h2 className="text-[#0F172A] font-bold text-[18px] min-[360px]:text-[19.5px] min-[400px]:text-[21px] sm:text-[25px] md:text-[28px] tracking-tight leading-snug break-keep-all text-center px-2">
-              <span>예배와 찬양 준비로 분주한 사역자의 고민</span>
+              <span>{intro.questionHeading || '예배와 찬양 준비로 분주한 사역자의 고민'}</span>
             </h2>
 
             {/* Question Card Surface (Outer border removed) */}

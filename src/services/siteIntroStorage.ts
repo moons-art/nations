@@ -231,6 +231,10 @@ const introMemoryCache: Record<PageKey, SiteIntroData> = {
   bible: { ...DEFAULT_SITE_INTROS.bible },
 };
 
+export function getSiteIntroCached(page: PageKey): SiteIntroData {
+  return introMemoryCache[page] || DEFAULT_SITE_INTROS[page];
+}
+
 // 1. LocalStorage Synchronous Hydration
 function loadIntroFromLocalStorage(): void {
   if (typeof window === 'undefined' || !window.localStorage) return;
@@ -299,6 +303,9 @@ export function useSiteIntro(page: PageKey): SiteIntroData {
 
   useEffect(() => {
     initSiteIntroListeners();
+
+    // Immediately sync state with memory cache when page changes
+    setIntro({ ...introMemoryCache[page] });
 
     const handleUpdate = () => {
       setIntro({ ...introMemoryCache[page] });

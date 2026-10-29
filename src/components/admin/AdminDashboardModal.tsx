@@ -15,6 +15,7 @@ import {
 } from '../../services/imageStorage';
 import {
   useSiteIntro,
+  getSiteIntroCached,
   saveSiteIntro,
   resetSiteIntro,
   SiteIntroData,
@@ -54,22 +55,37 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
   // Real-time Site Intro for selected page
   const liveIntro = useSiteIntro(selectedPage);
-  const [introForm, setIntroForm] = useState<SiteIntroData>(liveIntro);
+  const [introForm, setIntroForm] = useState<SiteIntroData>(() => getSiteIntroCached('sermon'));
+  const [heroPhrasesInput, setHeroPhrasesInput] = useState<string>(() =>
+    (getSiteIntroCached('sermon').heroPhrases || []).join('\n')
+  );
   const [isSavingIntro, setIsSavingIntro] = useState(false);
   const [confirmResetIntro, setConfirmResetIntro] = useState(false);
 
+  // Synchronize form when selectedPage or liveIntro updates
   React.useEffect(() => {
-    if (liveIntro) {
-      setIntroForm(liveIntro);
-    }
-  }, [liveIntro, selectedPage]);
+    const cachedOrLive = liveIntro || getSiteIntroCached(selectedPage);
+    setIntroForm(cachedOrLive);
+    setHeroPhrasesInput((cachedOrLive.heroPhrases || []).join('\n'));
+  }, [selectedPage, liveIntro]);
 
   const handleSaveIntro = async () => {
     try {
       setIsSavingIntro(true);
-      await saveSiteIntro(selectedPage, introForm);
+      const parsedPhrases = heroPhrasesInput
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const dataToSave: SiteIntroData = {
+        ...introForm,
+        heroPhrases: parsedPhrases,
+      };
+
+      await saveSiteIntro(selectedPage, dataToSave);
+      setIntroForm(dataToSave);
       showToast(
-        `${PAGE_TITLES[selectedPage]} 문구가 저장되었습니다! (sermon 앱에 즉시 스트리밍 반영)`,
+        `${PAGE_TITLES[selectedPage]} 문구가 저장되었습니다! (홈페이지 및 앱에 즉시 스트리밍 반영)`,
         'success'
       );
     } catch (err) {
@@ -89,6 +105,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     try {
       setIsSavingIntro(true);
       await resetSiteIntro(selectedPage);
+      const def = DEFAULT_SITE_INTROS[selectedPage];
+      setHeroPhrasesInput((def.heroPhrases || []).join('\n'));
       setConfirmResetIntro(false);
       showToast(`${PAGE_TITLES[selectedPage]} 문구가 기본값으로 복원되었습니다.`, 'info');
     } catch (err) {
@@ -520,7 +538,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
                 <div className="text-[12px] text-slate-500 flex items-center gap-1 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>수정 즉시 sermon 앱에 실시간 스트리밍 반영</span>
+                  <span>수정 즉시 [{PAGE_TITLES[selectedPage]}] 페이지에 실시간 스트리밍 반영</span>
                 </div>
               </div>
               {activeTabType === 'texts' ? (
@@ -535,7 +553,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           [{PAGE_TITLES[selectedPage]}] 페이지 문구 편집
                         </span>
                         <span className="text-slate-300 ml-2 text-[11.5px]">
-                          아래 문구를 수정하고 저장하면 홈페이지와 sermon 앱 화면에 즉각 실시간 스트리밍 반영됩니다.
+                          아래 문구를 수정하고 저장하면 홈페이지의 [{PAGE_TITLES[selectedPage]}] 탭 화면에 즉각 실시간 스트리밍 반영됩니다.
                         </span>
                       </div>
                     </div>
@@ -561,7 +579,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, heroTopText: e.target.value }))
                           }
-                          placeholder="예: 목사님의 설교를 모든 성도에게"
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.heroTopText || '상단 고정 문구를 입력하세요'}
                           className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13.5px] bg-slate-50 focus:bg-white transition-colors"
                         />
                       </div>
@@ -571,30 +589,22 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           히어로 타이핑/순환 문구 (줄바꿈으로 구분)
                         </label>
                         <textarea
-                          rows={2}
-                          value={(introForm.heroPhrases || []).join('\n')}
-                          onChange={(e) =>
-                            setIntroForm((prev) => ({
-                              ...prev,
-                              heroPhrases: e.target.value
-                                .split('\n')
-                                .map((s) => s.trim())
-                                .filter(Boolean),
-                            }))
-                          }
-                          placeholder="설교숏츠, 릴스 네이션스가 해결해 드릴게요&#10;교회를 돕는 모든 것 네이션스"
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white transition-colors"
+                          rows={3}
+                          value={heroPhrasesInput}
+                          onChange={(e) => setHeroPhrasesInput(e.target.value)}
+                          placeholder={(DEFAULT_SITE_INTROS[selectedPage]?.heroPhrases || []).join('\n')}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white transition-colors leading-relaxed"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* 2. 목사님의 고민 (질문 카드) */}
+                  {/* 2. 사역자/목사님의 고민 (질문 카드) */}
                   <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col gap-4">
                     <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
                       <span className="material-symbols-outlined text-amber-600 text-[20px]">help</span>
                       <h4 className="text-[15px] font-bold text-slate-900">
-                        2. 목사님의 고민 (질문 카드)
+                        2. {selectedPage === 'score' ? '찬양사역자' : selectedPage === 'vote' ? '사역자' : selectedPage === 'bible' ? '설교자' : '목사님'}의 고민 (질문 카드)
                       </h4>
                     </div>
 
@@ -609,7 +619,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, questionHeading: e.target.value }))
                           }
-                          placeholder="예: 숏폼 세대에게 설교를 전달하고 싶어하는 목사님의 고민"
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.questionHeading || '질문 카드 제목을 입력하세요'}
                           className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13.5px] bg-slate-50 focus:bg-white transition-colors"
                         />
                       </div>
@@ -624,7 +634,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, questionText: e.target.value }))
                           }
-                          placeholder="목사님들의 고민 질문 내용을 입력해주세요."
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.questionText || '고민 질문 내용을 입력해주세요.'}
                           className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white transition-colors leading-relaxed"
                         />
                       </div>
@@ -643,7 +653,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[12px] font-bold text-slate-700">
-                          상단 메인 문구 1행 (sermon 로그인 카드 헤딩)
+                          상단 메인 문구 1행 (메인 헤딩 1행)
                         </label>
                         <input
                           type="text"
@@ -651,14 +661,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, mainHeadingLine1: e.target.value }))
                           }
-                          placeholder="예: 목사님의 은혜로운 설교를"
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.mainHeadingLine1 || '메인 헤딩 1행'}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
                         />
                       </div>
 
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[12px] font-bold text-slate-700">
-                          상단 메인 문구 2행 (sermon 로그인 카드 헤딩)
+                          상단 메인 문구 2행 (메인 헤딩 2행)
                         </label>
                         <input
                           type="text"
@@ -666,7 +676,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, mainHeadingLine2: e.target.value }))
                           }
-                          placeholder="예: 숏폼세대와 모든 성도에게"
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.mainHeadingLine2 || '메인 헤딩 2행'}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
                         />
                       </div>
@@ -681,7 +691,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, subHeadingLine1: e.target.value }))
                           }
-                          placeholder="예: AI 매니저가 알아서 만듭니다."
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.subHeadingLine1 || '보조 카피 1행'}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
                         />
                       </div>
@@ -696,7 +706,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           onChange={(e) =>
                             setIntroForm((prev) => ({ ...prev, subHeadingLine2: e.target.value }))
                           }
-                          placeholder="예: 링크 하나로 끝나요"
+                          placeholder={DEFAULT_SITE_INTROS[selectedPage]?.subHeadingLine2 || '서브 카피 2행'}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:border-slate-900 focus:outline-none text-[13px] bg-slate-50 focus:bg-white"
                         />
                       </div>
